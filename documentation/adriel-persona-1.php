@@ -31,7 +31,20 @@
 	I want to know the current infection rate of the corona virus around me.</p>
 
 <h1>Use Case Interaction Flow</h1>
-<p></p>
+<p>Title: Searching for information about COVID 19 and seeking support. </p>
+
+	<p>Description: Adriel wants to be up to date with information about the corona virus and is in need of some essentials.</p>
+
+	<p>Name of the user and his role: Adriel, a 40 yaers old Fullstack web developer. He is a father of an 8yrs old girl and
+		lives with his wife, kid and father.</p>
+
+	<p>Usage Pre-conditions: He must have downloaded the COVID 19 app and signed-up. He should have access to internet.</p>
+
+	<p>Interaction Flow:
+	-Adriel opens the COVID 19 app on his mobile phone and clicks on the search bar.
+	-He types in "number of deaths and infected persons in New Mexico", then presses "enter".
+	-the server recieves the request and presents information.
+	-Adriel views the information and exits the app.</p>
 
 </body>
 </html>
