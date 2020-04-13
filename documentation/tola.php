@@ -25,10 +25,10 @@
  She's tech savy but still prefers simplicity over complexity</p>
 
 <h3>Frustration and Needs: </h3>
-<p>Tola needs a clear source of information about the covid-19 virus in New Mexico and also a sign of relief that <br>
+<p>Tola needs a clear source of information about the Covid-19 virus in New Mexico and also a sign of relief that <br>
  situation is being handled properly. She wants to see sites of see sites of quarantine other than people's homes.</p>
 <p><strong>Goals: </strong>Tola's goal is to report the virus as well as give the people of new Mexico hope by sharing<br>
- prevention and showing what the state has in place to take care of the affected people and the state's prvention measures.</p>
+ prevention and showing what the state has in place to take care of the affected people and the state's prevention measures.</p>
 <p><strong>User Story: </strong>As a user, I want to see a map showing areas of tested positive, non-tested, and the <br>
 	general population as well as quarantine spots or hospitals dealing with Covid-19 cases.</p>
 
