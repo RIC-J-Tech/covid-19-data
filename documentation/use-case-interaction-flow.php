@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container" style="background-color: aliceblue">
-
+	<div class="jumbotron">
 	<h1>USE CASE</h1>
 	<img src="../images/tola.jpg" height="500" width="500" alt="image of tola"/>
 	<h4>Use Case: Access icorana.com</h4>
@@ -24,27 +24,22 @@
 	<h4>Actor: Tola</h4>
 
 	<h4>Goal:</h4><p>To post honest reviews to show non-essential businesses can operate during the Covid-19 crisis.</p>
-<br>
-	<div class="jumbotron">
-	<ul>
 		<strong>Usage Pre-conditions:</strong>
+	<ul>
 		<li>Tola accesses icorona.com in web browser</li>
 		<li>Tola creates an account</li>
 		<li>Tola selects her current state/city location</li>
 	</ul>
 
-	<ul>
 		<strong>Usage Post-condition</strong>
-		<li>
-			Tola is able to post her thoughts.
-		</li>
-		<li>
-			Tola is able to post reviews on businesses safety guidelines practices.
-		</li>
-		<li>
-			Tola gets updates on Covid-19 cases all over the country.
-		</li>
+	<ul>
 
+		<li>
+			Tola is able to post her thoughts and read comments of other users.
+		</li>
+		<li>
+			Tola is able to post behaviors of businesses safety guidelines practices.
+		</li>
 
 
 	</ul>
