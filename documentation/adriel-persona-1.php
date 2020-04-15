@@ -39,10 +39,10 @@
 	<h1>Use Case Interaction Flow</h1>
 		<p>Title: Researching businesses innovative approaches during this pandemic.</p>
 
-		<p>Description: Adriel wants to know what local businesses like restuarants, grocery stores, etc are doing
+		<p>Description: Adriel wants to know what local businesses like restaurants, grocery stores, etc are doing
 			differently to reduce the spread of the corona virus and still be able to get revenue.</p>
 
-		<p>Name of the user and his role: Adriel, a 40 yrs old Fullstack web developer. He is a father of an 8yrs old girl and
+		<p>Name of the user and his role: Adriel, a 40 yrs old Full stack web developer. He is a father of an 8yrs old girl and
 			lives with his wife, kid and father.</p>
 
 		<p>Usage Pre-conditions: He must have downloaded the app and signed-up. He should have access to internet.</p>
@@ -50,7 +50,7 @@
 		<p>Interaction Flow:
 		-Adriel opens the app on his mobile phone and clicks on the search bar.
 		-He types in "Meal delivery methods", then presses "enter".
-		-the server recieves the request and presents a list of resently posted meal delivery methods.
+		-the server receives the request and presents a list of recently posted meal delivery methods.
 		-Adriel views the list and selects a particular post, reads previously added review comments about that method
 			and adds a review comment to it.
 		- he then exits the app</p>
