@@ -66,7 +66,7 @@
 </ul>
 <br>
 <br>
-<img src="../images/erd.png" alt="">
+<img src="../images/erd.png" alt="erd" height="850" width="850">
 <br>
 <br>
 <a href="user-story.php">Next page</a>
