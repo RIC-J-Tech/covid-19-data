@@ -64,6 +64,9 @@
 	<li>A business can have many behaviors (1 to m)</li>
 
 </ul>
-
+<br>
+<br>
+<a href="user-story.php">Next page</a>
+<a href="index.php">Home</a>
 </body>
 </html>

@@ -48,6 +48,9 @@
 </div>
 </div>
 
-
+<br>
+<br>
+<a href="tola.php">Next</a>
+<a href="index.php">Home</a>
 </body>
 </html>

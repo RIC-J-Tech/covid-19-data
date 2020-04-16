@@ -32,6 +32,8 @@ she is not familiar with before critiquing.<br> Tola reads a lot of books and sh
  at this business locations.</p>
 <p><strong>User Story: </strong>As a user, I want to post my thoughts on a general topic and post reviews of what I witness
 at local businesses I visit to let other users view for information</p>
-
+<br><br>
+<a href="conceptual-data.php">Next Page</a>
+<a href="index.php">Home</a>
 </body>
 </html>
