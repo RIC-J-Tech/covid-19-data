@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<img src="../images/tola.jpg" alt="image of tola">
+<img src="../images/tola.jpg" alt="image of tola" height="450" width="450">
 
 <h1>User Story</h1>
 <br>

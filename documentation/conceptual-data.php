@@ -6,44 +6,64 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+
 <h2>Entities & Attributes</h2>
 <ul>
-	<strong>USER:</strong>
-	<li>userId (primary key)</li>
-	<li>userFirstName</li>
-	<li>userLastName</li>
-	<li></li>
+	<strong>PROFILE:</strong>
+	<li>profileId (primary key)</li>
+	<li>profileActivationToken</li>
+	<li>profileAvatarUrl</li>
+	<li>profileEmail</li>
+	<li>profileHash</li>
+	<li>profilePhone</li>
+	<li>profileUsername</li>
 
 </ul>
 
 <ul>
-	<strong>SPORT:</strong>
-	<li>sportId (primary key)</li>
-	<li>sportLeague</li>
-	<li>sportName</li>
+	<strong>BUSINESS:</strong>
+	<li>businessId (primary key)</li>
+	<li>businessAddress</li>
+	<li>businessLng</li>
+	<li>businessLat</li>
+	<li>businessName</li>
+	<li>businessUrl</li>
 
 </ul>
 
 <ul>
-	<strong>BET:</strong>
-	<li>betId (primary key)</li>
-	<li>betSportId (foreign key)</li>
-	<li>betType</li>
-	<li>betUserId(foreign key)</li>
+	<strong>BEHAVIOR:</strong>
+	<li>behaviorId (primary key)</li>
+	<li>behaviorBusinessId (foreign key)</li>
+	<li>behaviorProfileId (foreign key)</li>
+	<li>behaviorContent</li>
+	<li>behaviorDate</li>
+	<li>behaviorType</li>
 
 </ul>
+
+<ul>
+	<strong>VOTE:</strong>
+	<li>voteId (primary key)</li>
+	<li>voteBehaviorId (foreign key)</li>
+	<li>behaviorProfileId (foreign key)</li>
+	<li>voteDate</li>
+	<li>voteResult</li>
+
+
+</ul>
+
 
 <h2>Relations</h2>
-<p>
-<ul>
-	<li>A user can select multiple bet types (1 to n)</li>
-	<li>A sport can have many type bets (1 to m)</li>
 
+	<ul>
+	<li>one profile can have many votes (1 to m)</li>
+	<li>One profile can have many behaviors (1 to m)</li>
+	<li>A behavior can have multiple votes (1 to m)</li>
+	<li>A business can have many behaviors (1 to m)</li>
 
 </ul>
-</p>
-</div>
-<a href="erd.html">ERD PAGE</a>
 
 </body>
 </html>
