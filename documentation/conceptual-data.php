@@ -37,9 +37,9 @@
 	<li>behaviorId (primary key)</li>
 	<li>behaviorBusinessId (foreign key)</li>
 	<li>behaviorProfileId (foreign key)</li>
-	<li>behaviorContent</li>
+	<li>behavior</li>
 	<li>behaviorDate</li>
-	<li>behaviorType</li>
+
 
 </ul>
 
