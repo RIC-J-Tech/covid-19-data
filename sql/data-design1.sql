@@ -9,7 +9,7 @@ Use ojonah;
 	profileActivationToken CHAR(32),
 	profileAvatarUrl VARCHAR(255) NOT NULL,
 	profileEmail VARCHAR(128) NOT NULL,
-	profileHash CHAR(97) NOT NULL,
+	profileHash CHAR(64) NOT NULL,
 	profilePhone VARCHAR(32),
 	profileUsername VARCHAR(32) NOT NULL,
 	UNIQUE(profileEmail),
