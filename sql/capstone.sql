@@ -1,9 +1,4 @@
-USE ctasama;
-
-DROP TABLE IF EXISTS vote;
-DROP TABLE IF EXISTS behavior;
-DROP TABLE IF EXISTS business;
-DROP TABLE IF EXISTS profile;
+USE cap28_covid;
 
 
 CREATE TABLE profile(
