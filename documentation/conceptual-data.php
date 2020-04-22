@@ -67,7 +67,7 @@
 <br>
 <br>
 <br>
-<img src="../images/erd-db.png" alt="erd" height="850" width="850">
+<img src="../images/erdcovid.png" alt="erd" height="850" width="850">
 <br>
 <br>
 <a href="user-story.php">Next page</a>
