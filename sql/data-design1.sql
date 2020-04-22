@@ -1,8 +1,4 @@
-Use ojonah;
-		DROP TABLE IF EXISTS vote;
-		DROP TABLE IF EXISTS behavior;
-		DROP TABLE IF EXISTS business;
-		DROP TABLE IF EXISTS profile;
+Use cap28_covid;
 
 	CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
@@ -24,7 +20,7 @@ CREATE TABLE business(
 	businessAddress VARCHAR(128) NOT NULL,
 	businessLng DECIMAL(5,2),
 	businessLat DECIMAL(5,2),
-	businessName VARCHAR(64) NOT NULL,
+	businessName VARCHAR(128) NOT NULL,
 	businessUrl VARCHAR(256) NOT NULL,
 	UNIQUE(businessLng),
 	UNIQUE(businessLat),
@@ -36,7 +32,7 @@ CREATE TABLE business(
 
 CREATE TABLE behavior(
 	behaviorId BINARY(16) NOT NULL,
-	behaviorBuisnessId BINARY(16) NOT NULL,
+	behaviorBusinessId BINARY(16) NOT NULL,
 	behaviorProfileId BINARY(16) NOT NULL,
 	behavior VARCHAR(256) NOT NULL,
 	behaviorDate DATETIME(6) NOT NULL,
@@ -49,7 +45,7 @@ CREATE TABLE behavior(
 
 
 CREATE TABLE vote(
-	voteId BINARY(16)NOT NULL,
+
 	voteProfileId BINARY(16) NOT NULL,
 	voteBehaviorId BINARY(16) NOT NULL,
 	voteDate DATETIME(6) NOT NULL,
