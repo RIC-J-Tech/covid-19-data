@@ -45,7 +45,6 @@
 
 <ul>
 	<strong>VOTE:</strong>
-	<li>voteId (primary key)</li>
 	<li>voteBehaviorId (foreign key)</li>
 	<li>behaviorProfileId (foreign key)</li>
 	<li>voteDate</li>
