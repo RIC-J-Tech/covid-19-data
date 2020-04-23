@@ -71,7 +71,11 @@ private  $reportProfileId;
 	 */
 public function __construct(uuid $newReportId, uuid $newReportBusinessId, uuid $newReportProfileId, string $newReport, DateTime $newReportDate) {
 	try{
-
+			$this->setReportId($newReportId);
+			$this->setReportBusinessId($newReportBusinessId);
+			$this->setReportProfileId($newReportProfileId);
+			$this->setReport($newReport);
+			$this->setReportDate($newReportDate);
 
 	}
 	catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
@@ -79,8 +83,25 @@ public function __construct(uuid $newReportId, uuid $newReportBusinessId, uuid $
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
 
-
 }
+
+	/**
+	 * @param uuid $reportId
+	 */
+
+	public function setReportId(){
+
+	}
+	/**
+	 * @param uuid $reportBusinessId
+	 */
+	public function setReportBusinessId(uuid $reportBusinessId): void {
+		$this->reportBusinessId = $reportBusinessId;
+	}
+
+
+
+
 
 
 	/**
