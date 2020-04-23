@@ -1,7 +1,12 @@
 <?php
 namespace OpeyemiJonah\ObjectOriented;
 require_once ("autoload.php");
+
+use DateTime;
+use InvalidArgumentException;
 use Ramsey\uuid\uuid;
+use RangeException;
+use TypeError;
 
 /**
  * RIC-J Tech to the rescue
@@ -180,10 +185,11 @@ private $profileAvatarUrl;
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newProfileId is not a uuid or string
 	 */
+
 	public function setProfileId($newProfileId) : void {
 		try{
 			$uuid = self::validateUuid($newProfileId);
-		} catch(\InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
+		} catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -194,12 +200,14 @@ private $profileAvatarUrl;
 	 * mutator method for tweet content
 	 *
 	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
-	 * @throws \InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
+	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
 	 * @throws \RangeException if $newProfileAvatarUrl is > 255 characters
 	 * @throws \TypeError if $newProfileAvatarUrl is not a string
 
 	 */
-	public function setProfileAvatarUrl(?string $newProfileAvatarUrl) {try {
+
+	public function setProfileAvatarUrl(?string $newProfileAvatarUrl) {
+		try {
 		// Making sure there are no whitespaces
 		$newProfileAvatarUrl = trim($newProfileAvatarUrl);
 		$newProfileAvatarUrl = filter_var($newProfileAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -208,7 +216,7 @@ private $profileAvatarUrl;
 		if(strlen($newProfileAvatarUrl) > 255) {
 			throw(new \RangeException("image content too large"));
 		}
-	} catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
+	} catch(InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
@@ -218,77 +226,117 @@ private $profileAvatarUrl;
 	}
 
 	/**
-	 * mutator method for tweet date
+	 * mutator method for Activation Token
 	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
+	 * * @throws TypeError if $newProfileActivation is not a string
+	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws RangeException if $newTweetDate is a date that does not exist
 	 **/
 
 	/**
-	 * @param string $profileActivationToken
+	 * @param string $newProfileActivationToken
 	 */
-	public function setProfileActivationToken(string $profileActivationToken) {
-		$this->profileActivationToken = $profileActivationToken;
+	public function setProfileActivationToken(string $newProfileActivationToken) {
+
+		try{
+			if($newProfileActivationToken === null){
+				$this->profileActivationToken = null;
+				return;
+			}
+
+			//verifying field is not empty
+			if(ctype_xdigit($newProfileActivationToken)===false){
+
+				throw (new \InvalidArgumentException("Not taken"));
+			}
+
+			//Making sure the input matches the database character length
+			if (strlen($newProfileActivationToken)!==32){
+				throw (new \RangeException("Must be of 32 characters"));
+			}
+
+
+		}
+		catch(\InvalidArgumentException | \RangeException | \RangeException | \Exception | \TypeError $exception){
+
+			$exceptionType = get_class($exception);
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
+		}
+
+		//store object value based on new input from a user
+
+		$this->profileActivationToken = $newProfileActivationToken;
+	}
+
+
+
+	/**
+	 * mutator method for profile email
+	 *@throws \TypeError if $newProfileEmail is not a string
+	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws RangeException if $newProfileEmail is a date that does not exist
+	 **/
+
+	/**
+	 * @param string $newProfileEmail
+	 */
+	public function setProfileEmail(string $newProfileEmail) {
+		try{
+
+
+		}
+catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			$exceptionType =get_class($exception);
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
+
+}
+
+		$this->profileEmail = $newProfileEmail;
+	}
+
+
+
+	/**
+	 * mutator method for profile hash
+	 *@throws \TypeError if $newProfileHash is not a string
+	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws \RangeException if $newProfileHash is a date that does not exist
+	 **/
+
+	/**
+	 * @param string $newProfileHash
+	 */
+	public function setProfileHash(string $newProfileHash) {
+		$this->profileHash = $newProfileHash;
+	}
+
+	/**
+	 * mutator method for profile phone number
+	 *@throws \TypeError if $newProfileProfile is not a string
+	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws \RangeException if $newProfilePhone is a date that does not exist
+	 **/
+	/**
+	 * @param string $newProfilePhone
+	 */
+	public function setProfilePhone(string $newProfilePhone) {
+		$this->profilePhone = $newProfilePhone;
 	}
 
 	/**
 	 * mutator method for tweet date
 	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
+	 * @throws \TypeError if $newProfileUsername is not a string
+	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws \RangeException if $newProfileUsername is a date that does not exist
 	 **/
 
 	/**
-	 * @param string $profileEmail
+	 * @param string $newProfileUsername
 	 */
-	public function setProfileEmail(string $profileEmail) {
-		$this->profileEmail = $profileEmail;
-	}
+	public function setProfileUsername(string $newProfileUsername) {
+		$this->profileUsername = $newProfileUsername;
 
-	/**
-	 * mutator method for tweet date
-	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
-	 **/
-
-	/**
-	 * @param string $profileHash
-	 */
-	public function setProfileHash(string $profileHash) {
-		$this->profileHash = $profileHash;
-	}
-
-	/**
-	 * mutator method for tweet date
-	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
-	 **/
-	/**
-	 * @param string $profilePhone
-	 */
-	public function setProfilePhone(string $profilePhone) {
-		$this->profilePhone = $profilePhone;
-	}
-
-	/**
-	 * mutator method for tweet date
-	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
-	 **/
-
-	/**
-	 * @param string $profileUsername
-	 */
-	public function setProfileUsername(string $profileUsername) {
-		$this->profileUsername = $profileUsername;
 	}
 
 
