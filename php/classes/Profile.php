@@ -67,31 +67,52 @@ private $profileAvatarUrl;
 	 **/
 	private $profileUsername;
 
+
+	/**
+	 * Profile cloudinary Id
+	 * @var string $profileCloudinaryId
+	 */
+
+	private $profileCloudinaryId;
+
 	/**
 	 * constructor for this Profile class
 	 *
 	 * @param uuid $newProfileId
+	 * @param $newProfileCloudinaryId
 	 * @param string $newProfileAvatarUrl
 	 * @param string $newProfileActivationToken
 	 * @param string $newProfileEmail
-	 * @param string $newProfielHash
+	 * @param $newProfileHash
 	 * @param string $newProfilePhone
 	 * @param string $newProfileUsername
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
 
-	public function __construct($newProfileId,$newProfileAvatarUrl,$newProfileActivationToken,$newProfileEmail,
-										 $newProfielHash,$newProfilePhone,$newProfileUsername) {
+	public function __construct($newProfileId,$newProfileCloudinaryId,$newProfileAvatarUrl,$newProfileActivationToken,$newProfileEmail,
+										 $newProfileHash,$newProfilePhone,$newProfileUsername) {
 
 										$this->setProfileId($newProfileId);
+										$this->setProfileCloudinaryId($newProfileCloudinaryId);
 										$this->setProfileAvatarUrl($newProfileAvatarUrl);
 										$this->setProfileActivationToken($newProfileActivationToken);
 										$this->setProfileEmail($newProfileEmail);
-										$this->setProfileHash($newProfielHash);
+										$this->setProfileHash($newProfileHash);
 										$this->setProfilePhone($newProfilePhone);
 										$this->setProfileUsername($newProfileUsername);
 
 	}
+
+	/*Accessor for cloudinary Id
+	 * Profile Cloudinary Id
+	 *
+	 *
+	 */
+	public function getProfileCloudinaryId(): string {
+
+
+	}
+
 
 	/**
 	 * accessor method for profile id
@@ -121,9 +142,6 @@ private $profileAvatarUrl;
 	 * @return string
 	 **/
 
-	/**
-	 * @return string
-	 */
 	public function getProfileActivationToken(): ?string {
 		return $this->profileActivationToken;
 	}
@@ -133,21 +151,17 @@ private $profileAvatarUrl;
 	 *
 	 * @return string value of email
 	 **/
-	/**
-	 * @return string
-	 */
+
 	public function getProfileEmail(): string {
 		return $this->profileEmail;
 	}
 
 	/**
-	 * accessor method for profile password
+	 * accessor method for profile hash
 	 *
-	 * @return string value of profile password
+	 * @return string value of profile hash
 	 **/
-	/**
-	 * @return string
-	 */
+
 	public function getProfileHash(): string {
 		return $this->profileHash;
 	}
