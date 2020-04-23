@@ -326,7 +326,16 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 				throw (new \InvalidArgumentException("Not a valid hash"));
 			}
 
+			//enforce the hash is really an Argon hash
+			$profileHashInfo = password_get_info($newProfileHash);
+			if($profileHashInfo["algoName"]!=="argon2i"){
+				throw (new \InvalidArgumentException("profile hash is not a valid hash"));
+			}
 
+			//enforce that hash is exactly 97 characters
+			if(strlen($newProfileHash)>97){
+				throw (new \RangeException("Hash range is out of bound must be 97 characters"));
+			}
 
 		}
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
@@ -334,13 +343,14 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 		}
 
+//store object value based on new input from a user
 		$this->profileHash = $newProfileHash;
 	}
 
 	/**
 	 * mutator method for profile phone number
-	 *@throws \TypeError if $newProfileProfile is not a string
-	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 *@throws \TypeError if $newProfilePhone is not a string
+	 	 * @throws InvalidArgumentException if $newProfilePhone is not a valid object or string
 	 * @throws \RangeException if $newProfilePhone is a date that does not exist
 	 **/
 	/**
