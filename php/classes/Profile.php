@@ -79,11 +79,11 @@ private $profileAvatarUrl;
 	 * constructor for this Profile class
 	 *
 	 * @param uuid $newProfileId
-	 * @param $newProfileCloudinaryId
+	 * @param string $newProfileCloudinaryId
 	 * @param string $newProfileAvatarUrl
 	 * @param string $newProfileActivationToken
 	 * @param string $newProfileEmail
-	 * @param $newProfileHash
+	 * @param string $newProfileHash
 	 * @param string $newProfilePhone
 	 * @param string $newProfileUsername
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
@@ -106,10 +106,9 @@ private $profileAvatarUrl;
 	/*Accessor for cloudinary Id
 	 * Profile Cloudinary Id
 	 *
-	 *
 	 */
 	public function getProfileCloudinaryId(): string {
-
+		return  $this->profileCloudinaryId;
 
 	}
 
@@ -209,6 +208,42 @@ private $profileAvatarUrl;
 		}
 		$this->profileId = $uuid;
 	}
+
+
+	/**
+	 * mutator method for tweet content
+	 *
+	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
+	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
+	 * @throws \RangeException if $newProfileAvatarUrl is > 255 characters
+	 * @throws \TypeError if $newProfileAvatarUrl is not a string
+
+	 */
+
+	/**
+	 * @param string $profileCloudinaryId
+	 */
+	public function setProfileCloudinaryId($newProfileCloudinaryId): void {
+		try {
+			// Making sure there are no whitespaces
+			$newProfileCloudinaryId = trim($newProfileCloudinaryId);
+			$newProfileCloudinaryId = filter_var($newProfileCloudinaryId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+			// verify the avatar URL will fit in the database
+			if(strlen($newProfileCloudinaryId) > 255) {
+				throw(new \RangeException("image content too large"));
+			}
+		}
+
+		catch(InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+
+
+		$this->profileCloudinaryId = $newProfileCloudinaryId;
+	}
+
 
 	/**
 	 * mutator method for tweet content
