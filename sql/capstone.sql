@@ -1,5 +1,12 @@
 USE cap28_covid;
 
+DROP TABLE IF EXISTS report;
+DROP TABLE IF EXISTS vote;
+DROP TABLE IF EXISTS behavior;
+DROP TABLE IF EXISTS business;
+DROP TABLE IF EXISTS profile;
+
+
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
@@ -19,7 +26,6 @@ CREATE TABLE profile(
 
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
-   businessAddress JSON NOT NULL,
    businessLng DECIMAL(9,6),
    businessLat DECIMAL(9,6),
    businessName VARCHAR(128) NOT NULL,
@@ -31,9 +37,9 @@ CREATE TABLE business(
 
 CREATE TABLE behavior(
    behaviorId BINARY(16) NOT NULL,
-   behaviorBusinessId BINARY(16) NOT NULL,
+	behaviorBusinessId BINARY(16) NOT NULL,
    behaviorProfileId BINARY(16) NOT NULL,
-	behaviors TEXT NOT NULL,
+	behaviorContent TEXT NOT NULL,
 	behaviorDate DATETIME(6) NOT NULL,
 	INDEX(behaviorBusinessId),
 	INDEX(behaviorProfileId),
@@ -52,4 +58,17 @@ CREATE TABLE vote(
 	INDEX(voteBehaviorId),
 	FOREIGN KEY(voteProfileId) REFERENCES profile(profileId),
 	FOREIGN KEY(voteBehaviorId) REFERENCES behavior(behaviorId)
+);
+
+CREATE TABLE report(
+   reportId BINARY(16) NOT NULL,
+   reportBusinessId BINARY(16) NOT NULL,
+   reportProfileId BINARY(16) NOT NULL,
+	reportContent TEXT NOT NULL,
+	reportDate DATETIME(6) NOT NULL,
+	INDEX(reportBusinessId),
+	INDEX(reportProfileId),
+	FOREIGN KEY(reportBusinessId) REFERENCES business(businessId),
+	FOREIGN KEY(reportProfileId) REFERENCES profile(profileId),
+	PRIMARY KEY(reportId)
 );
