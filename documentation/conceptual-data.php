@@ -54,6 +54,14 @@
 
 </ul>
 
+<ul>
+	<strong>REPORT:</strong>
+	<li>reportId (primary key)</li>
+	<li>reportBusinessId (foreign key)</li>
+	<li>report</li>
+
+</ul>
+
 
 <h2>Relations</h2>
 
@@ -62,6 +70,7 @@
 	<li>One profile can have many behaviors (1 to m)</li>
 	<li>A behavior can have multiple votes (1 to m)</li>
 	<li>A business can have many behaviors (1 to m)</li>
+	<li>A business can have multiple reports(1 to m)</li>
 
 </ul>
 <br>
