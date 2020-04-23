@@ -13,6 +13,7 @@
 	<strong>PROFILE:</strong>
 	<li>profileId (primary key)</li>
 	<li>profileActivationToken</li>
+	<li>profileCloudinaryId</li>
 	<li>profileAvatarUrl</li>
 	<li>profileEmail</li>
 	<li>profileHash</li>
@@ -66,7 +67,11 @@
 <br>
 <br>
 <br>
+<<<<<<< HEAD
 <img src="../images/erdcovid.png" alt="erd" height="850" width="850">
+=======
+<img src="../images/erd.png" alt="erd" height="850" width="850">
+>>>>>>> persona-for-tola
 <br>
 <br>
 <a href="user-story.php">Next page</a>
