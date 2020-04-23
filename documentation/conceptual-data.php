@@ -13,6 +13,7 @@
 	<strong>PROFILE:</strong>
 	<li>profileId (primary key)</li>
 	<li>profileActivationToken</li>
+	<li>profileCloudinaryId</li>
 	<li>profileAvatarUrl</li>
 	<li>profileEmail</li>
 	<li>profileHash</li>
@@ -45,12 +46,19 @@
 
 <ul>
 	<strong>VOTE:</strong>
-	<li>voteId (primary key)</li>
 	<li>voteBehaviorId (foreign key)</li>
 	<li>behaviorProfileId (foreign key)</li>
 	<li>voteDate</li>
 	<li>voteResult</li>
 
+
+</ul>
+
+<ul>
+	<strong>REPORT:</strong>
+	<li>reportId (primary key)</li>
+	<li>reportBusinessId (foreign key)</li>
+	<li>report</li>
 
 </ul>
 
@@ -62,12 +70,17 @@
 	<li>One profile can have many behaviors (1 to m)</li>
 	<li>A behavior can have multiple votes (1 to m)</li>
 	<li>A business can have many behaviors (1 to m)</li>
+	<li>A business can have multiple reports(1 to m)</li>
 
 </ul>
 <br>
 <br>
 <br>
-<img src="../images/erd-db.png" alt="erd" height="850" width="850">
+<<<<<<< HEAD
+<img src="../images/erdcovid.png" alt="erd" height="850" width="850">
+=======
+<img src="../images/erd.png" alt="erd" height="850" width="850">
+>>>>>>> persona-for-tola
 <br>
 <br>
 <a href="user-story.php">Next page</a>
