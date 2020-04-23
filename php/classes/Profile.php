@@ -91,15 +91,22 @@ private $profileAvatarUrl;
 
 	public function __construct($newProfileId,$newProfileCloudinaryId,$newProfileAvatarUrl,$newProfileActivationToken,$newProfileEmail,
 										 $newProfileHash,$newProfilePhone,$newProfileUsername) {
+try{
+			$this->setProfileId($newProfileId);
+			$this->setProfileCloudinaryId($newProfileCloudinaryId);
+			$this->setProfileAvatarUrl($newProfileAvatarUrl);
+			$this->setProfileActivationToken($newProfileActivationToken);
+			$this->setProfileEmail($newProfileEmail);
+			$this->setProfileHash($newProfileHash);
+			$this->setProfilePhone($newProfilePhone);
+			$this->setProfileUsername($newProfileUsername);
 
-										$this->setProfileId($newProfileId);
-										$this->setProfileCloudinaryId($newProfileCloudinaryId);
-										$this->setProfileAvatarUrl($newProfileAvatarUrl);
-										$this->setProfileActivationToken($newProfileActivationToken);
-										$this->setProfileEmail($newProfileEmail);
-										$this->setProfileHash($newProfileHash);
-										$this->setProfilePhone($newProfilePhone);
-										$this->setProfileUsername($newProfileUsername);
+}
+catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
+	$exceptionType = get_class($exception);
+	throw(new $exceptionType($exception->getMessage(), 0, $exception));
+}
+
 
 	}
 

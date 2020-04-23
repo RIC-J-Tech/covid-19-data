@@ -59,17 +59,28 @@ private $reportDate;
 private  $reportProfileId;
 
 
+	/**
+	 * constructor for this Profile class
+	 *
+	 * @param uuid $newReportId
+	 * @param uuid $newReportBusinessId
+	 * @param uuid $newReportProfileId
+	 * @param string $newReport
+	 * @param DateTime $newReportDate
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 */
+public function __construct(uuid $newReportId, uuid $newReportBusinessId, uuid $newReportProfileId, string $newReport, DateTime $newReportDate) {
+	try{
 
 
+	}
+	catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	}
 
 
-
-
-
-
-
-
-
+}
 
 
 	/**
