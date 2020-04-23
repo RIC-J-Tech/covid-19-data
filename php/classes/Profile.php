@@ -307,7 +307,6 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	}
 
 
-
 	/**
 	 * mutator method for profile hash
 	 *@throws \TypeError if $newProfileHash is not a string
@@ -356,7 +355,31 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	/**
 	 * @param string $newProfilePhone
 	 */
-	public function setProfilePhone(string $newProfilePhone) {
+	public function setProfilePhone(?string $newProfilePhone): void {
+		try {
+			//if $profilePhone is null return it right away
+			if($newProfilePhone === null) {
+				$this->profilePhone = null;
+				return;
+			}
+			// verify the phone is secure
+			$newProfilePhone = trim($newProfilePhone);
+			$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			if(empty($newProfilePhone) === true) {
+				throw(new \InvalidArgumentException("profile phone is empty or insecure"));
+			}
+			// verify the phone will fit in the database
+			if(strlen($newProfilePhone) > 32) {
+				throw(new \RangeException("profile phone is too large"));
+			}
+
+		}
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			$exceptionType = get_class($exception);
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
+		}
+
+		// store the phone
 		$this->profilePhone = $newProfilePhone;
 	}
 
@@ -372,17 +395,27 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	 * @param string $newProfileUsername
 	 */
 	public function setProfileUsername(string $newProfileUsername) {
+		try {
+
+
+			// verify the at handle is secure
+			$newProfileUsername = trim($newProfileUsername);
+			$newProfileUsername = filter_var($newProfileUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			if(empty($newProfileUsername) === true) {
+				throw(new \InvalidArgumentException("profile at handle is empty or insecure"));
+			}
+			// verify the at handle will fit in the database
+			if(strlen($newProfileUsername) > 32) {
+				throw(new \RangeException("profile at handle is too large"));
+			}
+		}
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			$exceptionType = get_class($exception);
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
+		}
+		// store the at username
 		$this->profileUsername = $newProfileUsername;
-
 	}
-
-
-
-
-
-
-
-
 
 	/**
 	 * formats the state variables for JSON serialization
@@ -392,11 +425,8 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["tweetId"] = $this->tweetId->toString();
-		$fields["tweetProfileId"] = $this->tweetProfileId->toString();
+		$fields["profileId"] = $this->profileId->toString();
 
-		//format the date so that the front end can consume it
-		$fields["tweetDate"] = round(floatval($this->tweetDate->format("U.u")) * 1000);
-		return($fields);
+
 	}
 }
