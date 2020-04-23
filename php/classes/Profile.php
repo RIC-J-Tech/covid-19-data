@@ -111,7 +111,7 @@ private $profileAvatarUrl;
 	/**
 	 * @return string
 	 */
-	public function getProfileAvatarUrl(): string {
+	public function getProfileAvatarUrl(): ?string {
 		return $this->profileAvatarUrl;
 	}
 
@@ -124,7 +124,7 @@ private $profileAvatarUrl;
 	/**
 	 * @return string
 	 */
-	public function getProfileActivationToken(): string {
+	public function getProfileActivationToken(): ?string {
 		return $this->profileActivationToken;
 	}
 
@@ -206,7 +206,7 @@ private $profileAvatarUrl;
 
 	 */
 
-	public function setProfileAvatarUrl(?string $newProfileAvatarUrl) {
+	public function setProfileAvatarUrl(?string $newProfileAvatarUrl): void {
 		try {
 		// Making sure there are no whitespaces
 		$newProfileAvatarUrl = trim($newProfileAvatarUrl);
@@ -236,7 +236,7 @@ private $profileAvatarUrl;
 	/**
 	 * @param string $newProfileActivationToken
 	 */
-	public function setProfileActivationToken(string $newProfileActivationToken) {
+	public function setProfileActivationToken(string $newProfileActivationToken): void {
 
 		try{
 			if($newProfileActivationToken === null){
@@ -280,9 +280,21 @@ private $profileAvatarUrl;
 	/**
 	 * @param string $newProfileEmail
 	 */
-	public function setProfileEmail(string $newProfileEmail) {
+	public function setProfileEmail(string $newProfileEmail): void {
 		try{
+				//verify the email is secure
+			$newProfileEmail = trim($newProfileEmail);
+			$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL,FILTER_FLAG_EMAIL_UNICODE);
 
+			//CHECK TO SEE IF EMAIL IS EMPTY
+			if (empty($newProfileEmail)===true){
+				throw (new \InvalidArgumentException("Profile email is empty or insecure"));
+			}
+
+			//verify the email will fit the database
+			if (strlen($newProfileEmail)>128){
+				throw (new \RangeException("Email is too long"));
+			}
 
 		}
 catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
@@ -290,7 +302,7 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 
 }
-
+		//store object value based on new input from a user
 		$this->profileEmail = $newProfileEmail;
 	}
 
@@ -306,7 +318,22 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	/**
 	 * @param string $newProfileHash
 	 */
-	public function setProfileHash(string $newProfileHash) {
+	public function setProfileHash($newProfileHash): void {
+		try{
+			//enforce that the hash is properly formatted
+			$newProfileHash = trim($newProfileHash);
+			if(empty($newProfileHash)===true){
+				throw (new \InvalidArgumentException("Not a valid hash"));
+			}
+
+
+
+		}
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			$exceptionType = get_class($exception);
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
+		}
+
 		$this->profileHash = $newProfileHash;
 	}
 
