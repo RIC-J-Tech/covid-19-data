@@ -7,7 +7,7 @@ require_once(dirname(__DIR__) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 /*
- * This is the Author class
+ * This is the behavior class
  */
 class Behavior implements \JsonSerializable {
 	use ValidateDate;
@@ -64,8 +64,7 @@ class Behavior implements \JsonSerializable {
 			$this->setBehaviorProfileId($newBehaviorProfileId);
 			$this->setBehaviorContent($newBehaviorContent);
 			$this->setBehaviorDate($newBehaviorDate);
-		}
-			//determine what exception type was thrown
+		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -77,8 +76,8 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return Uuid value of behavior id
 	 **/
-	public function getBehaviorId() : Uuid {
-		return($this->behaviorId);
+	public function getBehaviorId(): Uuid {
+		return ($this->behaviorId);
 	}
 
 	/**
@@ -88,7 +87,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \RangeException if $newBehaviorId is not positive
 	 * @throws \TypeError if $newBehaviorId is not a uuid or string
 	 **/
-	public function setBehaviorId( $newBehaviorId) : void {
+	public function setBehaviorId($newBehaviorId): void {
 		try {
 			$uuid = self::validateUuid($newBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -105,8 +104,8 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return Uuid value of behavior business id
 	 **/
-	public function getBehaviorBusinessId() : Uuid{
-		return($this->behaviorBusinessId);
+	public function getBehaviorBusinessId(): Uuid {
+		return ($this->behaviorBusinessId);
 	}
 
 	/**
@@ -116,7 +115,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \RangeException if $newBusinessId is not positive
 	 * @throws \TypeError if $newBehaviorBusinessId is not an integer
 	 **/
-	public function setBehaviorBusinessId( $newBehaviorBusinessId) : void {
+	public function setBehaviorBusinessId($newBehaviorBusinessId): void {
 		try {
 			$uuid = self::validateUuid($newBehaviorBusinessId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -134,8 +133,8 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return Uuid value of behavior profile id
 	 **/
-	public function getBehaviorProfileId() : Uuid{
-		return($this->behaviorProfileId);
+	public function getBehaviorProfileId(): Uuid {
+		return ($this->behaviorProfileId);
 	}
 
 	/**
@@ -145,7 +144,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if $newBehaviorProfileId is not an integer
 	 **/
-	public function setTweetProfileId( $newBehaviorProfileId) : void {
+	public function setBehaviorProfileId($newBehaviorProfileId): void {
 		try {
 			$uuid = self::validateUuid($newBehaviorProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -162,8 +161,8 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return string value of behavior content
 	 **/
-	public function getTweetContent() : string {
-		return($this->behaviorContent);
+	public function getBehaviorContent(): string {
+		return ($this->behaviorContent);
 	}
 
 	/**
@@ -174,7 +173,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \RangeException if $newBehaviorContent is > 140 characters
 	 * @throws \TypeError if $newBehaviorContent is not a string
 	 **/
-	public function setBehaviorContent(string $newBehaviorContent) : void {
+	public function setBehaviorContent(string $newBehaviorContent): void {
 		// verify the tweet content is secure
 		$newBehaviorContent = trim($newBehaviorContent);
 		$newBehaviorContent = filter_var($newBehaviorContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -182,12 +181,7 @@ class Behavior implements \JsonSerializable {
 			throw(new \InvalidArgumentException("behavior content is empty or insecure"));
 		}
 
-		// verify the behavior content will fit in the database
-		if(strlen($newBehaviorContent) > 140) {
-			throw(new \RangeException("behavior content too large"));
-		}
-
-		// store the tweet content
+		// store the behavior content
 		$this->behaviorContent = $newBehaviorContent;
 	}
 
@@ -197,8 +191,8 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return \DateTime value of behavior date
 	 **/
-	public function getBehaviorDate() : \DateTime {
-		return($this->behaviorDate);
+	public function getBehaviorDate(): \DateTime {
+		return ($this->behaviorDate);
 	}
 
 	/**
@@ -208,7 +202,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newBehaviorDate is not a valid object or string
 	 * @throws \RangeException if $newBehaviorDate is a date that does not exist
 	 **/
-	public function setBehaviorDate($newBehaviorDate = null) : void {
+	public function setBehaviorDate($newBehaviorDate = null): void {
 		// base case: if the date is null, use the current date and time
 		if($newBehaviorDate === null) {
 			$this->behaviorDate = new \DateTime();
@@ -233,7 +227,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function insert(\PDO $pdo) : void {
+	public function insert(\PDO $pdo): void {
 
 		// create query template
 		$query = "INSERT INTO behavior(behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate) VALUES(:behaviorId, :behaviorBusinessId, :behaviorProfileId, :behaviorContent, :behaviorDate)";
@@ -253,7 +247,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) : void {
+	public function delete(\PDO $pdo): void {
 
 		// create query template
 		$query = "DELETE FROM behavior WHERE behaviorId = :behaviorId";
@@ -272,7 +266,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function update(\PDO $pdo) : void {
+	public function update(\PDO $pdo): void {
 
 		// create query template
 		$query = "UPDATE behavior SET behaviorBusinessId = :behaviorBusinessId, behaviorProfileId = :behaviorProfileId, behaviorContent = :behaviorContent, behaviorDate = :behaviorDate WHERE behaviorId = :behaviorId";
@@ -288,12 +282,12 @@ class Behavior implements \JsonSerializable {
 	 * gets the behavior by behaviorId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $tweetId behavior id to search for
+	 * @param Uuid|string $behaviorId behavior id to search for
 	 * @return Behavior|null Behavior found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorId(\PDO $pdo, $behaviorId) : ?Behavior {
+	public static function getBehaviorByBehaviorId(\PDO $pdo, $behaviorId): ?Behavior {
 		// sanitize the behaviorId before searching
 		try {
 			$behaviorId = self::validateUuid($behaviorId);
@@ -321,9 +315,8 @@ class Behavior implements \JsonSerializable {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($behavior);
+		return ($behavior);
 	}
-
 
 
 	/**
@@ -335,7 +328,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorBusinessId(\PDO $pdo, $behaviorBusinessId) : \SplFixedArray {
+	public static function getBehaviorByBehaviorBusinessId(\PDO $pdo, $behaviorBusinessId): \SplFixedArray {
 
 		try {
 			$behaviorBusinessId = self::validateUuid($behaviorBusinessId);
@@ -349,7 +342,7 @@ class Behavior implements \JsonSerializable {
 		// bind the behavior Business id to the place holder in the template
 		$parameters = ["behaviorBusinessId" => $behaviorBusinessId->getBytes()];
 		$statement->execute($parameters);
-		// build an array of tweets
+		// build an array of behaviors
 		$behaviors = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
@@ -362,7 +355,7 @@ class Behavior implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($behaviors);
+		return ($behaviors);
 	}
 
 
@@ -375,7 +368,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorProfileId(\PDO $pdo, $behaviorProfileId) : \SplFixedArray {
+	public static function getBehaviorByBehaviorProfileId(\PDO $pdo, $behaviorProfileId): \SplFixedArray {
 
 		try {
 			$behaviorProfileId = self::validateUuid($behaviorProfileId);
@@ -402,7 +395,7 @@ class Behavior implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($behaviors);
+		return ($behaviors);
 	}
 
 
@@ -415,7 +408,7 @@ class Behavior implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorContent(\PDO $pdo, string $behaviorContent) : \SplFixedArray {
+	public static function getBehaviorByBehaviorContent(\PDO $pdo, string $behaviorContent): \SplFixedArray {
 		// sanitize the description before searching
 		$behaviorContent = trim($behaviorContent);
 		$behaviorContent = filter_var($behaviorContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -448,9 +441,8 @@ class Behavior implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return($behaviors);
+		return ($behaviors);
 	}
-
 
 
 	/**
@@ -458,7 +450,7 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @return array resulting state variables to serialize
 	 **/
-	public function jsonSerialize() : array {
+	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 
 		$fields["behaviorId"] = $this->behaviorId->toString();
@@ -468,6 +460,8 @@ class Behavior implements \JsonSerializable {
 
 		//format the date so that the front end can consume it
 		$fields["behaviorDate"] = round(floatval($this->behaviorDate->format("U.u")) * 1000);
-		return($fields);
+		return ($fields);
 	}
+
+
 }
