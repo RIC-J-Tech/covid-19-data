@@ -102,7 +102,7 @@ try{
 			$this->setProfileUsername($newProfileUsername);
 
 }
-catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
+catch(InvalidArgumentException | RangeException| \Exception | TypeError $exception) {
 	$exceptionType = get_class($exception);
 	throw(new $exceptionType($exception->getMessage(), 0, $exception));
 }
@@ -202,14 +202,14 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 	 * mutator method for tweet profile id
 	 *
 	 * @param string | Uuid $newProfileId new value of profile id
-	 * @throws \RangeException if $newProfileId is not positive
-	 * @throws \TypeError if $newProfileId is not a uuid or string
+	 * @throws RangeException if $newProfileId is not positive
+	 * @throws TypeError if $newProfileId is not a uuid or string
 	 */
 
 	public function setProfileId($newProfileId) : void {
 		try{
 			$uuid = self::validateUuid($newProfileId);
-		} catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
+		} catch(InvalidArgumentException | RangeException| \Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -222,10 +222,9 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 	 *
 	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
 	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
-	 * @throws \RangeException if $newProfileAvatarUrl is > 255 characters
-	 * @throws \TypeError if $newProfileAvatarUrl is not a string
-
-	 */
+	 * @throws RangeException if $newProfileAvatarUrl is > 255 characters
+	 * @throws TypeError if $newProfileAvatarUrl is not a string
+ */
 
 	/**
 	 * @param string $profileCloudinaryId
@@ -238,11 +237,11 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 
 			// verify the avatar URL will fit in the database
 			if(strlen($newProfileCloudinaryId) > 255) {
-				throw(new \RangeException("image content too large"));
+				throw(new RangeException("image content too large"));
 			}
 		}
 
-		catch(InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
+		catch(InvalidArgumentException | RangeException | \Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -257,10 +256,9 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 	 *
 	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
 	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
-	 * @throws \RangeException if $newProfileAvatarUrl is > 255 characters
-	 * @throws \TypeError if $newProfileAvatarUrl is not a string
-
-	 */
+	 * @throws RangeException if $newProfileAvatarUrl is > 255 characters
+	 * @throws TypeError if $newProfileAvatarUrl is not a string
+ */
 
 	public function setProfileAvatarUrl(?string $newProfileAvatarUrl): void {
 		try {
@@ -270,9 +268,9 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 
 		// verify the avatar URL will fit in the database
 		if(strlen($newProfileAvatarUrl) > 255) {
-			throw(new \RangeException("image content too large"));
+			throw(new RangeException("image content too large"));
 		}
-	} catch(InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
+	} catch(InvalidArgumentException | RangeException | \Exception | TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
@@ -308,12 +306,12 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 
 			//Making sure the input matches the database character length
 			if (strlen($newProfileActivationToken)!==32){
-				throw (new \RangeException("Must be of 32 characters"));
+				throw (new RangeException("Must be of 32 characters"));
 			}
 
 
 		}
-		catch(\InvalidArgumentException | \RangeException | \RangeException | \Exception | \TypeError $exception){
+		catch(\InvalidArgumentException | RangeException | RangeException | \Exception | TypeError $exception){
 
 			$exceptionType = get_class($exception);
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
@@ -328,7 +326,7 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 
 	/**
 	 * mutator method for profile email
-	 *@throws \TypeError if $newProfileEmail is not a string
+	 *@throws TypeError if $newProfileEmail is not a string
 	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
 	 * @throws RangeException if $newProfileEmail is a date that does not exist
 	 **/
@@ -349,11 +347,11 @@ catch(InvalidArgumentException | \RangeException| \Exception | \TypeError $excep
 
 			//verify the email will fit the database
 			if (strlen($newProfileEmail)>128){
-				throw (new \RangeException("Email is too long"));
+				throw (new RangeException("Email is too long"));
 			}
 
 		}
-catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+catch(\InvalidArgumentException | RangeException | \Exception | TypeError $exception){
 			$exceptionType =get_class($exception);
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 
@@ -365,9 +363,9 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 
 	/**
 	 * mutator method for profile hash
-	 *@throws \TypeError if $newProfileHash is not a string
+	 *@throws TypeError if $newProfileHash is not a string
 	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newProfileHash is a date that does not exist
+	 * @throws RangeException if $newProfileHash is a date that does not exist
 	 **/
 
 	/**
@@ -389,11 +387,11 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 
 			//enforce that hash is exactly 97 characters
 			if(strlen($newProfileHash)>97){
-				throw (new \RangeException("Hash range is out of bound must be 97 characters"));
+				throw (new RangeException("Hash range is out of bound must be 97 characters"));
 			}
 
 		}
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		catch(\InvalidArgumentException | RangeException | \Exception | TypeError $exception){
 			$exceptionType = get_class($exception);
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 		}
@@ -404,9 +402,9 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 
 	/**
 	 * mutator method for profile phone number
-	 *@throws \TypeError if $newProfilePhone is not a string
+	 *@throws TypeError if $newProfilePhone is not a string
 	 	 * @throws InvalidArgumentException if $newProfilePhone is not a valid object or string
-	 * @throws \RangeException if $newProfilePhone is a date that does not exist
+	 * @throws RangeException if $newProfilePhone is a date that does not exist
 	 **/
 	/**
 	 * @param string $newProfilePhone
@@ -426,11 +424,11 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 			}
 			// verify the phone will fit in the database
 			if(strlen($newProfilePhone) > 32) {
-				throw(new \RangeException("profile phone is too large"));
+				throw(new RangeException("profile phone is too large"));
 			}
 
 		}
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		catch(\InvalidArgumentException | RangeException | \Exception | TypeError $exception){
 			$exceptionType = get_class($exception);
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 		}
@@ -442,9 +440,9 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 	/**
 	 * mutator method for tweet date
 	 *
-	 * @throws \TypeError if $newProfileUsername is not a string
+	 * @throws TypeError if $newProfileUsername is not a string
 	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newProfileUsername is a date that does not exist
+	 * @throws RangeException if $newProfileUsername is a date that does not exist
 	 **/
 
 	/**
@@ -462,16 +460,60 @@ catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exc
 			}
 			// verify the at handle will fit in the database
 			if(strlen($newProfileUsername) > 32) {
-				throw(new \RangeException("profile at handle is too large"));
+				throw(new RangeException("profile at handle is too large"));
 			}
 		}
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		catch(\InvalidArgumentException | RangeException | \Exception | TypeError $exception){
 			$exceptionType = get_class($exception);
 			throw (new $exceptionType($exception->getMessage(),0,$exception));
 		}
 		// store the at username
 		$this->profileUsername = $newProfileUsername;
 	}
+
+	/**
+	 * inserts profiles into database
+	 * @param \PDO $pdo connection object
+	 * @throws  \PDOException when mySQL related errors occur
+	 * @throws TypeError if $pdo is not a PDO connection object
+	 */
+
+public function insert(\PDO $pdo): void{
+	//create query template
+	$query = "INSERT INTO profile(profileId,profileCloudinaryId,profileAvatarUrl,profileActivationToken,
+					profileEmail, profileHash,profilePhone, profileUsername) VALUES(:profileId,:profileCloudinaryId,:profileAvatarUrl,:profileActivationToken,
+					:profileEmail, :profileHash,:profilePhone, :profileUsername)";
+
+	$statement = $pdo->prepare($query);
+
+	//binding table attributes to the placeholders
+	$parameters = ["profileId"=>$this->profileId->getBytes(),"profileCloudinaryId"=>$this->profileCloudinaryId,
+						"profileAvatarUrl"=>$this->profileAvatarUrl,"profileEmail"=>$this->profileEmail, "profileHash"=>
+	$this->profileHash, "profilePhone"=>$this->profilePhone,"profileUsername"=>$this->profileUsername];
+
+	$statement->execute($parameters);
+}
+
+
+	/**
+	 * deletes this attribute from mySQL
+	 *
+	 * @param \PDO $pdo connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws TypeErrorif $pdo is not a PDO connection object
+	 */
+
+public function delete(\PDO $pdo): void{
+	//create a query
+	$query = "DELETE FROM profile WHERE profileId = :profileId";
+	$statement = $pdo->prepare($query);
+
+	//binding parameters to placeholders
+	$parameters = ["profileId"=>$this->profileId->getBytes()];
+	$statement->execute($query);
+
+}
+
 
 	/**
 	 * formats the state variables for JSON serialization
