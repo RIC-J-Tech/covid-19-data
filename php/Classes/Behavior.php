@@ -284,19 +284,190 @@ class Behavior implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * gets the behavior by behaviorId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $tweetId behavior id to search for
+	 * @return Behavior|null Behavior found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getBehaviorByBehaviorId(\PDO $pdo, $behaviorId) : ?Behavior {
+		// sanitize the behaviorId before searching
+		try {
+			$behaviorId = self::validateUuid($behaviorId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorId = :behaviorId";
+		$statement = $pdo->prepare($query);
+
+		// bind the behavior id to the place holder in the template
+		$parameters = ["behaviorId" => $behaviorId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the behavior from mySQL
+		try {
+			$behavior = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($behavior);
+	}
 
 
 
-	public function jsonSerialize(): array {
+	/**
+	 * gets the Behavior by business id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $behaviorBusinessId profile id to search by
+	 * @return \SplFixedArray SplFixedArray of Behavior found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getBehaviorByBehaviorBusinessId(\PDO $pdo, $behaviorBusinessId) : \SplFixedArray {
+
+		try {
+			$behaviorBusinessId = self::validateUuid($behaviorBusinessId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorBusinessId = :behaviorBusinessId";
+		$statement = $pdo->prepare($query);
+		// bind the behavior Business id to the place holder in the template
+		$parameters = ["behaviorBusinessId" => $behaviorBusinessId->getBytes()];
+		$statement->execute($parameters);
+		// build an array of tweets
+		$behaviors = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behaviors[$behaviors->key()] = $behavior;
+				$behavior->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($behaviors);
+	}
+
+
+	/**
+	 * gets the Behavior by profile id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $behaviorProfileId profile id to search by
+	 * @return \SplFixedArray SplFixedArray of Behavior found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getBehaviorByBehaviorProfileId(\PDO $pdo, $behaviorProfileId) : \SplFixedArray {
+
+		try {
+			$behaviorProfileId = self::validateUuid($behaviorProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorProfileId = :behaviorProfileId";
+		$statement = $pdo->prepare($query);
+		// bind the behavior profile id to the place holder in the template
+		$parameters = ["behaviorProfileId" => $behaviorProfileId->getBytes()];
+		$statement->execute($parameters);
+		// build an array of tweets
+		$behaviors = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behaviors[$behaviors->key()] = $behavior;
+				$behavior->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($behaviors);
+	}
+
+
+	/**
+	 * gets the behavior by content
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $tweetContent behavior content to search for
+	 * @return \SplFixedArray SplFixedArray of behavior found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getBehaviorByBehaviorContent(\PDO $pdo, string $behaviorContent) : \SplFixedArray {
+		// sanitize the description before searching
+		$behaviorContent = trim($behaviorContent);
+		$behaviorContent = filter_var($behaviorContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($behaviorContent) === true) {
+			throw(new \PDOException("behavior content is invalid"));
+		}
+
+		// escape any mySQL wild cards
+		$behaviorContent = str_replace("_", "\\_", str_replace("%", "\\%", $behaviorContent));
+
+		// create query template
+		$query = "SELECT behaviorId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorContent LIKE :behaviorContent";
+		$statement = $pdo->prepare($query);
+
+		// bind the behavior content to the place holder in the template
+		$behaviorContent = "%$behaviorContent%";
+		$parameters = ["behaviorContent" => $behaviorContent];
+		$statement->execute($parameters);
+
+		// build an array of behaviors
+		$behaviors = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behaviors[$behaviors->key()] = $behavior;
+				$behaviors->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($behaviors);
+	}
+
+
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["authorId"] = $this->authorId->toString();
-		$fields["authorActivationToken"] = $this->authorActivationToken->toString();
-		$fields["authorAvatarUrl"] = $this->authorAvatarUrl->toString();
-		$fields["authorEmail"] = $this->authorEmail->toString();
-		$fields["authorHash"] = $this->authorHash->toString();
-		$fields["authorUsername"] = $this->authorUserName->toString();
+		$fields["behaviorId"] = $this->behaviorId->toString();
+		$fields["behaviorBusinessId"] = $this->behaviorBusinessId->toString();
+		$fields["behaviorProfileId"] = $this->behaviorProfileId->toString();
+		$fields["behaviorContent"] = $this->behaviorContent->toString();
 
-		return ($fields);
+		//format the date so that the front end can consume it
+		$fields["behaviorDate"] = round(floatval($this->behaviorDate->format("U.u")) * 1000);
+		return($fields);
 	}
 }
