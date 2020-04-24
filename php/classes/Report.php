@@ -40,10 +40,10 @@ private $reportBusinessId;
 
 	/**
 	 *Actual report made by users
-	 * @var string $report
+	 * @var string $reportContent
 	 */
 
-private $report;
+private $reportContent;
 
 	/**
 	 * Date of report
@@ -65,16 +65,16 @@ private  $reportProfileId;
 	 * @param uuid $newReportId
 	 * @param uuid $newReportBusinessId
 	 * @param uuid $newReportProfileId
-	 * @param string $newReport
+	 * @param string $newReportContent
 	 * @param DateTime $newReportDate
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct(uuid $newReportId, uuid $newReportBusinessId, uuid $newReportProfileId, string $newReport, DateTime $newReportDate) {
+public function __construct($newReportId,$newReportBusinessId,$newReportProfileId, string $newReportContent, DateTime $newReportDate) {
 	try{
 			$this->setReportId($newReportId);
 			$this->setReportBusinessId($newReportBusinessId);
 			$this->setReportProfileId($newReportProfileId);
-			$this->setReport($newReport);
+			$this->setReport($newReportContent);
 			$this->setReportDate($newReportDate);
 
 	}
@@ -86,7 +86,42 @@ public function __construct(uuid $newReportId, uuid $newReportBusinessId, uuid $
 }
 
 	/**
-	 * @param uuid $reportId
+	 * Accessor for report ID
+	 * @return uuid
+	 */
+	public function getReportId(): Uuid{
+		return $this->reportId;
+	}
+
+
+	/**
+	 * Accessor for reportBusinessId
+	 * @return uuid
+	 */
+public function getReportBusinessId(): Uuid{
+	return $this->reportBusinessId;
+}
+
+	/**
+	 * Accessor for reportProfileId
+	 * @return string
+	 */
+	public function getReportContent(): string {
+		return $this->reportContent;
+	}
+
+	/**
+	 * Accessor for report date
+	 * @return DateTime
+	 */
+public function getReportDate(): DateTime{
+	return $this->reportDate;
+}
+
+
+
+	/**
+	 * @param $reportId
 	 */
 
 	public function setReportId(){
