@@ -513,7 +513,92 @@ public function delete(\PDO $pdo): void{
 	$statement->execute($query);
 
 }
+	/**
+	 * updates attribute into mySQL
+	 *
+	 * @param \PDO $pdo connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws TypeErrorif $pdo is not a PDO connection object
+	 */
 
+	public function update(\PDO $pdo): void{
+		//create query template
+		$query =  "UPDATE profile SET
+						profileCloudinaryId = :profileCloudinaryId,
+						profileAvatarUrl = :profileAvatarUrl,
+						profileActivationToken = :profileActivationToken,
+						profileEmail = :profileEmail,
+						profileHash = :profileHash,
+						profilePhone = :profilePhone,
+						profileUsername = :profileUsername
+						
+						WHERE profileId = :profileId";
+
+		//prepare the query with PDO
+		$statement = $pdo->prepare($query);
+
+		//bind parameters to placeholders
+		$parameter = ["profileId"=>$this->profileId->getBytes(),
+							"profileCloudinaryId"=>$this->profileCloudinaryId,
+							"profileAvatarUrl"=>$this->profileAvatarUrl,
+							"profileActivationToken"=>$this->profileActivationToken,
+							"profileEmail"=>$this->profileEmail,
+							"profileHash"=>$this->profileHash,
+							"profilePhone"=>$this->profilePhone,
+							"profileUsername"=>$this->profileUsername];
+
+							$statement->execute($parameter);
+	}
+
+	/**
+	 * pulls username from profile
+	 * @param string $profileUsername
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of profile found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws TypeError if $pdo is not a PDO connection object
+	 *
+	 */
+public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splFixedArray{
+	//create query
+
+	$query = "SELECT profileId,
+				profileCloudinaryId,profileAvatarUrl,
+				profileActivationToken,profileEmail,
+				profileHash, profilePhone,
+				profileUsername";
+	//prepare statement
+	$statement=$pdo->prepare($query);
+
+
+	// bind the parameters username to the placeholder in the template
+	$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
+	$parameters = ["profileUsername"=>$profileUsername];
+	$statement->execute($query);
+
+	//build an array of profiles
+	$profile = new \SplFixedArray($statement->rowCount());
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	while(($row = $statement->fetch()) !== false){
+
+		try {
+			$profile = new Profile($row["profileId"],
+											$row["profileCloudinary"],
+											$row["profileAvatarUrl"],
+											$row["profileActivationToken"],
+											$row["profileEmail"],
+											$row["profileHash"],
+											$row["profilePhone"],
+											$row["profileUsername"] );
+		}
+
+		catch(\Exception $exception){
+			throw (new \PDOException($exception->getMessage(),0,$exception));
+		}
+	}
+
+
+}
 
 	/**
 	 * formats the state variables for JSON serialization
