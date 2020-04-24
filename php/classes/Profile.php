@@ -4,6 +4,7 @@ require_once ("autoload.php");
 
 use DateTime;
 use InvalidArgumentException;
+use PDO;
 use Ramsey\uuid\uuid;
 use RangeException;
 use TypeError;
@@ -653,6 +654,49 @@ return ($profile);
 			}
 			return ($profile);
 	}
+
+	/**
+	 * gets profile by Email form mySQL
+	 * @param PDO $pdo PDO connection object
+	 * @param string $profileEmail
+	 * @return Profile
+	 */
+
+	public static function getProfileByEmail(\PDO $pdo, string $profileEmail): Profile{
+		//create query template
+		$query = "SELECT profileId,
+					profileCloudinaryId,
+					profileAvatarUrl,
+					profileActivationToken,
+					profileEmail,
+					profileHash,
+					profilePhone,
+					profileUsername WHERE profileEmail = :profileEmail";
+		//prepare query
+		$statement = $pdo->prepare($query);
+
+		//bind the object to their respective placeholders in the database
+		$parameters=["profileEmail"=>$profileEmail];
+		$statement->execute($parameters);
+
+		//grab profile from database
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !== false){
+			//instantiate profile and push data into it
+			$profile = new Profile($row["profileId"],
+				$row["profileCloudinaryId"],
+				$row["profileAvatarUrl"],
+				$row["profileActivationToken"],
+				$row["profileEmail"],
+				$row["profileHash"],
+				$row["profilePhone"],
+				$row["profileUsername"]);
+		}
+		return ($profile);
+		}
+
 
 
 
