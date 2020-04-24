@@ -596,9 +596,66 @@ public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splF
 			throw (new \PDOException($exception->getMessage(),0,$exception));
 		}
 	}
-
+return ($profile);
 
 }
+
+	/**
+	 * pulls single data from profile by Id
+	 * @param uuid|string $profileId
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of profile found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws TypeError if $pdo is not a PDO connection object
+	 *
+	 */
+
+	public static function getProfileByProfileId(\PDO $pdo, $profileId): ?Profile{
+		//create query template
+		$query = "SELECT profileId,
+					profileCloudinaryId,
+					profileAvatarUrl,
+					profileActivationToken,
+					profileEmail,
+					profileHash,
+					profilePhone,
+					profileUsername
+					FROM profile WHERE profileId = :profileId";
+
+		//prepare query
+		$statement = $pdo->prepare($query);
+
+		try{
+			$profileId = self::validateUuid($profileId);
+
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			throw (new \PDOException($exception->getMessage(),0,$exception));
+		}
+		//bind parameters to placeholders in the table
+		$parameter = [ "profileId"=>$profileId->getBytes()];
+		$statement->execute($parameter);
+
+		//grab profile from database
+
+			$profile = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false){
+				//instantiate author object and push data into it
+				$profile = new Profile($row["profileId"],
+				$row["profileCloudinaryId"],
+					$row["profileAvatarUrl"],
+					$row["profileActivationToken"],
+					$row["profileEmail"],
+					$row["profileHash"],
+					$row["profilePhone"],
+					$row["profileUsername"]);
+			}
+			return ($profile);
+	}
+
+
+
 
 	/**
 	 * formats the state variables for JSON serialization
