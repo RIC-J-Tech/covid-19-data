@@ -7,6 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use Ramsey\uuid\uuid;
 use RangeException;
+use SplFixedArray;
 use TypeError;
 
 /**
@@ -263,14 +264,14 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param $reportProfileId
-	 * @return \SplFixedArray SplFixedArray of reports found
+	 * @return SplFixedArray SplFixedArray of reports found
 	 *
 	 */
 
-public function getReportByProfileId(\PDO $pdo, $reportProfileId): \SplFixedArray{
+public function getReportByProfileId(\PDO $pdo, $reportProfileId): SplFixedArray{
 
 	//create query template
-	$query = "SELECT * FROM report WHERE repotProfileId = :reportProfileId ";
+	$query = "SELECT * FROM report WHERE reportProfileId = :reportProfileId ";
 	$statement = $pdo->prepare($query);
 
 	try {
@@ -287,7 +288,7 @@ public function getReportByProfileId(\PDO $pdo, $reportProfileId): \SplFixedArra
 	$statement->execute($parameters);
 
 	//build an array of reports
-	$reports = new \SplFixedArray($statement->rowCount());
+	$reports = new SplFixedArray($statement->rowCount());
 
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 	while(($row = $statement->fetch())!== false){
@@ -317,12 +318,105 @@ return $reports;
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param $reportBusinessId
-	 * @return Report
+	 * @return SplFixedArray
+	 */
+public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \SplFixedArray{
+	//create query template
+	$query = "SELECT * FROM report WHERE reportBusinessId = :reportProfileId ";
+	$statement = $pdo->prepare($query);
+
+	try {
+		$reportProfileId = self::validateUuid($reportBusinessId);
+
+	}
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		$exceptionType = get_class($exception);
+		throw (new $exceptionType($exception->getMessage(),0,$exception));
+	}
+
+	//bind the object to their respective  placeholders in the table
+	$parameters = ["reportBusinessId"=>$reportBusinessId->getBytes()];
+	$statement->execute($parameters);
+
+	//build an array of reports
+	$reports = new SplFixedArray($statement->rowCount());
+
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	while(($row = $statement->fetch())!== false){
+		try {
+			//instantiate report object and push data into it
+			$report = new Report($row["reportId"],
+				$row["reportBusinessId"],
+				$row["reportProfileId"],
+				$row["reportContent"],
+				$row["reportDate"]);
+			$reports[$reports->key()] = $report;
+			$reports->next();
+
+		}
+		catch(\Exception $exception){
+			throw (new \PDOException($exception->getMessage(),0,$exception));
+		}
+
+
+	}
+
+	return $reports;
+}
+
+	/**
+	 * Retrieves report from database using the businessId
 	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param $reportId
+	 * @return SplFixedArray
 	 */
 
+public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
+	//sanitize the reportId before searching
+	try {
+		$reportId = self::validateUuid($reportId);
+	}
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		throw (new \PDOException($exception->getMessage(),0,$exception));
+	}
+	//create query template
+	$query = "SELECT * FROM report WHERE reportId= :reportId";
+	$statement = $pdo->prepare($query);
 
+	//bind objects to placeholders
+	$parameters = ["reportId"=>$reportId->getBytes()];
+	$statement->execute($parameters);
 
+	//grab report from mySQL
+	try {
+		$report = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement-fetch();
+		if($row !== false){
+				$report = new Report($row["reportId"],
+											$row["reportBusinessId"],
+											$row["reportProfileId"],
+											$row["reportContent"],
+											$row["reportDate"]);
+
+		}
+
+	}catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		throw (new \PDOException($exception->getMessage(),0,$exception));
+	}
+	return $report;
+
+}
+
+	/**
+	 * Gets all reports posted on the calendar day of a given DateTime.
+	 *
+	 * @param \PDO $pdo The database connection object
+	 * @param DateTime $reportDate The date on which to search for reports
+	 * @return \SplFixedArray An array of report object that match the date.
+	 * @throws \PDOException|Exception mySQL related errors being caught
+	 */
 
 
 	/**
