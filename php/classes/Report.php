@@ -438,7 +438,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 		$statement->execute($parameters);
 
 		//Build an array of reports from the returned rows
-		$report = new \SplFixedArray($statement->rowCount());
+		$reports = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
 		while(($row= $statement->fetch())!==false){
@@ -460,6 +460,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 
 
 		}
+		return $reports;
 
 	}
 
