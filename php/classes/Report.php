@@ -418,6 +418,54 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	 * @throws \PDOException|Exception mySQL related errors being caught
 	 */
 
+	public function getReportByDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
+
+		//create dates for midnight of the date and midnight of the next day.
+		$startDateString = $reportDate->format('Y-m-d').'00:00:00';
+		$startDate = new DateTime($startDateString);
+		$endDate = new DateTime($startDateString);
+		$endDate->add(new \DateInterval('P1D'));
+
+		//create query template
+		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate >= :endDate";
+		$statement = $pdo->prepare($query);
+
+		//Bind the beginning and end dates to their placeholders in the template
+		$parameters = [
+			'startDate' => $startDate->format('Y-m-d H:i:s.u'),
+								$endDate->format('Y-m-d H:i:s.u')
+		];
+		$statement->execute($parameters);
+
+		//Build an array of reports from the returned rows
+		$report = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+		while(($row= $statement->fetch())!==false){
+			try {
+				//instantiate report object and push data into it
+				$report = new Report($row["reportId"],
+					$row["reportBusinessId"],
+					$row["reportProfileId"],
+					$row["reportContent"],
+					$row["reportDate"]);
+				$reports[$reports->key()] = $report;
+				$reports->next();
+
+
+			}
+			catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+				throw (new \PDOException($exception->getMessage(),0,$exception));
+			}
+
+
+		}
+
+	}
+
+
+
+
 
 	/**
 	 * formats the state variables for JSON serialization
