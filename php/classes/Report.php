@@ -258,6 +258,68 @@ public function getReportDate(): DateTime{
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * Retrieves report from database using the profileId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param $reportProfileId
+	 * @return \SplFixedArray SplFixedArray of reports found
+	 *
+	 */
+
+public function getReportByProfileId(\PDO $pdo, $reportProfileId): \SplFixedArray{
+
+	//create query template
+	$query = "SELECT * FROM report WHERE repotProfileId = :reportProfileId ";
+	$statement = $pdo->prepare($query);
+
+	try {
+		$reportProfileId = self::validateUuid($reportProfileId);
+
+	}
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		$exceptionType = get_class($exception);
+		throw (new $exceptionType($exception->getMessage(),0,$exception));
+	}
+
+	//bind the object to their respective  placeholders in the table
+	$parameters = ["reportProfileId"=>$reportProfileId->getBytes()];
+	$statement->execute($parameters);
+
+	//build an array of reports
+	$reports = new \SplFixedArray($statement->rowCount());
+
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	while(($row = $statement->fetch())!== false){
+		try {
+			//instantiate report object and push data into it
+			$report = new Report($row["reportId"],
+				$row["reportBusinessId"],
+				$row["reportProfileId"],
+				$row["reportContent"],
+				$row["reportDate"]);
+			$reports[$reports->key()] = $report;
+			$reports->next();
+
+		}
+		catch(\Exception $exception){
+			throw (new \PDOException($exception->getMessage(),0,$exception));
+		}
+
+
+	}
+
+return $reports;
+}
+
+	/**
+	 * Retrieves report from database using the businessId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param $reportBusinessId
+	 * @return Report
+	 *
+	 */
 
 
 
