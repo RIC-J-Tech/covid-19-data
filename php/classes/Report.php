@@ -75,7 +75,7 @@ public function __construct($newReportId,$newReportBusinessId,$newReportProfileI
 			$this->setReportId($newReportId);
 			$this->setReportBusinessId($newReportBusinessId);
 			$this->setReportProfileId($newReportProfileId);
-			$this->setReport($newReportContent);
+			$this->setReportContent($newReportContent);
 			$this->setReportDate($newReportDate);
 
 	}
