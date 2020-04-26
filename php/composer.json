@@ -1,0 +1,6 @@
+{
+  "require": {
+    "ramsey/uuid": "@stable",
+    "ext-pdo": "*"
+  }
+}
