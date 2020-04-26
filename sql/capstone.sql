@@ -1,12 +1,5 @@
 USE cap28_covid;
 
-DROP TABLE IF EXISTS report;
-DROP TABLE IF EXISTS vote;
-DROP TABLE IF EXISTS behavior;
-DROP TABLE IF EXISTS business;
-DROP TABLE IF EXISTS profile;
-
-
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
@@ -26,6 +19,7 @@ CREATE TABLE profile(
 
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
+   businessYelpId BINARY(16) NOT NULL,
    businessLng DECIMAL(9,6),
    businessLat DECIMAL(9,6),
    businessName VARCHAR(128) NOT NULL,
