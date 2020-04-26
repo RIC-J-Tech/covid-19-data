@@ -1,5 +1,5 @@
 <?php
-namespace OpeyemiJonah\ObjectOriented;
+namespace RICJTech\Covid19;
 require_once ("autoload.php");
 
 use DateTime;
