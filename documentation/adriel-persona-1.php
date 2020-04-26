@@ -6,11 +6,12 @@
 </head>
 <body>
 	<h1>Persona: Adriel Stephens; COVID 19 app user</h1>
+		<img src="../images/adriel-persona.jpg" alt="photo of Adriel" height="450" width="450"><br>
 		<h2>Demographics</h2>
 			<ul>
 				<li>Age: 40yrs old</li>
 				<li>location: Rio Rancho, New Mexico</li>
-				<li>ofession: Fullstack Developer</li>
+				<li>Profession: Fullstack Developer</li>
 			</ul>
 
 		<h2>Goals</h2>
