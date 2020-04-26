@@ -1,6 +1,6 @@
 <?php
 
-namespace RussellDorgan\Covid19;
+namespace RICJTech\Covid19;
 require_once("autoload.php");
 
 use DateTime;
@@ -25,14 +25,14 @@ class business implements JsonSerializable {
 	private $businessYelpId;
 
 
-	public function __construct($newBusinessId, string $newBusinessLng, string $newBusinessLat, $newBusinessName, $newBusinessUrl, $newBusinessYelpId) {
+	public function __construct($newBusinessId, $newBusinessYelpId, string $newBusinessLng, string $newBusinessLat, $newBusinessName, $newBusinessUrl) {
 		try {
 			$this->setBusinessId($newBusinessId);
+			$this->setBusinessYelpId($newBusinessYelpId);
 			$this->setBusinessLng($newBusinessLng);
 			$this->setBusinessLat($newBusinessLat);
 			$this->setBusinessName($newBusinessName);
 			$this->setBusinessUrl($newBusinessUrl);
-			$this->setBusinessYelpId($newBusinessYelpId);
 
 		} catch(InvalidArgumentException | RangeException| Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -137,15 +137,15 @@ class business implements JsonSerializable {
 
 	public function insert(PDO $pdo): void {
 
-		$query = "INSERT INTO business(businessId,businessLng,businessLat,businessName,
-					businessUrl, businessYelpId) VALUES(:businessId,:businessLng,:businessLat,:businessName,
-					:businessUrl, :businessYelpId)";
+		$query = "INSERT INTO business(businessId,businessYelpId,businessLng,businessLat,businessName,
+					businessUrl) VALUES(:businessId,:businessYelpId,:businessLng,:businessLat,:businessName,
+					:businessUrl)";
 
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["businessId" => $this->businessId->getBytes(), "businessLng" => $this->businessLng,
+		$parameters = ["businessId" => $this->businessId->getBytes(), "businessYelpId" => $this->businessYelpId, "businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat, "businessName" => $this->businessName, "businessUrl" =>
-				$this->businessUrl, "businessYelpId" => $this->businessYelpId];
+				$this->businessUrl];
 
 		$statement->execute($parameters);
 	}
@@ -164,22 +164,22 @@ class business implements JsonSerializable {
 
 		$query = "UPDATE business SET
 						businessId = :businessId,
+						businessYelpId = :businessYelpId,
 						businessLng = :businessLng,
 						businessLat = :businessLat,
 						businessName = :businessName,
-						businessUrl = :businessUrl,
-						businessYelpId = :businessYelpId,
+						businessUrl = :businessUrl
 						
 						WHERE businessId = :businessId";
 
 		$statement = $pdo->prepare($query);
 
 		$parameter = ["businessId" => $this->businessId->getBytes(),
+			"businessYelpId" => $this->businessYelpId,
 			"businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat,
 			"businessName" => $this->businessName,
-			"businessUrl" => $this->businessUrl,
-			"businessYelpId" => $this->businessYelpId];
+			"businessUrl" => $this->businessUrl];
 
 		$statement->execute($parameter);
 	}
@@ -193,7 +193,7 @@ class business implements JsonSerializable {
 			throw(new PDOException($exception->getMessage(), 0, $exception));
 		}
 
-		$query = "SELECT businessId, businessLng, businessLat, businessName, businessUrl, businessYelpId FROM business WHERE businessId = :businessId";
+		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["businessId" => $businessId->getBytes()];
@@ -203,7 +203,7 @@ class business implements JsonSerializable {
 		$statement->setFetchMode(PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$businessId = new Business($row["businessId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"], $row["businessYelpId"]);
+				$businessId = new Business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
 				$businessId[$businessId->key()] = $businessId;
 				$businessId->next();
 			} catch(Exception $exception) {
@@ -218,12 +218,13 @@ class business implements JsonSerializable {
 		$fields = get_object_vars($this);
 
 		$fields["businessId"] = $this->businessId->toString();
+		$fields["businessYelpId"] = round(floatval($this->businessYelpId->format("")) * 1000);
 		$fields["businessLng"] = round(floatval($this->businessLng->format("")) * 1000);
 		$fields["businessLat"] = round(floatval($this->businessLat->format("")) * 1000);
 		$fields["businessName"] = $this->businessName->toString();
 		$fields["businessUrl"] = $this->businessUrl->toString();
-		$fields["businessYelpId"] = round(floatval($this->businessYelpId->format("")) * 1000);
 		return ($fields);
 	}
 }
+
 
