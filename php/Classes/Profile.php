@@ -300,6 +300,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 			}
 
 			//verifying field is not empty
+			$newProfileActivationToken = strtolower(trim($newProfileActivationToken));
 			if(ctype_xdigit($newProfileActivationToken)===false){
 
 				throw (new \InvalidArgumentException("Not taken"));
