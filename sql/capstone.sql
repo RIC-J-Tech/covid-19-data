@@ -33,7 +33,7 @@ CREATE TABLE behavior(
    behaviorId BINARY(16) NOT NULL,
 	behaviorBusinessId BINARY(16) NOT NULL,
    behaviorProfileId BINARY(16) NOT NULL,
-	behaviorContent TEXT NOT NULL,
+	behaviorContent VARCHAR(256) NOT NULL,
 	behaviorDate DATETIME(6) NOT NULL,
 	INDEX(behaviorBusinessId),
 	INDEX(behaviorProfileId),
