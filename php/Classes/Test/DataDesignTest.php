@@ -1,5 +1,5 @@
 <?php
-namespace DeepDiveDylan\DataDesign;
+namespace RICJTech\Covid19;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;

@@ -5,7 +5,8 @@
     "phpunit/dbunit": "@stable",
     "phpunit/phpunit": "@stable",
     "swiftmailer/swiftmailer": "@stable",
-    "lcobucci/jwt": "3.2"
+    "lcobucci/jwt": "3.2",
+    "ext-json": "*"
   },
   "scripts":{
     "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
