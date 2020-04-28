@@ -1,5 +1,5 @@
 <?php
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 require_once ("autoload.php");
 
 use DateTime;

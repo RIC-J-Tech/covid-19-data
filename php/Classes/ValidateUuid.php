@@ -1,5 +1,5 @@
 <?php
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
