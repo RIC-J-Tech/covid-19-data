@@ -1,5 +1,5 @@
 <?php
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
