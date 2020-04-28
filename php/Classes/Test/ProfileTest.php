@@ -101,7 +101,8 @@ class ProfileTest extends DataDesignTest{
 		self::assertEquals($this->VALID_PROFILE_PHONE, $pdoProfile->getProfilePhone());
 		self::assertEquals($this->VALID_PROFILE_USERNAME,$pdoProfile->getProfileUsername());
 
-
+		//verify that the saved username is the same as the updated username
+		self::assertEquals($changedProfileUsername,$pdoProfile->getProfileUsername());
 
 	}
 
