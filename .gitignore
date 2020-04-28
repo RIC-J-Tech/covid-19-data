@@ -1,4 +1,8 @@
 /.idea
 .DS_Store
+<<<<<<< HEAD
 php/vendor
 php/lib/config.php
+=======
+php/vendor
+>>>>>>> profile-class

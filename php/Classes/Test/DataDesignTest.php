@@ -1,5 +1,5 @@
 <?php
-namespace RICJ\Covid19\Test;
+namespace RICJTech\Covid19Data;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -9,6 +9,8 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 // grab the encrypted properties file
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
+
+
 
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
@@ -47,7 +49,10 @@ abstract class DataDesignTest extends TestCase {
 
 		// add all the tables for the project here
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
-		$dataset->addTable("author");
+		$dataset->addTable("profile");
+		$dataset->addTable("tweet");
+		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
+		$dataset->addTable("like", "SELECT likeProfileId, likeTweetId, likeDate FROM `like`");
 		return($dataset);
 	}
 
@@ -85,8 +90,8 @@ abstract class DataDesignTest extends TestCase {
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
 
-			//TODO fixed the namespace with a backslash and made sure of the file path (cohort28 was missing at 1st)
-			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/cohort28/ojonah.ini");
+
+			$secrets =  new Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}
