@@ -13,7 +13,7 @@ require_once (dirname(__DIR__)."/Test/DataDesignTest.php");
 //grab the class scrutiny
 require_once (dirname(__DIR__)."/autoload.php");
 
-require_once (dirname(__DIR__,2)."./lib/uuid.php");
+require_once (dirname(__DIR__,2)."/lib/uuid.php");
 
 class ProfileTest extends DataDesignTest{
 	private $VALID_ACTIVATION_TOKEN;

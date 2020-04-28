@@ -476,8 +476,8 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["profileId"] = $this->reportId->toString();
-		$fields["profileId"] = $this->reportBusinessId->toString();
+		$fields["reportId"] = $this->reportId->toString();
+		$fields["reportBusinessId"] = $this->reportBusinessId->toString();
 
 
 	}
