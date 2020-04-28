@@ -1,6 +1,6 @@
 <?php
 
-namespace RICJ\Covid19;
+namespace RICJTech\Covid19Data;
 
 use RICJTech\Covid19\DataDesignTest;
 use Faker;
