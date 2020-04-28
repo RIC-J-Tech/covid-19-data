@@ -478,6 +478,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 
 		$fields["reportId"] = $this->reportId->toString();
 		$fields["reportBusinessId"] = $this->reportBusinessId->toString();
+		$fields["reportProfileId"]= $this->reportProfileId->toString();
 
 
 	}
