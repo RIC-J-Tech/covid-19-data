@@ -81,6 +81,27 @@ class ProfileTest extends DataDesignTest{
 			$this->VALID_PROFILE_USERNAME);
 		$profile->insert($this->getPDO());
 
+		//update a value on the record that was just inserted
+		$changedProfileUsername = $this->VALID_PROFILE_USERNAME."change";
+		$profile->setProfileUsername($changedProfileUsername);
+		$profile->update($this->getPDO());
+
+		//check count of profile record in the db after the insert
+		$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
+		self::assertEquals($numRows + 1,$numRowsAfterInsert,"update checked record count");
+
+		//get a copy of the record just inserted and validate the values
+		//make sure the values that went into the record are the same ones that come out
+		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(),$profile->getProfileId()->toString());
+		self::assertEquals($this->VALID_CLOUDINARY_ID,$pdoProfile->getProfileCloudinaryId());
+		self::assertEquals($this->	VALID_AVATAR_URL,$pdoProfile->getProfileAvatarUrl());
+		self::assertEquals($this->VALID_ACTIVATION_TOKEN, $pdoProfile->getProfileActivationToken());
+		self::assertEquals($this->VALID_PROFILE_EMAIL, $pdoProfile->getProfileEmail());
+		self::assertEquals($this->VALID_PROFILE_HASH,$pdoProfile->getProfileHash());
+		self::assertEquals($this->VALID_PROFILE_PHONE, $pdoProfile->getProfilePhone());
+		self::assertEquals($this->VALID_PROFILE_USERNAME,$pdoProfile->getProfileUsername());
+
+
 
 	}
 
