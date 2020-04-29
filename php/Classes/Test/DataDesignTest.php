@@ -91,7 +91,8 @@ abstract class DataDesignTest extends TestCase {
 			// connect to mySQL and provide the interface to PHPUnit
 
 
-			$secrets =  new Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+			require_once("/etc/apache2/capstone-mysql/Secrets.php");
+			$secrets =  new Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}
