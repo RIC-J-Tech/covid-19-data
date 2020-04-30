@@ -2,12 +2,12 @@
 namespace RICJTech\Covid19Data\Test;
 
 use RICJTech\Covid19Data\{Behavior};
-use RICJTech\Covid19\business;
-use RICJTech\Covid19\Profile;
+use RICJTech\Covid19Data\{Business};
+use RICJTech\Covid19Data\{Profile};
 
 
-//Hack!!! - added so this class could see DataDesignTest
-require_once(dirname(__DIR__) . "/Behavior-Test/DatadesignTest.php");
+////Hack!!! - added so this class could see DataDesignTest
+//require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
