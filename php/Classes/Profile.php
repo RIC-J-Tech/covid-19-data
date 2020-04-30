@@ -563,11 +563,12 @@ public function delete(\PDO $pdo): void{
 public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : \SPLFixedArray{
 	//create query
 
-	$query = "SELECT profileId,
-				profileCloudinaryId,profileAvatarUrl,
+	$query = "SELECT profileId,profileCloudinaryId,profileAvatarUrl,
 				profileActivationToken,profileEmail,
 				profileHash, profilePhone,
-				profileUsername";
+				profileUsername
+				FROM profile
+				 WHERE profileUsername = :profileUsername";
 	//prepare statement
 	$statement=$pdo->prepare($query);
 
