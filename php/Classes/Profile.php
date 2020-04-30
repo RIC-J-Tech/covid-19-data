@@ -712,7 +712,7 @@ public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 
 	while (($row = $statement->fetch()) !== false) {
 		try {
-			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileActivationToken"], $row["profileAvatarUrl"], $row["profileEmail"], $row["profileHash"], $row["profileUsername"]);
+			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileActivationToken"], $row["profileAvatarUrl"], $row["profileEmail"], $row["profileHash"],$row["profilePhone"], $row["profileUsername"]);
 			$profiles[$profiles->key()] = $profile;
 			$profiles->next();
 		} catch(\Exception $exception) {
