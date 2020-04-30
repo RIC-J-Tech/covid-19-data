@@ -1,4 +1,5 @@
 /.idea
 .DS_Store
 php/vendor
-php/lib/config.php
+
+php/lib/db-config.txt

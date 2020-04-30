@@ -1,5 +1,5 @@
 <?php
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 require_once ("autoload.php");
 
 use DateTime;
@@ -9,6 +9,7 @@ use Ramsey\uuid\uuid;
 use RangeException;
 use SplFixedArray;
 use TypeError;
+
 
 /**
  * RIC-J Tech to the rescue
@@ -80,7 +81,7 @@ public function __construct($newReportId,$newReportBusinessId,$newReportProfileI
 			$this->setReportDate($newReportDate);
 
 	}
-	catch(InvalidArgumentException | RangeException| Exception | \TypeError $exception) {
+	catch(InvalidArgumentException | RangeException| Exception | TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
@@ -127,12 +128,12 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param Uuid|string $newReportId new value of report id
 	 * @throws RangeException if $newReportId is not positive
-	 * @throws \TypeError if $newReportId is not a uuid or string
+	 * @throws TypeError if $newReportId is not a uuid or string
 	 **/
 	public function setReportId($newReportId): void {
 		try {
 			$uuid = self::validateUuid($newReportId);
-		} catch(InvalidArgumentException | RangeException | Exception | \TypeError $exception) {
+		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -144,12 +145,12 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param string | Uuid $newReportBusinessId new value of behavior business id
 	 * @throws RangeException if $newReportId is not positive
-	 * @throws \TypeError if $newReportBusinessId is not an integer
+	 * @throws TypeError if $newReportBusinessId is not an integer
 	 **/
 	public function setReportBusinessId($newReportBusinessId): void {
 		try {
 			$uuid = self::validateUuid($newReportBusinessId);
-		} catch(InvalidArgumentException | RangeException | Exception | \TypeError $exception) {
+		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -161,12 +162,12 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param string | Uuid $newReportProfileId new value of behavior business id
 	 * @throws RangeException if $newProfileId is not positive
-	 * @throws \TypeError if $newReportProfileId is not an integer
+	 * @throws TypeError if $newReportProfileId is not an integer
 	 **/
 	public function setReportProfileId($newReportProfileId): void {
 		try {
 			$uuid = self::validateUuid($newReportProfileId);
-		} catch(InvalidArgumentException | RangeException | Exception | \TypeError $exception) {
+		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -178,7 +179,7 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param string $newReportContent new value of report content
 	 * @throws InvalidArgumentException if $newReportContent is not a string or insecure
-	 * @throws \TypeError if $newReportContent is not a string
+	 * @throws TypeError if $newReportContent is not a string
 	 **/
 	public function setReportContent(string $newReportContent): void {
 		// verify the report content is secure
@@ -217,7 +218,7 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo): void {
 		// create query template
@@ -233,7 +234,7 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo): void {
 		// create query template
@@ -248,7 +249,7 @@ public function getReportDate(): DateTime{
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws TypeError if $pdo is not a PDO connection object
 	 **/
 	public function update(\PDO $pdo): void {
 		// create query template
@@ -278,7 +279,7 @@ public function getReportByProfileId(\PDO $pdo, $reportProfileId): SplFixedArray
 		$reportProfileId = self::validateUuid($reportProfileId);
 
 	}
-	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+	catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
 		$exceptionType = get_class($exception);
 		throw (new $exceptionType($exception->getMessage(),0,$exception));
 	}
@@ -329,7 +330,7 @@ public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \Spl
 		$reportProfileId = self::validateUuid($reportBusinessId);
 
 	}
-	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+	catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
 		$exceptionType = get_class($exception);
 		throw (new $exceptionType($exception->getMessage(),0,$exception));
 	}
@@ -377,7 +378,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	try {
 		$reportId = self::validateUuid($reportId);
 	}
-	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+	catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
 		throw (new \PDOException($exception->getMessage(),0,$exception));
 	}
 	//create query template
@@ -392,7 +393,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	try {
 		$report = null;
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement-fetch();
+		$row = $statement->fetch();
 		if($row !== false){
 				$report = new Report($row["reportId"],
 											$row["reportBusinessId"],
@@ -402,7 +403,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 
 		}
 
-	}catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+	}catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
 		throw (new \PDOException($exception->getMessage(),0,$exception));
 	}
 	return $report;
@@ -454,7 +455,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 
 
 			}
-			catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
 				throw (new \PDOException($exception->getMessage(),0,$exception));
 			}
 
@@ -476,8 +477,9 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["profileId"] = $this->reportId->toString();
-		$fields["profileId"] = $this->reportBusinessId->toString();
+		$fields["reportId"] = $this->reportId->toString();
+		$fields["reportBusinessId"] = $this->reportBusinessId->toString();
+		$fields["reportProfileId"]= $this->reportProfileId->toString();
 
 
 	}

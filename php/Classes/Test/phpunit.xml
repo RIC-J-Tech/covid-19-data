@@ -1,7 +1,8 @@
 <phpunit>
 	<testsuites>
-		<testsuite name="Behavior Object Oriented">
-			<file>BehaviorTest.php</file>
+		<testsuite name="Profile and Report class">
+			<file>ProfileTest.php</file>
+			<file>ReportTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>
