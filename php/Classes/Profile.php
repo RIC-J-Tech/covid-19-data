@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use PDO;
 use Ramsey\uuid\uuid;
 use RangeException;
+use SPLFixedArray;
 use TypeError;
 
 /**
@@ -555,12 +556,12 @@ public function delete(\PDO $pdo): void{
 	 * pulls username from profile
 	 * @param string $profileUsername
 	 * @param \PDO $pdo PDO connection object
-	 * @return \SplFixedArray SplFixedArray of profile found
+	 * @return SplFixedArray SplFixedArray of profile found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws TypeError if $pdo is not a PDO connection object
 	 *
 	 */
-public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : \SPLFixedArray{
+public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : SPLFixedArray{
 	//create query
 
 	$query = "SELECT profileId,profileCloudinaryId,profileAvatarUrl,
@@ -575,11 +576,12 @@ public static function getProfileByUsername(\PDO $pdo, string $profileUsername) 
 
 	// bind the parameters username to the placeholder in the template
 	$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
+
 	$parameters = ["profileUsername"=>$profileUsername];
 	$statement->execute($parameters);
 
 	//build an array of profiles
-	$profile = new \SplFixedArray($statement->rowCount());
+	$profiles = new SplFixedArray($statement->rowCount());
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 	while(($row = $statement->fetch()) !== false){
 
@@ -592,13 +594,14 @@ public static function getProfileByUsername(\PDO $pdo, string $profileUsername) 
 											$row["profileHash"],
 											$row["profilePhone"],
 											$row["profileUsername"] );
+
 		}
 
 		catch(\Exception $exception){
 			throw (new \PDOException($exception->getMessage(),0,$exception));
 		}
 	}
-return ($profile);
+return ($profiles);
 
 }
 
@@ -606,7 +609,7 @@ return ($profile);
 	 * pulls single data from profile by Id
 	 * @param uuid|string $profileId
 	 * @param \PDO $pdo PDO connection object
-	 * @return \SplFixedArray SplFixedArray of profile found
+	 * @return SplFixedArray SplFixedArray of profile found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws TypeError if $pdo is not a PDO connection object
 	 *
@@ -672,7 +675,7 @@ return ($profile);
 					profileEmail,
 					profileHash,
 					profilePhone,
-					profileUsername WHERE profileEmail = :profileEmail";
+					profileUsername FROM profile WHERE profileEmail = :profileEmail";
 		//prepare query
 		$statement = $pdo->prepare($query);
 
@@ -698,7 +701,7 @@ return ($profile);
 		return ($profile);
 		}
 
-public function getAllProfiles(\PDO $pdo): \SplFixedArray{
+public function getAllProfiles(\PDO $pdo): SplFixedArray{
 
 
 	// create query template
@@ -707,7 +710,7 @@ public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 	$statement = $pdo->prepare($query);
 	$statement->execute();
 
-	$profiles = new \SPLFixedArray($statement->rowCount());
+	$profiles = new SPLFixedArray($statement->rowCount());
 
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
