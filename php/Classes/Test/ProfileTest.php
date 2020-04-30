@@ -203,7 +203,7 @@ public function getProfileValidateByUsername(): void{
 
 
 
-	public function testGetValidProfiles() : void {
+	public function testGetAllValidProfiles() : void {
 		$faker = Faker\Factory::create();
 
 		//how many records were in the db before we start?
