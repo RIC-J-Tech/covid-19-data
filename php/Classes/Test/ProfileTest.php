@@ -28,7 +28,7 @@ class ProfileTest extends DataDesignTest {
 		$faker = Faker\Factory::create();
 
 
-		$password ="strong_password";
+		$password =$faker->password;
 		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
 		$this->VALID_ACTIVATION_TOKEN= bin2hex(random_bytes(16));
 		$this->VALID_PROFILE_EMAIL = $faker->email;
@@ -54,7 +54,7 @@ class ProfileTest extends DataDesignTest {
 		$profile->insert($this->getPDO());
 
 
-		//check count of author records in the database after the insert
+		//check count of Profile records in the database after the insert
 		$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
 		self::assertEquals($numRows + 1,$numRowsAfterInsert);
 
@@ -112,5 +112,44 @@ class ProfileTest extends DataDesignTest {
 		self::assertEquals($changedProfileUsername,$pdoProfile->getProfileUsername());
 
 	}
+
+public function testDeleteValidProfile() : void {
+$faker = Faker\Factory::create();
+//get count of Profile records in db before we run the test
+	$numRows = $this->getConnection()->getRowCount("profile");
+
+$insertedRow = 3;
+
+for($i = 0; $i < $insertedRow; $i++){
+
+$profileId=generateUuidV4()->toString();
+$profile = new Profile(
+$profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACTIVATION_TOKEN,
+	$this->VALID_PROFILE_EMAIL=$faker->email,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,
+	$this->VALID_PROFILE_USERNAME=$faker->userName);
+
+	$profile->insert($this->getPDO());
+
+}
+//get a copy of the record just updated and validate the values
+	// make sure the values that went into the record are the same ones that come out
+	$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
+	self::assertEquals($numRows + $insertedRow, $numRowsAfterInsert);
+
+	//now delete the last record we inserted
+	$profile->delete($this->getPDO());
+
+	//try to get the last record we inserted. it should not exist.
+	$pdoProfile = Profile::getProfileByProfileId($this->getPDO(),$profile->getProfileId()->toString());
+	//validate that only one record was deleted.
+	$numRowsAfterDelete = $this->getConnection()->getRowCount("profile");
+	self::assertEquals($numRows + $insertedRow - 1, $numRowsAfterDelete);
+
+
+}
+
+
+
+
 
 }

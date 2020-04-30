@@ -511,7 +511,7 @@ public function delete(\PDO $pdo): void{
 
 	//binding parameters to placeholders
 	$parameters = ["profileId"=>$this->profileId->getBytes()];
-	$statement->execute($query);
+	$statement->execute($parameters);
 
 }
 	/**
@@ -519,7 +519,7 @@ public function delete(\PDO $pdo): void{
 	 *
 	 * @param \PDO $pdo connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws TypeErrorif $pdo is not a PDO connection object
+	 * @throws TypeError if $pdo is not a PDO connection object
 	 */
 
 	public function update(\PDO $pdo): void{
