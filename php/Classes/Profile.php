@@ -575,7 +575,7 @@ public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splF
 	// bind the parameters username to the placeholder in the template
 	$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
 	$parameters = ["profileUsername"=>$profileUsername];
-	$statement->execute($query);
+	$statement->execute($parameters);
 
 	//build an array of profiles
 	$profile = new \SplFixedArray($statement->rowCount());

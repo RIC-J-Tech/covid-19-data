@@ -148,6 +148,26 @@ $profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACT
 
 }
 
+public function getProfileByUsername(): \SplFixedArray{
+	$faker = Faker\Factory::create();
+//get count of Profile records in db before we run the test
+	$numRows = $this->getConnection()->getRowCount("profile");
+
+	$insertedRow = 5;
+
+	for($i = 0; $i < $insertedRow; $i++){
+
+		$profileId=generateUuidV4()->toString();
+		$profile = new Profile(
+			$profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACTIVATION_TOKEN,
+			$this->VALID_PROFILE_EMAIL=$faker->email,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,
+			$this->VALID_PROFILE_USERNAME=$faker->userName);
+
+		$profile->insert($this->getPDO());
+
+	}
+
+}
 
 
 
