@@ -569,7 +569,7 @@ public static function getProfileByUsername(\PDO $pdo, string $profileUsername) 
 				profileHash, profilePhone,
 				profileUsername
 				FROM profile
-				 WHERE profileUsername = :profileUsername";
+				 WHERE profileUsername LIKE :profileUsername";
 	//prepare statement
 	$statement=$pdo->prepare($query);
 
@@ -587,7 +587,7 @@ public static function getProfileByUsername(\PDO $pdo, string $profileUsername) 
 
 		try {
 			$profile = new Profile($row["profileId"],
-											$row["profileCloudinary"],
+											$row["profileCloudinaryId"],
 											$row["profileAvatarUrl"],
 											$row["profileActivationToken"],
 											$row["profileEmail"],
