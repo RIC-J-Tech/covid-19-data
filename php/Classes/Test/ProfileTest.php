@@ -148,7 +148,7 @@ $profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACT
 
 }
 
-public function getProfileValidateByUsername(): void{
+public function testProfileValidateByUsername(): void{
 	$faker = Faker\Factory::create();
 //get count of Profile records in db before we run the test
 	$numRows = $this->getConnection()->getRowCount("profile");
@@ -161,11 +161,15 @@ public function getProfileValidateByUsername(): void{
 
 		$profile->insert($this->getPDO());
 	$profile->getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
+
+	$pdoProfile = Profile::getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
+	self::assertEquals($this->VALID_PROFILE_USERNAME, $pdoProfile->getProfileUsername());
+
 	}
 
 
 
-	public function getProfileValidByEmail(): void {
+	public function testProfileValidByEmail(): void {
 		$faker = Faker\Factory::create();
 //get count of Profile records in db before we run the test
 		$numRows = $this->getConnection()->getRowCount("profile");
@@ -200,7 +204,6 @@ public function getProfileValidateByUsername(): void{
 		$numRowsAfter = $this->getConnection()->getRowCount("profile");
 		self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
 	}
-
 
 
 	public function testGetAllValidProfiles() : void {
