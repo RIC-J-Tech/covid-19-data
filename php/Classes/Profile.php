@@ -701,7 +701,7 @@ public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 
 
 	// create query template
-	$query = "SELECT profileId, profileCloudinaryId,profileActivationToken, profileAvatarUrl, profileEmail, profileHash, profilePhone,profileUsername 
+	$query = "SELECT profileId, profileCloudinaryId,profileAvatarUrl, profileActivationToken, profileEmail, profileHash, profilePhone,profileUsername 
 						FROM profile";
 	$statement = $pdo->prepare($query);
 	$statement->execute();
@@ -712,7 +712,7 @@ public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 
 	while (($row = $statement->fetch()) !== false) {
 		try {
-			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileActivationToken"], $row["profileAvatarUrl"], $row["profileEmail"], $row["profileHash"],$row["profilePhone"], $row["profileUsername"]);
+			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileAvatarUrl"],$row["profileActivationToken"] , $row["profileEmail"], $row["profileHash"],$row["profilePhone"], $row["profileUsername"]);
 			$profiles[$profiles->key()] = $profile;
 			$profiles->next();
 		} catch(\Exception $exception) {
