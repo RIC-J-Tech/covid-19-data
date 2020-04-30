@@ -393,7 +393,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	try {
 		$report = null;
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement-fetch();
+		$row = $statement->fetch();
 		if($row !== false){
 				$report = new Report($row["reportId"],
 											$row["reportBusinessId"],

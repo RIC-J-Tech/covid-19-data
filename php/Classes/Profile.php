@@ -18,7 +18,7 @@ use TypeError;
  * the CDC guidelines or rules
  * Creating a profile class to store user profiles using the app
  *
- * @author Opeyemi Jonah <gavrieljonah@gmail.com>
+ * @author  Opeyemi Jonah <gavrieljonah@gmail.com>
  * @version 1.0.0
  **/
 
@@ -237,7 +237,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 			$newProfileCloudinaryId = filter_var($newProfileCloudinaryId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 			// verify the avatar URL will fit in the database
-			if(strlen($newProfileCloudinaryId) > 255) {
+			if(strlen($newProfileCloudinaryId) > 256) {
 				throw(new RangeException("image content too large"));
 			}
 		}
@@ -489,7 +489,7 @@ public function insert(\PDO $pdo): void{
 
 	//binding table attributes to the placeholders
 	$parameters = ["profileId"=>$this->profileId->getBytes(),"profileCloudinaryId"=>$this->profileCloudinaryId,
-						"profileAvatarUrl"=>$this->profileAvatarUrl,"profileEmail"=>$this->profileEmail, "profileHash"=>
+						"profileAvatarUrl"=>$this->profileAvatarUrl,"profileActivationToken"=>$this->profileActivationToken,"profileEmail"=>$this->profileEmail,"profileHash"=>
 	$this->profileHash, "profilePhone"=>$this->profilePhone,"profileUsername"=>$this->profileUsername];
 
 	$statement->execute($parameters);
@@ -511,7 +511,7 @@ public function delete(\PDO $pdo): void{
 
 	//binding parameters to placeholders
 	$parameters = ["profileId"=>$this->profileId->getBytes()];
-	$statement->execute($query);
+	$statement->execute($parameters);
 
 }
 	/**
@@ -519,7 +519,7 @@ public function delete(\PDO $pdo): void{
 	 *
 	 * @param \PDO $pdo connection object
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws TypeErrorif $pdo is not a PDO connection object
+	 * @throws TypeError if $pdo is not a PDO connection object
 	 */
 
 	public function update(\PDO $pdo): void{
@@ -560,7 +560,7 @@ public function delete(\PDO $pdo): void{
 	 * @throws TypeError if $pdo is not a PDO connection object
 	 *
 	 */
-public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splFixedArray{
+public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : \SPLFixedArray{
 	//create query
 
 	$query = "SELECT profileId,
@@ -575,7 +575,7 @@ public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splF
 	// bind the parameters username to the placeholder in the template
 	$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
 	$parameters = ["profileUsername"=>$profileUsername];
-	$statement->execute($query);
+	$statement->execute($parameters);
 
 	//build an array of profiles
 	$profile = new \SplFixedArray($statement->rowCount());
@@ -642,7 +642,7 @@ return ($profile);
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false){
-				//instantiate author object and push data into it
+				//instantiate profile object and push data into it
 				$profile = new Profile($row["profileId"],
 				$row["profileCloudinaryId"],
 					$row["profileAvatarUrl"],
@@ -697,7 +697,31 @@ return ($profile);
 		return ($profile);
 		}
 
+public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 
+
+	// create query template
+	$query = "SELECT profileId, profileCloudinaryId,profileAvatarUrl, profileActivationToken, profileEmail, profileHash, profilePhone,profileUsername 
+						FROM profile";
+	$statement = $pdo->prepare($query);
+	$statement->execute();
+
+	$profiles = new \SPLFixedArray($statement->rowCount());
+
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+	while (($row = $statement->fetch()) !== false) {
+		try {
+			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileAvatarUrl"],$row["profileActivationToken"] , $row["profileEmail"], $row["profileHash"],$row["profilePhone"], $row["profileUsername"]);
+			$profiles[$profiles->key()] = $profile;
+			$profiles->next();
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+	}
+	return ($profiles);
+}
 
 
 
