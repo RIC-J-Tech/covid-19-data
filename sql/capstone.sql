@@ -44,8 +44,8 @@ CREATE TABLE behavior(
 
 
 CREATE TABLE vote(
-	voteProfileId BINARY(16) NOT NULL,
 	voteBehaviorId BINARY(16) NOT NULL,
+	voteProfileId BINARY(16) NOT NULL,
 	voteDate DATETIME(6) NOT NULL,
 	voteResult BOOLEAN NOT NULL,
 	INDEX(voteProfileId),
