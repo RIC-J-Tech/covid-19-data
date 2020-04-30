@@ -561,7 +561,7 @@ public function delete(\PDO $pdo): void{
 	 * @throws TypeError if $pdo is not a PDO connection object
 	 *
 	 */
-public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : SPLFixedArray{
+public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : ?Profile{
 	//create query
 
 	$query = "SELECT profileId,profileCloudinaryId,profileAvatarUrl,
@@ -569,39 +569,41 @@ public static function getProfileByUsername(\PDO $pdo, string $profileUsername) 
 				profileHash, profilePhone,
 				profileUsername
 				FROM profile
-				 WHERE profileUsername LIKE :profileUsername";
+				 WHERE profileUsername = :profileUsername";
+
 	//prepare statement
 	$statement=$pdo->prepare($query);
 
 
 	// bind the parameters username to the placeholder in the template
-	$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
+	//$profileUsername = "%$profileUsername%"; //searches for any character similar either from the left or right
 
 	$parameters = ["profileUsername"=>$profileUsername];
 	$statement->execute($parameters);
 
-	//build an array of profiles
-	$profiles = new SplFixedArray($statement->rowCount());
-	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	while(($row = $statement->fetch()) !== false){
+	try {
 
-		try {
+		//build an array of profiles
+//		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+			//instantiate profile object and push data into it
 			$profile = new Profile($row["profileId"],
-											$row["profileCloudinaryId"],
-											$row["profileAvatarUrl"],
-											$row["profileActivationToken"],
-											$row["profileEmail"],
-											$row["profileHash"],
-											$row["profilePhone"],
-											$row["profileUsername"] );
-
+				$row["profileCloudinaryId"],
+				$row["profileAvatarUrl"],
+				$row["profileActivationToken"],
+				$row["profileEmail"],
+				$row["profileHash"],
+				$row["profilePhone"],
+				$row["profileUsername"]);
 		}
-
+	}
 		catch(\Exception $exception){
 			throw (new \PDOException($exception->getMessage(),0,$exception));
 		}
-	}
-return ($profiles);
+
+return ($profile);
 
 }
 
