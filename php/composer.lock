@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
+    "content-hash": "312ecd481a3863d01949b8b76b3b0e80",
+=======
     "content-hash": "9b1e758df01bfcf719b94ecf788d2d18",
+>>>>>>> profile-class
     "packages": [
         {
             "name": "brick/math",
@@ -229,6 +233,8 @@
             "time": "2020-02-13T22:36:52+00:00"
         },
         {
+<<<<<<< HEAD
+=======
             "name": "fzaninotto/faker",
             "version": "v1.9.1",
             "source": {
@@ -279,6 +285,7 @@
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
+>>>>>>> profile-class
             "name": "lcobucci/jwt",
             "version": "3.2.0",
             "source": {

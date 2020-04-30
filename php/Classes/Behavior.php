@@ -43,7 +43,7 @@ class Behavior implements \JsonSerializable {
 	private $behaviorDate;
 
 	/**
-	 * constructor for this Tweet
+	 * constructor for this Behavior
 	 *
 	 * @param string|Uuid $newBehaviorId id of this behavior or null if a new Behavior
 	 * @param string|Uuid $newBehaviorBusinessId id of the Business to whom this behavior is posted
@@ -57,7 +57,7 @@ class Behavior implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 
-	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, $newBehaviorDate = null) {
+	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, DateTime $newBehaviorDate) {
 		try {
 			$this->setBehaviorId($newBehaviorId);
 			$this->setBehaviorBusinessId($newBehaviorBusinessId);
@@ -95,7 +95,7 @@ class Behavior implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
-		// convert and store the tweet id
+		// convert and store the report id
 		$this->behaviorId = $uuid;
 	}
 
@@ -170,15 +170,20 @@ class Behavior implements \JsonSerializable {
 	 *
 	 * @param string $newBehaviorContent new value of behavior content
 	 * @throws \InvalidArgumentException if $newBehaviorContent is not a string or insecure
-	 * @throws \RangeException if $newBehaviorContent is > 140 characters
+	 * @throws \RangeException if $newBehaviorContent is > 256 characters
 	 * @throws \TypeError if $newBehaviorContent is not a string
 	 **/
 	public function setBehaviorContent(string $newBehaviorContent): void {
-		// verify the tweet content is secure
+		// verify the behavior content is secure
 		$newBehaviorContent = trim($newBehaviorContent);
 		$newBehaviorContent = filter_var($newBehaviorContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newBehaviorContent) === true) {
 			throw(new \InvalidArgumentException("behavior content is empty or insecure"));
+		}
+
+		// verify the tweet content will fit in the database
+		if(strlen($newBehaviorContent) > 256) {
+			throw(new \RangeException("tweet content too large"));
 		}
 
 		// store the behavior content
@@ -456,7 +461,6 @@ class Behavior implements \JsonSerializable {
 		$fields["behaviorId"] = $this->behaviorId->toString();
 		$fields["behaviorBusinessId"] = $this->behaviorBusinessId->toString();
 		$fields["behaviorProfileId"] = $this->behaviorProfileId->toString();
-		$fields["behaviorContent"] = $this->behaviorContent->toString();
 
 		//format the date so that the front end can consume it
 		$fields["behaviorDate"] = round(floatval($this->behaviorDate->format("U.u")) * 1000);
