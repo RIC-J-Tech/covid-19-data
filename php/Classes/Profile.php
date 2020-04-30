@@ -18,7 +18,7 @@ use TypeError;
  * the CDC guidelines or rules
  * Creating a profile class to store user profiles using the app
  *
- * @author Opeyemi Jonah <gavrieljonah@gmail.com>
+ * @author  Opeyemi Jonah <gavrieljonah@gmail.com>
  * @version 1.0.0
  **/
 
@@ -560,7 +560,7 @@ public function delete(\PDO $pdo): void{
 	 * @throws TypeError if $pdo is not a PDO connection object
 	 *
 	 */
-public function getProfileByUsername(\PDO $pdo, string $profileUsername) : \splFixedArray{
+public static function getProfileByUsername(\PDO $pdo, string $profileUsername) : \SPLFixedArray{
 	//create query
 
 	$query = "SELECT profileId,
@@ -642,7 +642,7 @@ return ($profile);
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false){
-				//instantiate author object and push data into it
+				//instantiate profile object and push data into it
 				$profile = new Profile($row["profileId"],
 				$row["profileCloudinaryId"],
 					$row["profileAvatarUrl"],
@@ -697,7 +697,31 @@ return ($profile);
 		return ($profile);
 		}
 
+public function getAllProfiles(\PDO $pdo): \SplFixedArray{
 
+
+	// create query template
+	$query = "SELECT profileId, profileCloudinaryId,profileActivationToken, profileAvatarUrl, profileEmail, profileHash, profilePhone,profileUsername 
+						FROM profile";
+	$statement = $pdo->prepare($query);
+	$statement->execute();
+
+	$profiles = new \SPLFixedArray($statement->rowCount());
+
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+	while (($row = $statement->fetch()) !== false) {
+		try {
+			$profile = new Profile($row["profileId"],$row["profileCloudinaryId"] ,$row["profileActivationToken"], $row["profileAvatarUrl"], $row["profileEmail"], $row["profileHash"], $row["profileUsername"]);
+			$profiles[$profiles->key()] = $profile;
+			$profiles->next();
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+	}
+	return ($profiles);
+}
 
 
 

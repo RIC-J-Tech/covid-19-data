@@ -86,7 +86,7 @@ class ProfileTest extends DataDesignTest {
 		$profile = new Profile($profileId, $this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
 			$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE,
 			$this->VALID_PROFILE_USERNAME);
-		echo $this->VALID_PROFILE_USERNAME;
+
 		$profile->insert($this->getPDO());
 
 		//update a value on the record that was just inserted
@@ -97,7 +97,7 @@ class ProfileTest extends DataDesignTest {
 		//check count of profile record in the db after the insert
 		$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
 		self::assertEquals($numRows + 1,$numRowsAfterInsert,"update checked record count");
-		echo $this->VALID_PROFILE_USERNAME;
+
 		//get a copy of the record just inserted and validate the values
 		//make sure the values that went into the record are the same ones that come out
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(),$profile->getProfileId()->toString());
@@ -148,14 +148,14 @@ $profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACT
 
 }
 
-public function getProfileByUsername(): \SplFixedArray{
+public function getProfileValidateByUsername(): void{
 	$faker = Faker\Factory::create();
 //get count of Profile records in db before we run the test
 	$numRows = $this->getConnection()->getRowCount("profile");
 
 	$insertedRow = 5;
+	$searchProfileUsername = "%$this->VALID_PROFILE_USERNAME%";
 
-	for($i = 0; $i < $insertedRow; $i++){
 
 		$profileId=generateUuidV4()->toString();
 		$profile = new Profile(
@@ -165,11 +165,60 @@ public function getProfileByUsername(): \SplFixedArray{
 
 		$profile->insert($this->getPDO());
 
+
+//check count of profile record in the db after the insert
+	$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
+	self::assertEquals($numRows + 1,$numRowsAfterInsert,"update checked record count");
+
+//check count of profile record in the db after the insert
+	$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
+	self::assertEquals($numRows + 1,$numRowsAfterInsert,"update checked record count");
+
+	//get a copy of the record just inserted and validate the values
+	//make sure the values that went into the record are the same ones that come out
+	$pdoProfile = Profile::getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
+
+
+	//verify that the saved username is the same as the updated username
+	self::assertEquals($searchProfileUsername,$pdoProfile->getProfileUsername());
 	}
 
-}
 
 
+	public function getProfileValidByEmail(): void {
+		$faker = Faker\Factory::create();
+//get count of Profile records in db before we run the test
+		$numRows = $this->getConnection()->getRowCount("profile");
+
+		$profileId=generateUuidV4()->toString();
+		$profile = new Profile(
+			$profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACTIVATION_TOKEN,
+			$this->VALID_PROFILE_EMAIL=$faker->email,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,
+			$this->VALID_PROFILE_USERNAME=$faker->userName);
+
+		$profile->insert($this->getPDO());
+
+		$profile->getProfileByEmail($this->getPDO(),$profile->getProfileEmail());
+		//check count of profile record in the db after the insert
+		$numRowsAfter = $this->getConnection()->getRowCount("profile");
+		self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+
+	}
+
+	public function testGetValidProfileByProfileId(): void {
+//get count of profile records in db before we run the test
+		$numRows = $this->getConnection()->getRowCount("profile");
+		//get an profile record in the db by Id
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
+			$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE,
+			$this->VALID_PROFILE_USERNAME);
+		$profile->insert($this->getPDO());
+		$profile->getAuthorByAuthorId($this->getPDO(),$profileId);
+		//check count of profile record in the db after the insert
+		$numRowsAfter = $this->getConnection()->getRowCount("profile");
+		self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+	}
 
 
 }
