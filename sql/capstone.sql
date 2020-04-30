@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS profile;
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
-	profileCloudinaryId VARCHAR(256),
+	profileCloudinaryId VARCHAR(16),
 	profileActivationToken CHAR(32),
 	profileAvatarUrl VARCHAR(256) NOT NULL,
 	profileEmail VARCHAR(128) NOT NULL,
