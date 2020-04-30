@@ -1,21 +1,20 @@
 <?php
 
-namespace RICJTech\Covid19Data;
+namespace RICJTech\Covid19Data\Test;
 
-use RICJTech\Covid19\DataDesignTest;
+use RICJTech\Covid19Data\{Profile};
+use Ramsey\Uuid\Uuid;
+use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
-use RICJTech\Covid19\{Profile};
+require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
+// grab the class under scrutiny
+require_once(dirname(__DIR__) . "/autoload.php");
+
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 
-require_once (dirname(__DIR__)."/Test/DataDesignTest.php");
-
-
-//grab the class scrutiny
-require_once (dirname(__DIR__)."/autoload.php");
-
-require_once (dirname(__DIR__,2)."/lib/uuid.php");
-
-class ProfileTest extends DataDesignTest{
+class ProfileTest extends DataDesignTest {
 	private $VALID_ACTIVATION_TOKEN;
 	private $VALID_CLOUDINARY_ID;
 	private $VALID_AVATAR_URL;
@@ -37,6 +36,7 @@ class ProfileTest extends DataDesignTest{
 		$this->VALID_CLOUDINARY_ID = $faker->url;
 		$this->VALID_AVATAR_URL = $faker->url;
 		$this->VALID_PROFILE_USERNAME = $faker->userName;
+		echo $faker->name;
 	}
 
 	public function testInsertValidateProfile(): void {
@@ -45,6 +45,8 @@ class ProfileTest extends DataDesignTest{
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		//insert a profile record in the db
+		/** @var Uuid $profileId */
+
 		$profileId = generateUuidV4()->toString();
 		$profile = new Profile($profileId, $this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
 		$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE,

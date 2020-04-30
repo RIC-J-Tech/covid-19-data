@@ -237,7 +237,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 			$newProfileCloudinaryId = filter_var($newProfileCloudinaryId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 			// verify the avatar URL will fit in the database
-			if(strlen($newProfileCloudinaryId) > 255) {
+			if(strlen($newProfileCloudinaryId) > 256) {
 				throw(new RangeException("image content too large"));
 			}
 		}
@@ -489,7 +489,7 @@ public function insert(\PDO $pdo): void{
 
 	//binding table attributes to the placeholders
 	$parameters = ["profileId"=>$this->profileId->getBytes(),"profileCloudinaryId"=>$this->profileCloudinaryId,
-						"profileAvatarUrl"=>$this->profileAvatarUrl,"profileEmail"=>$this->profileEmail, "profileHash"=>
+						"profileAvatarUrl"=>$this->profileAvatarUrl,"profileActivationToken"=>$this->profileActivationToken,"profileEmail"=>$this->profileEmail,"profileHash"=>
 	$this->profileHash, "profilePhone"=>$this->profilePhone,"profileUsername"=>$this->profileUsername];
 
 	$statement->execute($parameters);
