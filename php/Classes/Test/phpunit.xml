@@ -1,9 +1,9 @@
 <phpunit>
 	<testsuites>
 		<testsuite name="Profile and Report class">
-			<file>ProfileTest.php</file>
+<!--			<file>ProfileTest.php</file>-->
 			<file>ReportTest.php</file>
-			<file>BehaviorTest.php</file>
+<!--			<file>BehaviorTest.php</file>-->
 		</testsuite>
 	</testsuites>
 	<filter>

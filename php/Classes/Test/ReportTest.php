@@ -1,13 +1,11 @@
 <?php
-namespace RICJTech\Covid19Data;
+
+namespace RICJTech\Covid19Data\Test;
 
 use RICJTech\Covid19Data\{Profile,Business,Report};
-
 use Ramsey\Uuid\Uuid;
-
 use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
-
 require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
@@ -15,26 +13,31 @@ require_once(dirname(__DIR__) . "/autoload.php");
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
+
 class ReportTest extends DataDesignTest {
-	private $VALID_CLOUDINARY_ID ="astrongIdcloud";
-	private $VALID_REPORT_DATE =null;
-	private $VALID_REPORT_ID;
+	protected ivate $VALID_CLOUDINARY_ID ="astrongIdcloud";
+	protected $VALID_REPORT_DATE =null;
+	protected $VALID_REPORT_CONTENT="some random report of nuisance";
+	protected $VALID_DATE = null;
 
 	/**
 	 * @var \RICJTech\Covid19Data\Business
 	 */
-	private $business;
+	protected $business;
 	/**
 	 * @var \RICJTech\Covid19Data\Profile
 	 */
-	private $profile;
+	protected $profile;
 
 
 	public function setUp(): void {
 		parent::setUp();
 		$faker = Faker\Factory::create();
 		$this->VALID_REPORT_DATE=$faker->dateTime;
-		$profileId = generateUuidV4()->toString();
+
+		//insert a profile record in the db
+		/** @var Uuid $profileId */
+		$profileId = generateUuidV4();
 		$password =$faker->password;
 		$VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
 		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
@@ -49,7 +52,10 @@ class ReportTest extends DataDesignTest {
 
 
 		//create and insert a Business to own the Report content
-		$this->business = new Business(generateUuidV4()->toString(), $faker->url,$faker->longitude, $faker->latitude,
+		//insert a profile record in the db
+		/** @var Uuid $businessId */
+			$reportBusinessId = $faker->uuid;
+		$this->business = new Business($reportBusinessId, "1234567898364527",$faker->longitude, $faker->latitude,
 			"RICJTECH","https://ricjtech.com");
 		$this->business->insert($this->getPDO());
 
@@ -60,23 +66,16 @@ class ReportTest extends DataDesignTest {
 	}
 
 
-
-
-
-
 public function testInsert(): void {
 	$faker = Faker\Factory::create();
 
 	//get count of profile records in db before we run the test
 	$numRows = $this->getConnection()->getRowCount("profile");
 
+	/** @var Uuid $reportId */
+	$reportId = generateUuidV4();
 
-	$reportId = generateUuidV4()->toString();
-	$reportBusinessId = generateUuidV4()->toString();
-	$reportProfileId = generateUuidV4()->toString();
-
-	$report = new Report($reportId,$this->business->getBusinessId(),$this->profile->getProfileId(), $VALID_REPORT_CONTENT =$faker->text,
-		$this->VALID_REPORT_DATE=$faker->dateTime);
+	$report = new Report($reportId,$this->business->getBusinessId(),$this->profile->getProfileId(), $VALID_REPORT_CONTENT =$faker->text, $this->VALID_REPORT_DATE=$faker->dateTime);
 	$report->insert($this->getPDO());
 
 	//check count of Profile records in the database after the insert
@@ -87,15 +86,17 @@ public function testInsert(): void {
 	//make sure the values that went into the record are the same ones that come out
 	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
 
-
-	self::assertEquals($VALID_REPORT_CONTENT,$pdoReport->getReportContent());
-
 	$this->assertEquals($pdoReport->getReportProfileId(), $this->profile->getProfileId());
-	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
-	//format the date too seconds since the beginning of time to avoid round off error
-	$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
-//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoReport->getReportDate());
 
+	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
+
+	$this->assertEquals($pdoReport->getReportContent(), $this->VALID_REPORT_CONTENT);
+
+	//format the date too seconds since the beginning of time to avoid round off error
+	$this->assertEquals($pdoReport->getReportDate()->getTimestamp(), $this->VALID_DATE->getTimestamp());
+
+//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoReport->getReportDate());
+//	self::assertEquals(,$pdoReport->getReportContent());
 
 
 
