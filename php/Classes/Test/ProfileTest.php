@@ -159,11 +159,32 @@ public function testProfileValidateByUsername(): void{
 			$this->VALID_PROFILE_EMAIL=$faker->email,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,
 			$this->VALID_PROFILE_USERNAME=$faker->userName);
 
-		$profile->insert($this->getPDO());
-	$profile->getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
 
-	$pdoProfile = Profile::getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
-	self::assertEquals($this->VALID_PROFILE_USERNAME, $pdoProfile->getProfileUsername());
+
+		$profile->insert($this->getPDO());
+
+
+	//Returns an array
+//	var_dump($profile->getProfileUsername());
+	$results = Profile::getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
+
+
+//var_dump($results);
+	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
+	//$this->assertCount(0, $results);
+
+
+
+	// grab the result from the array and validate it
+	$pdoProfile = $results;
+			$this->assertEquals($profileId, $pdoProfile->getProfileId());
+			$this->assertEquals($this->VALID_CLOUDINARY_ID,$pdoProfile->getProfileCloudinaryId());
+			$this->assertEquals($this->	VALID_AVATAR_URL,$pdoProfile->getProfileAvatarUrl());
+			$this->assertEquals($this->VALID_ACTIVATION_TOKEN, $pdoProfile->getProfileActivationToken());
+			$this->assertEquals($this->VALID_PROFILE_EMAIL, $pdoProfile->getProfileEmail());
+			$this->assertEquals($this->VALID_PROFILE_HASH,$pdoProfile->getProfileHash());
+			$this->assertEquals($this->VALID_PROFILE_PHONE, $pdoProfile->getProfilePhone());
+
 
 	}
 
@@ -183,8 +204,10 @@ public function testProfileValidateByUsername(): void{
 		$profile->insert($this->getPDO());
 
 		$profile->getProfileByEmail($this->getPDO(),$profile->getProfileEmail());
+
 		//check count of profile record in the db after the insert
 		$numRowsAfter = $this->getConnection()->getRowCount("profile");
+
 		self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
 
 	}
