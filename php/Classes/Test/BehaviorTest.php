@@ -7,9 +7,10 @@ use RICJTech\Covid19Data\{Profile};
 
 
 ////Hack!!! - added so this class could see DataDesignTest
-//require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
+require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
+
 
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");

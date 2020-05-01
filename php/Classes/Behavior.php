@@ -449,6 +449,34 @@ class Behavior implements \JsonSerializable {
 		return ($behaviors);
 	}
 
+	/**
+	 * gets all votes
+	 *
+	 * @param \PDO $pdo PDO connection object.
+	 * @return \SplFixedArray SplFixedArray of votes found or null if not found.
+	 * @throws \PDOException when mySQL related errors.
+	 * @throws \TypeError when variables are not the correct data type.
+	 **/
+	public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
+		// create query template
+		$query = "SELECT behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM getAllBehavior";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+		// build an array of behaviors
+		$getAllBehaviors = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$getAllBehaviors = new getAllBehaviors($row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$getAllBehaviors[$getAllBehaviors->key()] = $getAllBehaviors;
+				$getAllBehaviors->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($getAllBehaviors);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization
