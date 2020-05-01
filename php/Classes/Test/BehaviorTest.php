@@ -56,7 +56,7 @@ class BehaviorTest extends DataDesignTest {
 
 		//insert a behavior record in the db
 		$behaviorId = generateUuidV4()->toString();
-		$behavior = new Author($behaviorId, $this->business->getBusinessId(), $this->profile->getProfileId(), $this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+		$behavior = new Behavior($behaviorId, $this->business->getBusinessId(), $this->profile->getProfileId(), $this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
 		$behavior->insert($this->getPDO());
 
 		// check count of behavior records in the db after the insert
@@ -105,6 +105,27 @@ class BehaviorTest extends DataDesignTest {
 		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
 	}
 
+	/**
+	 * test creating a Behavior and then deleting it
+	 **/
+	public function testDeleteValidBehavior() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("behavior");
+
+		// create a new Behavior and insert to into mySQL
+		$behaviorId = generateUuidV4();
+		$behavior = new Behavior($behaviorId, $this->business->getBusinessId(), $this->profile->getProfileId(), $this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+		$behavior->insert($this->getPDO());
+
+		// delete the Behavior from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+		$behavior->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Tweet does not exist
+		$pdoTweet = Tweet::getTweetByTweetId($this->getPDO(), $tweet->getTweetId());
+		$this->assertNull($pdoTweet);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("tweet"));
+	}
 
 
 
