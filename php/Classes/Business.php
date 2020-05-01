@@ -1,20 +1,11 @@
 <?php
 
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 require_once("autoload.php");
-
-use DateTime;
-use Exception;
-use InvalidArgumentException;
-use PDO;
-use PDOException;
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 use Ramsey\uuid\uuid;
-use RangeException;
-use SplFixedArray;
-use TypeError;
 
-class business implements JsonSerializable {
-	use ValidateDate;
+class Business implements \JsonSerializable {
 	use ValidateUuid;
 
 	private $businessId;
@@ -25,7 +16,7 @@ class business implements JsonSerializable {
 	private $businessYelpId;
 
 
-	public function __construct($newBusinessId, $newBusinessYelpId, string $newBusinessLng, string $newBusinessLat, $newBusinessName, $newBusinessUrl) {
+	public function __construct($newBusinessId, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
 		try {
 			$this->setBusinessId($newBusinessId);
 			$this->setBusinessYelpId($newBusinessYelpId);
@@ -34,20 +25,21 @@ class business implements JsonSerializable {
 			$this->setBusinessName($newBusinessName);
 			$this->setBusinessUrl($newBusinessUrl);
 
-		} catch(InvalidArgumentException | RangeException| Exception | TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException| \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
-	public function getBusinessId($businessId): Uuid {
-		$this->businessId = $businessId;
+
+	public function getBusinessId():Uuid {
+		return $this->businessId;
 	}
 
 	public function setBusinessId($newBusinessId): void {
 		try {
 			$uuid = self::validateUuid($newBusinessId);
-		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -55,8 +47,9 @@ class business implements JsonSerializable {
 		$this->businessId = $uuid;
 	}
 
-	public function getBusinessLng(): float {
-		$this->businessLng;
+
+	public function getBusinessLng() {
+		return $this->businessLng;
 	}
 
 	public function setBusinessLng($newBusinessLng): void {
@@ -70,11 +63,11 @@ class business implements JsonSerializable {
 	}
 
 
-	function getBusinessLat(): float {
-		$this->businessLat;
+	public function getBusinessLat() {
+		return $this->businessLat;
 	}
 
-	public function setBusinessLat($newBusinessLat): float {
+	public function setBusinessLat($newBusinessLat)  {
 		try {
 			$newBusinessLat = filter_var($newBusinessLat, FILTER_VALIDATE_FLOAT);
 		} catch(\TypeError $exception) {
@@ -85,8 +78,8 @@ class business implements JsonSerializable {
 	}
 
 
-	public function getBusinessName(): string {
-		$this->businessName;
+	public function getBusinessName():string {
+		return $this->businessName;
 	}
 
 	public function setBusinessName(string $newBusinessName) {
@@ -104,8 +97,8 @@ class business implements JsonSerializable {
 	}
 
 
-	public function getBusinessUrl(): string {
-		$this->businessUrl;
+	public function getBusinessUrl():string {
+		return $this->businessUrl;
 	}
 
 	public function setBusinessUrl(string $newBusinessUrl) {
@@ -116,15 +109,18 @@ class business implements JsonSerializable {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		if(strlen($newBusinessUrl) > 255) {
+		if(strlen($newBusinessUrl) > 256) {
 			throw(new \RangeException("Yelp url is longer than 255 characters"));
 		}
 
 		$this->businessUrl = $newBusinessUrl;
 	}
 
-	public function getBusinessYelpId(): string {
-		$this->businessYelpId;
+	/**
+	 * @return mixed
+	 */
+	public function getBusinessYelpId():string {
+		return $this->businessYelpId;
 	}
 
 	public function setBusinessYelpId(string $newBusinessYelpId) {
@@ -135,7 +131,7 @@ class business implements JsonSerializable {
 		$this->businessYelpId = $newBusinessYelpId;
 	}
 
-	public function insert(PDO $pdo): void {
+	public function insert(\PDO $pdo): void {
 
 		$query = "INSERT INTO business(businessId,businessYelpId,businessLng,businessLat,businessName,
 					businessUrl) VALUES(:businessId,:businessYelpId,:businessLng,:businessLat,:businessName,
@@ -150,20 +146,19 @@ class business implements JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	public function delete(PDO $pdo): void {
+	public function delete(\PDO $pdo): void {
 
 		$query = "DELETE FROM business WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["businessId" => $this->businessId->getBytes()];
-		$statement->execute($query);
+		$statement->execute($parameters);
 
 	}
 
-	public function update(PDO $pdo): void {
+	public function update(\PDO $pdo): void {
 
 		$query = "UPDATE business SET
-						businessId = :businessId,
 						businessYelpId = :businessYelpId,
 						businessLng = :businessLng,
 						businessLat = :businessLat,
@@ -185,12 +180,12 @@ class business implements JsonSerializable {
 	}
 
 
-	public function getBusinessbyBusinessId(PDO $pdo, $businessId): SplFixedArray {
+	public static function getBusinessByBusinessId(\PDO $pdo, $businessId): ?Business {
 
 		try {
 			$businessId = self::validateUuid($businessId);
-		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
-			throw(new PDOException($exception->getMessage(), 0, $exception));
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
@@ -199,20 +194,53 @@ class business implements JsonSerializable {
 		$parameters = ["businessId" => $businessId->getBytes()];
 		$statement->execute($parameters);
 
-		$businessId = new SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(PDO::FETCH_ASSOC);
+
+		try {
+			$business = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$business = new Business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+			}
+		} catch(Exception $exception) {
+
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($business);
+	}
+
+	public static function getBusinessByBusinessName(\PDO $pdo, string $newBusinessName) : \SplFixedArray {
+		$newBusinessName = trim($newBusinessName);
+		$businessName = filter_var($newBusinessName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($businessName) === true) {
+			throw(new \PDOException("business name is not valid"));
+		}
+
+		$businessName = str_replace("_", "\\_", str_replace("%", "\\%", $businessName));
+
+		// create query template
+		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessName LIKE :businessName";
+		$statement = $pdo->prepare($query);
+
+		$businessName = "%$businessName%";
+		$parameters = ["businessName" => $businessName];
+		$statement->execute($parameters);
+
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$businessId = new Business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
-				$businessId[$businessId->key()] = $businessId;
-				$businessId->next();
-			} catch(Exception $exception) {
+				$business = new business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
-				throw(new PDOException($exception->getMessage(), 0, $exception));
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($businessId);
+		return($businesses);
 	}
+
 
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
