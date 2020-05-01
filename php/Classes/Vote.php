@@ -210,19 +210,18 @@ class Vote implements \JsonSerializable {
 	}
 
 	/**
-	 * deletes this Vote from mySQL
-	 *
-	 * @param \PDO $pdo PDO connection object.
-	 * @throws \PDOException when mySQL related errors.
-	 * @throws TypeError if $pdo is not a PDO connection object.
-	 **/
-	public function delete(\PDO $pdo): void {
+	 * @param \PDO $pdo
+	 * @param $voteProfileId
+	 * @param $voteBehaviorId
+	 */
+	public function delete(\PDO $pdo, $voteProfileId, $voteBehaviorId): void {
 		// create query template
-		$query = "DELETE FROM vote WHERE voteProfileId = :voteProfileId";
+		$query = "DELETE FROM vote WHERE voteProfileId = :voteProfileId and voteBehaviorId = :voteBehaviorId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["voteProfileId" => $this->voteProfileId->getBytes()];
+		$parameters = ["voteProfileId" => $this->voteProfileId->getBytes(),
+			"voteBehaviorId" => $this->voteBehaviorId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -237,7 +236,7 @@ class Vote implements \JsonSerializable {
 	 */
 
 	/**
-	 * gets the vote by voteProfileId
+	 * gets the votes by voteProfileId
 	 *
 	 * @param \PDO $pdo PDO connection object.
 	 * @param Uuid|string $voteProfileId id to search by.
@@ -245,7 +244,7 @@ class Vote implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors.
 	 * @throws \TypeError when variables are not the correct data type.
 	 **/
-	public static function getVoteProfileIdByVoteProfileId(\PDO $pdo, $voteProfileId) : \SplFixedArray {
+	public static function getVotesByVoteProfileId(\PDO $pdo, $voteProfileId) : \SplFixedArray {
 
 		try {
 			$voteProfileId = self::ValidateUuid($voteProfileId);
@@ -254,7 +253,7 @@ class Vote implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT voteProfileId, voteProfileId, voteBehaviorId, voteDate FROM vote WHERE voteProfileId = :voteProfileId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteDate, voteResult FROM vote WHERE voteProfileId = :voteProfileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the vote profile id to the place holder in the template
@@ -266,8 +265,8 @@ class Vote implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$votes = new $voteProfileId($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
-				$votes[$votes->key()] = $votes;
+				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$votes[$votes->key()] = $vote;
 				$votes->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
@@ -278,115 +277,126 @@ class Vote implements \JsonSerializable {
 	}
 
 	/**
-	 * gets the vote by date
+	 * gets the votes by voteDate
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $voteDate profile id to search by
+	 * @param \DateTime|string $voteDate profile id to search by
 	 * @return \SplFixedArray SplFixedArray of Behavior found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getVoteByVoteDate(\PDO $pdo, $voteDate): \SplFixedArray {
+	public static function getVotesByVoteDate(\PDO $pdo, $voteDate): \SplFixedArray {
 
 		try {
-			$voteDate = self::ValidateUuid($voteDate);
+			$voteDate = self::ValidateDate($voteDate);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
+		//create dates for midnight of the date and midnight of the next day.
+		$startDateString = $voteDate->format('Y-m-d').'00:00:00';
+
+		$startDate = new DateTime($startDateString);
+
+		$endDate = new DateTime($startDateString);
+
+		$endDate->add(new \DateInterval('P1D'));
+
 		// create query template
-		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM bussiness WHERE voteBusinessId = :voteBusinessId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM vote WHERE voteDate >= :startDate AND voteDate <= :endDate";
 		$statement = $pdo->prepare($query);
+
 		// bind the behavior Business id to the place holder in the template
-		$parameters = ["voteDate" => $voteDate->getBytes()];
+		$parameters = ['startDate' => $startDate->format('Y-m-d H:i:s.u'),'endDate'=>$endDate->format('Y-m-d H:i:s.u')];
 		$statement->execute($parameters);
+
 		// build an array of behaviors
-		$behaviors = new \SplFixedArray($statement->rowCount());
+		$votes = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$voteDate = new $voteDate ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
-				$voteDate [$voteDate->key()] = $voteDate;
-				$voteDate->next();
+				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$votes [$votes->key()] = $vote;
+				$votes->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($voteDate);
+		return ($votes);
 	}
 
-	/**
-	 * gets the vote by result
-	 * .
-	 *
-	 * @param \PDO $pdo PDO connection object.
-	 * @param $voteResult
-	 * @return \SplFixedArray SplFixedArray of behavior found.
-	 * @throws \PDOException when mySQL related errors.
-	 * @throws \TypeError when variables are not the correct data type.
-	 */
-	public static function getVoteByVoteResult (\PDO $pdo, $voteResult) : \SplFixedArray {
-
-		try {
-			$voteResult = self::ValidateUuid($voteResult);
-		}
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
-		}
-
-		// create query template
-		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM vote WHERE voteId = :voteId";
-		$statement = $pdo->prepare($query);
-		// bind the tweet profile id to the place holder in the template
-		$parameters = ["voteResult" => $voteResult->getBytes()];
-		$statement->execute($parameters);
-		// build an array of tweets
-		$voteResult = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$voteResult = new voteId\voteId($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
-				$voteResult[$voteResult->key()] = $voteResult;
-				$voteResult->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
-		}
-		return($voteResult);
-	}
-
-
-	/**
-	 * gets all votes
-	 *
-	 * @param \PDO $pdo PDO connection object.
-	 * @return \SplFixedArray SplFixedArray of votes found or null if not found.
-	 * @throws \PDOException when mySQL related errors.
-	 * @throws \TypeError when variables are not the correct data type.
-	 **/
-	public static function getAllVotes(\PDO $pdo) : \SPLFixedArray {
-		// create query template
-		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM getAllVotes";
-		$statement = $pdo->prepare($query);
-		$statement->execute();
-
-		// build an array of votes
-		$getAllVotes = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$getAllVotes = new getAllVotes($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
-				$getAllVotes[$getAllVotes->key()] = $getAllVotes;
-				$getAllVotes->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
-		}
-		return ($getAllVotes);
-	}
+//	/**
+//	 * gets the vote by result
+//	 * .
+//	 *
+//	 * @param \PDO $pdo PDO connection object.
+//	 * @param $voteResult
+//	 * @return \SplFixedArray SplFixedArray of behavior found.
+//	 * @throws \PDOException when mySQL related errors.
+//	 * @throws \TypeError when variables are not the correct data type.
+//	 */
+//	public static function getVoteByVoteResult (\PDO $pdo, $voteResult) : \SplFixedArray {
+//
+//		try {
+//			$voteResult = self::ValidateUuid($voteResult);
+//		}
+//		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+//			throw(new \PDOException($exception->getMessage(), 0, $exception));
+//		}
+//
+//		// create query template
+//		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM vote WHERE voteId = :voteId";
+//		$statement = $pdo->prepare($query);
+//		// bind the tweet profile id to the place holder in the template
+//		$parameters = ["voteResult" => $voteResult->getBytes()];
+//		$statement->execute($parameters);
+//		// build an array of tweets
+//		$voteResult = new \SplFixedArray($statement->rowCount());
+//		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+//		while(($row = $statement->fetch()) !== false) {
+//			try {
+//				$voteResult = new voteId\voteId($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
+//				$voteResult[$voteResult->key()] = $voteResult;
+//				$voteResult->next();
+//			} catch(\Exception $exception) {
+//				// if the row couldn't be converted, rethrow it
+//				throw(new \PDOException($exception->getMessage(), 0, $exception));
+//			}
+//		}
+//		return($voteResult);
+//	}
+//
+//
+//	/**
+//	 * gets all votes
+//	 *
+//	 * @param \PDO $pdo PDO connection object.
+//	 * @return \SplFixedArray SplFixedArray of votes found or null if not found.
+//	 * @throws \PDOException when mySQL related errors.
+//	 * @throws \TypeError when variables are not the correct data type.
+//	 **/
+//	public static function getAllVotes(\PDO $pdo) : \SPLFixedArray {
+//		// create query template
+//		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM getAllVotes";
+//		$statement = $pdo->prepare($query);
+//		$statement->execute();
+//
+//		// build an array of votes
+//		$getAllVotes = new \SplFixedArray($statement->rowCount());
+//		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+//		while(($row = $statement->fetch()) !== false) {
+//			try {
+//				$getAllVotes = new getAllVotes($row["voteProfileId"], $row["voteBehaviorId"], $row["voteResult"], $row["voteDate"]);
+//				$getAllVotes[$getAllVotes->key()] = $getAllVotes;
+//				$getAllVotes->next();
+//			} catch(\Exception $exception) {
+//				// if the row couldn't be converted, rethrow it
+//				throw(new \PDOException($exception->getMessage(), 0, $exception));
+//			}
+//		}
+//		return ($getAllVotes);
+//	}
 
 	/**
 	 * formats the state variables for JSON serialization
