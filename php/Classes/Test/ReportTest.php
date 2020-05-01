@@ -16,14 +16,10 @@ require_once(dirname(__DIR__) . "/autoload.php");
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 class ReportTest extends DataDesignTest {
-	private $VALID_ACTIVATION_TOKEN;
 	private $VALID_CLOUDINARY_ID ="astrongIdcloud";
-	private $VALID_AVATAR_URL;
-	private $VALID_PROFILE_EMAIL;
-	private $VALID_PROFILE_HASH;
-	private $VALID_PROFILE_PHONE ;
-	private $VALID_PROFILE_USERNAME;
 	private $VALID_REPORT_DATE =null;
+	private $VALID_REPORT_ID;
+
 	/**
 	 * @var \RICJTech\Covid19Data\Business
 	 */
@@ -40,22 +36,25 @@ class ReportTest extends DataDesignTest {
 		$this->VALID_REPORT_DATE=$faker->dateTime;
 		$profileId = generateUuidV4()->toString();
 		$password =$faker->password;
-		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
-		$this->VALID_ACTIVATION_TOKEN= bin2hex(random_bytes(16));
+		$VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
+		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 
 		$this->VALID_REPORT_DATE= new \DateTime();
 
 		// create and insert a Profile to own the report content
-		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
-		$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL=$faker->email,
-			$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,$this->VALID_PROFILE_USERNAME=$faker->userNameit );
+		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID, $VALID_AVATAR_URL =$faker->url,
+			$VALID_ACTIVATION_TOKEN, $VALID_PROFILE_EMAIL =$faker->email,
+			$VALID_PROFILE_HASH, $VALID_PROFILE_PHONE =$faker->phoneNumber, $VALID_PROFILE_USERNAME =$faker->userName);
 		$this->profile->insert($this->getPDO());
 
 
 		//create and insert a Business to own the Report content
-		$this->business = new Business(generateUuidV4()->toString(), "wthsh82299292","123.456456", "128.789609",
+		$this->business = new Business(generateUuidV4()->toString(), $faker->url,$faker->longitude, $faker->latitude,
 			"RICJTECH","https://ricjtech.com");
 		$this->business->insert($this->getPDO());
+
+		// calculate the date (just use the time the unit test was setup...)
+		$this->VALID_DATE = new \DateTime();
 
 
 	}
@@ -86,14 +85,23 @@ public function testInsert(): void {
 
 	//get a copy of the record just inserted and validate the values
 	//make sure the values that went into the record are the same ones that come out
-	$pdoProfile = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
-//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoProfile->getReportDate());
-//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoProfile->getReportDate());
-//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoProfile->getReportDate());
-	self::assertEquals($VALID_REPORT_CONTENT,$pdoProfile->getReportContent());
-	self::assertEquals($this->	VALID_REPORT_DATE,$pdoProfile->getReportDate());
+	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
 
-}
+
+	self::assertEquals($VALID_REPORT_CONTENT,$pdoReport->getReportContent());
+
+	$this->assertEquals($pdoReport->getReportProfileId(), $this->profile->getProfileId());
+	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
+	//format the date too seconds since the beginning of time to avoid round off error
+	$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
+//	self::assertEquals($this->	VALID_REPORT_DATE,$pdoReport->getReportDate());
+
+
+
+
+
+	}
+
 
 
 

@@ -96,6 +96,10 @@ public function __construct($newReportId,$newReportBusinessId,$newReportProfileI
 		return $this->reportId;
 	}
 
+	public function getReportProfileId(): Uuid{
+		return $this->reportProfileId;
+	}
+
 
 	/**
 	 * Accessor for reportBusinessId
