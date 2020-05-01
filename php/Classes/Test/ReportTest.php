@@ -1,10 +1,11 @@
 <?php
 namespace RICJTech\Covid19Data;
 
-use RICJTech\Covid19Data\{Business,Profile};
+use RICJTech\Covid19Data\{Profile};
 
 use Ramsey\Uuid\Uuid;
 
+use RICJTech\Covid19\business;
 use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
 
@@ -29,12 +30,17 @@ class ReportTest extends DataDesignTest {
 		parent::setUp();
 		$faker = Faker\Factory::create();
 		$this->VALID_REPORT_DATE=$faker->dateTime;
-
+		$profileId = generateUuidV4()->toString();
 		// create and insert a Profile to own the report content
-		$this->report = new Profile(generateUuidV4(),$this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
+		$this->report = new Profile($profileId,$this->VALID_CLOUDINARY_ID,$this->VALID_AVATAR_URL,
 		$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL,
 			$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE,$this->VALID_PROFILE_USERNAME);
 		$this->profile->insert($this->getPDO());
+
+// create and insert a Profile to own the test Tweet
+		$this->business = new Business(generateUuidV4(), null,"123.456456", "128.789609",
+			"RICJTECH","https://ricjtech.com");
+		$this->business->insert($this->getPDO());
 
 	}
 
