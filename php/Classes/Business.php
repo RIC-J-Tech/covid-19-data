@@ -1,22 +1,9 @@
 <?php
-<<<<<<< HEAD
-
-=======
->>>>>>> 0b16a38... added correct business class
 namespace RICJTech\Covid19Data;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 use Ramsey\uuid\uuid;
-<<<<<<< HEAD
-use RangeException;
-use SplFixedArray;
-use TypeError;
-
-class Business implements JsonSerializable {
-	use ValidateDate;
-=======
 class Business implements \JsonSerializable {
->>>>>>> 0b16a38... added correct business class
 	use ValidateUuid;
 	private $businessId;
 	private $businessLng;
