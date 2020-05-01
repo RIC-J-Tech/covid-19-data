@@ -3,6 +3,7 @@
 		<testsuite name="Profile and Report class">
 			<file>ProfileTest.php</file>
 			<file>ReportTest.php</file>
+			<file>BehaviorTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>

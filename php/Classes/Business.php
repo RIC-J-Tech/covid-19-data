@@ -1,6 +1,6 @@
 <?php
 
-namespace RICJTech\Covid19;
+namespace RICJTech\Covid19Data;
 require_once("autoload.php");
 
 use DateTime;
@@ -13,7 +13,7 @@ use RangeException;
 use SplFixedArray;
 use TypeError;
 
-class business implements JsonSerializable {
+class Business implements JsonSerializable {
 	use ValidateDate;
 	use ValidateUuid;
 
