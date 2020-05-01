@@ -1,10 +1,13 @@
 <?php
 namespace RICJTech\Covid19Data;
 
-use RICJTech\Covid19Data\{Profile};
+use RICJTech\Covid19Data\{Business,Profile};
+
 use Ramsey\Uuid\Uuid;
+
 use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
+
 require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
