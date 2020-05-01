@@ -5,7 +5,7 @@ use RICJTech\Covid19Data\{Profile};
 
 use Ramsey\Uuid\Uuid;
 
-use RICJTech\Covid19\business;
+use RICJTech\Covid19data\Business;
 use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
 
@@ -71,6 +71,8 @@ public function testInsert(): void {
 	self::assertEquals($VALID_REPORT_CONTENT,$pdoProfile->getProfileCloudinaryId());
 	self::assertEquals($this->	VALID_REPORT_DATE,$pdoProfile->getProfileAvatarUrl());
 }
+
+
 
 
 
