@@ -180,8 +180,13 @@ class Vote implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 //bind the member variables to place holders.
-		$parameters = ["voteProfileId =>$this->voteProfileId-getBytes()"];
+
+		$formattedDate = $this->voteDate->format("Y-m-d H:i:s.u");
+		$parameters = ["voteProfileId" => $this->voteProfileIdId->getBytes(),
+			"voteBehaviorId" => $this->voteBehaviorId->getBytes(),
+			"voteResult" => $this->voteResult, "voteDate" => $formattedDate];
 		$statement->execute($parameters);
+
 	}
 
 	/**
@@ -191,17 +196,14 @@ class Vote implements \JsonSerializable {
 	 * @throws \PDOException mySQL related errors.
 	 * @throws \TypeError if $pdo is not a PDO connection object.
 	 **/
-	public function update(\PDO $pdo): void {
+	public function update(\PDO $pdo, $voteProfileId, $voteBehaviorId): void {
 
 
 		// create query template"
-		$query = "UPDATE vote SET  voteDate = :voteDate, voteResult = :voteResult WHERE voteProfileId = :voteProfileId";
+		$query = "UPDATE vote SET  voteDate = :voteDate, voteResult = :voteResult WHERE voteProfileId = :voteProfileId and voteBehaviorId = :voteBehaviorId";
 		$statement = $pdo->prepare($query);
-
-
 		$formattedDate = $this->voteDate->format("Y-m-d H:i:s.u");
-
-		$parameters = ["voteProfileId" => $this->voteProfileIdId->getBytes(),
+		$parameters = ["voteProfileId" => $this->voteProfileId->getBytes(),
 			"voteBehaviorId" => $this->voteBehaviorId->getBytes(),
 			"voteResult" => $this->voteResult, "voteDate" => $formattedDate];
 		$statement->execute($parameters);

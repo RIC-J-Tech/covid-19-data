@@ -46,5 +46,16 @@ class VoteTest extends DataDesignTest {
 		$this->behavior = new Behavior(generateUuidV4(), $this->business->getBusinessId(),$this->profile->getProfileId(),"india", new DateTime());
 		$this->behavior->insert($this->getPDO());
 	}
+	public function testImportValidVote(): void {
+
+
+	}
+	public function testUpdateValidVote(): void{
+
+	}
+	public function testDeleteValidVote(): void{
+
+	}
+
 }
 
