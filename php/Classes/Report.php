@@ -422,17 +422,12 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	public function getReportByDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
 
 		//create dates for midnight of the date and midnight of the next day.
-		$startDateString = $reportDate->format('Y-m-d').'00:00:00';
+		//$startDateString = $reportDate->format('Y-m-d').'00:00:00';
 
-		$startDate = new DateTime($startDateString);
-
-		$endDate = new DateTime($startDateString);
-
-		$endDate->add(new \DateInterval('P1D'));
-
-		$endDate = new DateTime($startDateString);
-
-		$startDate;
+		$endDate = new DateTime(); //today's date.
+		$endDateString = $endDate->format('Y-m-d') . ' 00:00:00'; //get datepart only
+		$startDate = new DateTime($endDateString); //initialize start date
+		$startDate->sub(new \DateInterval('P30D')); //subtract 30 days.
 
 		//create query template
 		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate >= :endDate";
