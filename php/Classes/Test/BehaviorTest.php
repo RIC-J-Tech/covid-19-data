@@ -76,6 +76,37 @@ class BehaviorTest extends DataDesignTest {
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date);
 
+	}
+
+	/**
+	 * test inserting a Behavior, editing it, and then updating it
+	 **/
+	public function testUpdateValidBehavior() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("behavior");
+
+		// create a new Behavior and insert it into mySQL
+		$behaviorId = generateUuidV4();
+		$behavior = new Behavior($behaviorId, $this->business->getBusinessId(), $this->profile->getProfileId(), $this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+		$behavior->insert($this->getPDO());
+
+	// edit the Behavior and update it in mySQL
+		$behavior->setbehaviorContent($this->Valid_Behavior_Content2);
+		$behavior->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoBehavior = Behavior::getBehaviortByBehaviorId($this->getPDO(), $behavior->getBehaviorId());
+		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
+		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content2);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
+	}
+
+
+
 
 
 
@@ -83,5 +114,3 @@ class BehaviorTest extends DataDesignTest {
 
 
 	}
-
-}
