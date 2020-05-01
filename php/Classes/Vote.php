@@ -2,15 +2,10 @@
 namespace RICJTech\Covid19Data;
 
 require_once("autoload.php");
-
-use voteBehaviorId;
-use behaviorProfileId;
-use voteDate;
-use voteResult;
-
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 class Vote implements \JsonSerializable {
-	use VailidateDate;
-	use VailidateUuid;
+	use ValidateDate;
+	use ValidateUuid;
 
 	/*
 	 * This is the vote class!

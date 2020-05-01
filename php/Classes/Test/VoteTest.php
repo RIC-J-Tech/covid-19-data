@@ -4,9 +4,9 @@ namespace RICJTech\Covid19Data\Test;
 
 use RICJTech\Covid19Data\{Profile,Behavior, Business, Vote};
 use Ramsey\Uuid\Uuid;
-use RICJTech\Covid19Data\DataDesignTest;
+//use RICJTech\Covid19Data\DataTest;
 
-require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
+//require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
@@ -30,7 +30,7 @@ class VoteTest extends DataDesignTest {
 
 	public function setUp(): void {
 		parent::setUp();
-		$faker = Faker\Factory::create();
+		$faker = \Faker\Factory::create();
 		$this->VALID_VOTE_DATE = $faker->dateTime;
 
 		// create and insert a Profile to own the report content
@@ -46,10 +46,32 @@ class VoteTest extends DataDesignTest {
 		$this->behavior = new Behavior(generateUuidV4(), $this->business->getBusinessId(),$this->profile->getProfileId(),"india", new DateTime());
 		$this->behavior->insert($this->getPDO());
 	}
-	public function testImportValidVote(): void {
+	public function testInsertValidVote(): void {
+		//get count of profile records in db before we run the test
+		$numRows = $this->getConnection()->getRowCount("vote");
+
+		//insert a profile record in the db
 
 
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(),$this->VALID_VOTE_DATE,$this->VALID_VOTE_RESULT);
+		$vote->insert($this->getPDO());
+
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Vote::getVotesByVoteProfileId ($this->getPDO(), $vote->getVoteProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
+		$this->assertCount(1, $results);
+
+		// grab the result from the array and validate it
+		$pdoVote = $results[0];
+
+		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getVoteProfileId());
+		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
 	}
+
+
 	public function testUpdateValidVote(): void{
 
 	}
