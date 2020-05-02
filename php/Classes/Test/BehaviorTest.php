@@ -21,27 +21,27 @@ class BehaviorTest extends DataDesignTest {
 	 * Business, this is for foreign key relations
 	 * @var  Business
 	 **/
-	private $business = null;
+	protected $business = null;
 
 	/**
 	 * Profile that created the Behavior; this is for foreign key relations
 	 * @var Profile
 	 **/
-	private $profile = null;
+	protected $profile = null;
 /*
  * content of behavior
  * @var string $Valid_Behavior_Content
  */
-	private $Valid_Behavior_Content = "Put on masks";
+	protected $Valid_Behavior_Content = "Put on masks";
 	/*
 	 * date and time of post of this behavior
 	 * @var \Datetime $Valid_Behavior_Date
 	 */
-	private $Valid_Behavior_Date = null;
+	protected $Valid_Behavior_Date = null;
 
 
-	private $VALID_PROFILE_HASH;
-	private $VALID_ACTIVATION_TOKEN;
+	protected $VALID_PROFILE_HASH;
+	protected $VALID_ACTIVATION_TOKEN;
 
 	public final function setUp()  : void {
 
