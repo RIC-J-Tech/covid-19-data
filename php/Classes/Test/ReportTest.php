@@ -15,7 +15,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 
 class ReportTest extends DataDesignTest {
-	protected ivate $VALID_CLOUDINARY_ID ="astrongIdcloud";
+	protected $VALID_CLOUDINARY_ID ="astrongIdcloud";
 	protected $VALID_REPORT_DATE =null;
 	protected $VALID_REPORT_CONTENT="some random report of nuisance";
 	protected $VALID_DATE = null;
@@ -37,7 +37,7 @@ class ReportTest extends DataDesignTest {
 
 		//insert a profile record in the db
 		/** @var Uuid $profileId */
-		$profileId = generateUuidV4();
+		$profileId = generateUuidV4()->toString();
 		$password =$faker->password;
 		$VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
 		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
