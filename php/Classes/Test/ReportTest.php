@@ -1,11 +1,10 @@
 <?php
-namespace RICJTech\Covid19Data;
+namespace RICJTech\Covid19Data\Test;
 
-use RICJTech\Covid19Data\{Profile};
+use RICJTech\Covid19Data\{Profile,Business};
 
 use Ramsey\Uuid\Uuid;
 
-use RICJTech\Covid19\business;
 use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
 

@@ -5,7 +5,7 @@ require_once ("autoload.php");
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use Ramsey\uuid\uuid;
+use Ramsey\Uuid\Uuid;
 use RangeException;
 use SplFixedArray;
 use TypeError;
