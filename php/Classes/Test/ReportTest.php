@@ -5,11 +5,11 @@ use RICJTech\Covid19Data\{Profile};
 
 use Ramsey\Uuid\Uuid;
 
-use RICJTech\Covid19\business;
-use RICJTech\Covid19Data\DataDesignTest;
+use RICJTech\Covid19Data\{Business};
+//use RICJTech\Covid19Data\DataDesignTest;
 use Faker;
-
-require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
+require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
+//require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 

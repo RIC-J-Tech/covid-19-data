@@ -2,7 +2,7 @@
 namespace RICJTech\Covid19Data;
 
 require_once("autoload.php");
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
@@ -57,7 +57,7 @@ class Behavior implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 
-	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, DateTime $newBehaviorDate) {
+	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, \DateTime $newBehaviorDate) {
 		try {
 			$this->setBehaviorId($newBehaviorId);
 			$this->setBehaviorBusinessId($newBehaviorBusinessId);
@@ -89,13 +89,14 @@ class Behavior implements \JsonSerializable {
 	 **/
 	public function setBehaviorId($newBehaviorId): void {
 		try {
+			var_dump($newBehaviorId);
 			$uuid = self::validateUuid($newBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
-		// convert and store the report id
+		// convert and store the behavior id
 		$this->behaviorId = $uuid;
 	}
 
