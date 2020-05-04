@@ -33,6 +33,11 @@ class BehaviorTest extends DataDesignTest {
  * @var string $Valid_Behavior_Content
  */
 	protected $Valid_Behavior_Content = "Put on masks";
+	/**
+	 * content of the updated Behavior
+	 * @var string $Valid_Behavior_Content2
+	 **/
+	protected $Valid_Behavior_Content2 ="Washed hands regularly";
 	/*
 	 * date and time of post of this behavior
 	 * @var \Datetime $Valid_Behavior_Date
@@ -123,14 +128,16 @@ class BehaviorTest extends DataDesignTest {
 			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
 		$behavior->insert($this->getPDO());
 
-	// edit the Behavior and update it in mySQL
+		// check count of behavior records in the db after the insert
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+
+		// edit the Behavior and update it in mySQL
 		$behavior->setbehaviorContent($this->Valid_Behavior_Content2);
 		$behavior->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoBehavior = Behavior::getBehaviortByBehaviorId($this->getPDO(), $behavior->getBehaviorId());
+		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
 		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
 		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
 		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content2);
