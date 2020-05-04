@@ -413,18 +413,18 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	 * @throws \PDOException|Exception mySQL related errors being caught
 	 */
 
-	public function getReportByDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
+	public static function getReportsByReportDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
 
 		//create dates for midnight of the date and midnight of the next day.
 		//$startDateString = $reportDate->format('Y-m-d').'00:00:00';
 
-		$endDate = new DateTime(); //today's date.
+		$endDate = $reportDate;
 		$endDateString = $endDate->format('Y-m-d') . ' 00:00:00'; //get datepart only
 		$startDate = new DateTime($endDateString); //initialize start date
 		$startDate->sub(new \DateInterval('P30D')); //subtract 30 days.
 
 		//create query template
-		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate >= :endDate";
+		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate <= :endDate";
 		$statement = $pdo->prepare($query);
 
 		//Bind the beginning and end dates to their placeholders in the template
@@ -432,6 +432,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 			'startDate' => $startDate->format('Y-m-d H:i:s.u'),
 			'endDate'=>$endDate->format('Y-m-d H:i:s.u')
 		];
+		var_dump($parameters);
 		$statement->execute($parameters);
 
 		//Build an array of reports from the returned rows
