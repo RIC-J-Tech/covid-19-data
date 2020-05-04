@@ -46,7 +46,6 @@ class ReportTest extends DataDesignTest {
 
 		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 
-var_dump($VALID_ACTIVATION_TOKEN);
 
 		// create and insert a Profile to own the report content
 		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID, $faker->url,
@@ -100,13 +99,13 @@ var_dump($VALID_ACTIVATION_TOKEN);
 //
 //	//format the date too seconds since the beginning of time to avoid round off error
 //	$this->assertEquals($pdoReport->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
-
+//
 //	self::assertEquals($this->	VALID_REPORT_DATE,$pdoReport->getReportDate());
-//	self::assertEquals(,$pdoReport->getReportContent());
-
+//	self::assertEquals($this->VALID_REPORT_CONTENT,$pdoReport->getReportContent());
+//
 //
 //	}
-
+//
 //public function testUpdate():void{
 //
 //	$faker = Faker\Factory::create();
@@ -140,12 +139,65 @@ var_dump($VALID_ACTIVATION_TOKEN);
 //
 //
 //}
+//
+//public function testDelete() : void{
+//
+//	$faker = Faker\Factory::create();
+//
+//// count the number of rows and save it for later
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//	$this->VALID_REPORT_CONTENT = $faker->text;
+//
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//
+//	$report->insert($this->getPDO());
+//
+//	// delete the Report from mySQL
+//	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("report"));
+//
+//	$report->delete($this->getPDO());
+//
+//	// grab the data from mySQL and enforce the Report does not exist
+//	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
+//
+//	$this->assertNull($pdoReport);
+//
+//	$this->assertEquals($numRows, $this->getConnection()->getRowCount("report"));
+//
+//}
 
-public function testDelete() : void{
+//public function testGetValidReportByBusinessId(): void{
+//	$faker = Faker\Factory::create();
+//
+//	//get count of profile records in db before we run the test
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//	$this->VALID_REPORT_CONTENT = $faker->text;
+//
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//	$report->insert($this->getPDO());
+//
+//	$report->getReportBusinessId($this->getPDO(),$this->business->getBusinessId()->getBytes());
+//	//check count of profile record in the db after the insert
+//	$numRowsAfter = $this->getConnection()->getRowCount("profile");
+//	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+//
+//}
+
+public function testGetValidReportByReportId():void{
 
 	$faker = Faker\Factory::create();
 
-// count the number of rows and save it for later
+	//get count of profile records in db before we run the test
 	$numRows = $this->getConnection()->getRowCount("report");
 
 	/** @var Uuid $reportId */
@@ -155,32 +207,23 @@ public function testDelete() : void{
 
 	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
 		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
-
 	$report->insert($this->getPDO());
 
-	// delete the Report from mySQL
-	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("report"));
-
-	$report->delete($this->getPDO());
-
-	// grab the data from mySQL and enforce the Report does not exist
-	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
-
-	$this->assertNull($pdoReport);
-
-	$this->assertEquals($numRows, $this->getConnection()->getRowCount("report"));
-
-}
-
-public function testGetValidReportByReportDate(): void{
-
-// count the number of rows and save it for later
-	$numRows = $this->getConnection()->getRowCount("report");
-
+	$report->getReportId($this->getPDO(),$report->getReportId());
+	//check count of profile record in the db after the insert
+	$numRowsAfter = $this->getConnection()->getRowCount("profile");
+	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
 
 
 }
 
+
+public function testGetValidReportByDate(): void{
+
+
+
+
+}
 
 
 

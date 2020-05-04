@@ -325,7 +325,7 @@ return $reports;
 	 * @param $reportBusinessId
 	 * @return SplFixedArray
 	 */
-public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \SplFixedArray{
+public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): ?Report{
 	//create query template
 	$query = "SELECT * FROM report WHERE reportBusinessId = :reportProfileId ";
 	$statement = $pdo->prepare($query);
@@ -344,29 +344,19 @@ public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \Spl
 	$statement->execute($parameters);
 
 	//build an array of reports
-	$reports = new SplFixedArray($statement->rowCount());
-
+	$reports = null;
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	while(($row = $statement->fetch())!== false){
-		try {
-			//instantiate report object and push data into it
-			$report = new Report($row["reportId"],
-				$row["reportBusinessId"],
-				$row["reportProfileId"],
-				$row["reportContent"],
-				new \DateTime($row["reportDate"]));
-			$reports[$reports->key()] = $report;
-			$reports->next();
+	$row = $statement->fetch();
+	if($row !== false){
+		//instantiate profile object and push data into it
+		$report = new Report($row["reportId"],
+			$row["reportBusinessId"],
+			$row["reportProfileId"],
+			$row["reportContent"],
+			new \DateTime($row["reportDate"]));
 
 		}
-		catch(\Exception $exception){
-			throw (new \PDOException($exception->getMessage(),0,$exception));
-		}
-
-
-	}
-
-	return $reports;
+	return ($reports);
 }
 
 	/**
