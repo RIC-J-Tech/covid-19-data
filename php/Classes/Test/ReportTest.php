@@ -188,38 +188,37 @@ class ReportTest extends DataDesignTest {
 //
 //	$report->getReportBusinessId($this->getPDO(),$this->business->getBusinessId()->getBytes());
 //	//check count of profile record in the db after the insert
-//	$numRowsAfter = $this->getConnection()->getRowCount("profile");
+//	$numRowsAfter = $this->getConnection()->getRowCount("report");
 //	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
 //
 //}
 
-public function testGetValidReportByReportId():void{
-
-	$faker = Faker\Factory::create();
-
-	//get count of profile records in db before we run the test
-	$numRows = $this->getConnection()->getRowCount("report");
-
-	/** @var Uuid $reportId */
-	$reportId = generateUuidV4()->toString();
-	$this->VALID_REPORT_DATE=$faker->dateTime;
-	$this->VALID_REPORT_CONTENT = $faker->text;
-
-	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
-		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
-	$report->insert($this->getPDO());
-
-	$report->getReportId($this->getPDO(),$report->getReportId());
-	//check count of profile record in the db after the insert
-	$numRowsAfter = $this->getConnection()->getRowCount("profile");
-	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
-
-
-}
+//public function testGetValidReportByReportId():void{
+//
+//	$faker = Faker\Factory::create();
+//
+//	//get count of profile records in db before we run the test
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//	$this->VALID_REPORT_CONTENT = $faker->text;
+//
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//	$report->insert($this->getPDO());
+//
+//	$report->getReportId($this->getPDO(),$report->getReportId());
+//	//check count of profile record in the db after the insert
+//	$numRowsAfter = $this->getConnection()->getRowCount("report");
+//	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+//
+//
+//}
 
 
 public function testGetValidReportByDate(): void{
-
 
 
 
