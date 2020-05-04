@@ -72,7 +72,7 @@ private  $reportProfileId;
 	 * @param DateTime $newReportDate
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct($newReportId, $newReportBusinessId,$newReportProfileId, string $newReportContent, DateTime $newReportDate) {
+public function __construct($newReportId, $newReportBusinessId,$newReportProfileId, string $newReportContent, \DateTime $newReportDate) {
 	try{
 			$this->setReportId($newReportId);
 			$this->setReportBusinessId($newReportBusinessId);
@@ -303,7 +303,7 @@ public function getReportByProfileId(\PDO $pdo, $reportProfileId): SplFixedArray
 				$row["reportBusinessId"],
 				$row["reportProfileId"],
 				$row["reportContent"],
-				$row["reportDate"]);
+				new \DateTime($row["reportDate"]));
 			$reports[$reports->key()] = $report;
 			$reports->next();
 
@@ -354,7 +354,7 @@ public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \Spl
 				$row["reportBusinessId"],
 				$row["reportProfileId"],
 				$row["reportContent"],
-				$row["reportDate"]);
+				new \DateTime($row["reportDate"]));
 			$reports[$reports->key()] = $report;
 			$reports->next();
 
@@ -403,7 +403,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 											$row["reportBusinessId"],
 											$row["reportProfileId"],
 											$row["reportContent"],
-											$row["reportDate"]);
+											new \DateTime($row["reportDate"]));
 
 		}
 
@@ -455,7 +455,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 					$row["reportBusinessId"],
 					$row["reportProfileId"],
 					$row["reportContent"],
-					$row["reportDate"]);
+					new \DateTime($row["reportDate"]));
 				$reports[$reports->key()] = $report;
 				$reports->next();
 
@@ -486,6 +486,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 		$fields["reportId"] = $this->reportId->toString();
 		$fields["reportBusinessId"] = $this->reportBusinessId->toString();
 		$fields["reportProfileId"]= $this->reportProfileId->toString();
+
 		return($fields);
 
 	}

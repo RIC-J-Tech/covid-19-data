@@ -15,10 +15,11 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 
 class ReportTest extends DataDesignTest {
-	protected $VALID_CLOUDINARY_ID ="astrongIdcloud";
-	protected $VALID_REPORT_DATE =null;
-	protected $VALID_REPORT_CONTENT="some random report of nuisance";
-	protected $VALID_DATE = null;
+	private $VALID_CLOUDINARY_ID ="astrongIdcloud";
+	private $VALID_REPORT_DATE =null;
+	private $VALID_REPORT_CONTENT="some random report of nuisance";
+	private $VALID_REPORT_CONTENT2;
+
 
 	/**
 	 * @var \RICJTech\Covid19Data\Business
@@ -38,73 +39,147 @@ class ReportTest extends DataDesignTest {
 		//insert a profile record in the db
 		/** @var Uuid $profileId */
 		$profileId = generateUuidV4()->toString();
+
 		$password =$faker->password;
+
 		$VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
+
 		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 
-		$this->VALID_REPORT_DATE= new \DateTime();
+var_dump($VALID_ACTIVATION_TOKEN);
 
 		// create and insert a Profile to own the report content
-		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID, $VALID_AVATAR_URL =$faker->url,
-			$VALID_ACTIVATION_TOKEN, $VALID_PROFILE_EMAIL =$faker->email,
-			$VALID_PROFILE_HASH, $VALID_PROFILE_PHONE =$faker->phoneNumber, $VALID_PROFILE_USERNAME =$faker->userName);
+		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID, $faker->url,
+			$VALID_ACTIVATION_TOKEN, $faker->email,
+			$VALID_PROFILE_HASH, $faker->phoneNumber, $faker->userName);
 		$this->profile->insert($this->getPDO());
 
 
 		//create and insert a Business to own the Report content
 		//insert a profile record in the db
 		/** @var Uuid $businessId */
-			$reportBusinessId = $faker->uuid;
+			$reportBusinessId =generateUuidV4()->toString();
 		$this->business = new Business($reportBusinessId, "1234567898364527",$faker->longitude, $faker->latitude,
 			"RICJTECH","https://ricjtech.com");
 		$this->business->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
-		$this->VALID_DATE = new \DateTime();
+		$this->VALID_REPORT_DATE= new \DateTime();
 
 
 	}
 
 
-public function testInsert(): void {
-	$faker = Faker\Factory::create();
-
-	//get count of profile records in db before we run the test
-	$numRows = $this->getConnection()->getRowCount("profile");
-
-	/** @var Uuid $reportId */
-	$reportId = generateUuidV4();
-
-	$report = new Report($reportId,$this->business->getBusinessId(),$this->profile->getProfileId(), $VALID_REPORT_CONTENT =$faker->text, $this->VALID_REPORT_DATE=$faker->dateTime);
-	$report->insert($this->getPDO());
-
-	//check count of Profile records in the database after the insert
-	$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
-	self::assertEquals($numRows + 1,$numRowsAfterInsert);
-
-	//get a copy of the record just inserted and validate the values
-	//make sure the values that went into the record are the same ones that come out
-	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
-
-	$this->assertEquals($pdoReport->getReportProfileId(), $this->profile->getProfileId());
-
-	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
-
-	$this->assertEquals($pdoReport->getReportContent(), $this->VALID_REPORT_CONTENT);
-
-	//format the date too seconds since the beginning of time to avoid round off error
-	$this->assertEquals($pdoReport->getReportDate()->getTimestamp(), $this->VALID_DATE->getTimestamp());
+//public function testInsert(): void {
+//	$faker = Faker\Factory::create();
+//
+//	//get count of profile records in db before we run the test
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//$this->VALID_REPORT_CONTENT = $faker->text;
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//	$report->insert($this->getPDO());
+//
+//	//check count of Profile records in the database after the insert
+//	$numRowsAfterInsert = $this->getConnection()->getRowCount("report");
+//	self::assertEquals($numRows + 1,$numRowsAfterInsert);
+//
+//	//get a copy of the record just inserted and validate the values
+//	//make sure the values that went into the record are the same ones that come out
+//	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
+//
+//	$this->assertEquals($pdoReport->getReportProfileId(), $this->profile->getProfileId());
+//
+//	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
+//
+//	$this->assertEquals($pdoReport->getReportContent(), $this->VALID_REPORT_CONTENT);
+//
+//	//format the date too seconds since the beginning of time to avoid round off error
+//	$this->assertEquals($pdoReport->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
 
 //	self::assertEquals($this->	VALID_REPORT_DATE,$pdoReport->getReportDate());
 //	self::assertEquals(,$pdoReport->getReportContent());
 
+//
+//	}
+
+//public function testUpdate():void{
+//
+//	$faker = Faker\Factory::create();
+//	//get count of profile records in database before we run the test
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//	$this->VALID_REPORT_CONTENT = $faker->text;
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//	$report->insert($this->getPDO());
+//
+//	// edit the Report and update it in mySQL
+//	$report->setReportContent($this->VALID_REPORT_CONTENT2=$faker->text);
+//	$report->update($this->getPDO());
+//
+//	//get a copy of the record just inserted and validate the values
+//	//make sure the values that went into the record are the same ones that come out
+//	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
+//
+//	$this->assertEquals($pdoReport->getReportProfileId(), $this->profile->getProfileId());
+//
+//	$this->assertEquals($pdoReport->getReportBusinessId(), $this->business->getBusinessId());
+//
+//	$this->assertEquals($pdoReport->getReportContent(), $this->VALID_REPORT_CONTENT2);
+//
+//	//format the date too seconds since the beginning of time to avoid round off error
+//	$this->assertEquals($pdoReport->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
+//
+//
+//}
+
+public function testDelete() : void{
+
+	$faker = Faker\Factory::create();
+
+// count the number of rows and save it for later
+	$numRows = $this->getConnection()->getRowCount("report");
+
+	/** @var Uuid $reportId */
+	$reportId = generateUuidV4()->toString();
+	$this->VALID_REPORT_DATE=$faker->dateTime;
+	$this->VALID_REPORT_CONTENT = $faker->text;
+
+	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+
+	$report->insert($this->getPDO());
+
+	// delete the Report from mySQL
+	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("report"));
+
+	$report->delete($this->getPDO());
+
+	// grab the data from mySQL and enforce the Report does not exist
+	$pdoReport = Report::getReportByReportId($this->getPDO(),$report->getReportId()->getBytes());
+
+	$this->assertNull($pdoReport);
+
+	$this->assertEquals($numRows, $this->getConnection()->getRowCount("report"));
+
+}
+
+public function testGetValidReportByReportDate(): void{
+
+// count the number of rows and save it for later
+	$numRows = $this->getConnection()->getRowCount("report");
 
 
 
-	}
-
-
-
+}
 
 
 
