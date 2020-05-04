@@ -2,7 +2,7 @@
 namespace RICJTech\Covid19Data;
 
 require_once("autoload.php");
-require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
@@ -89,7 +89,6 @@ class Behavior implements \JsonSerializable {
 	 **/
 	public function setBehaviorId($newBehaviorId): void {
 		try {
-			var_dump($newBehaviorId);
 			$uuid = self::validateUuid($newBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -315,7 +314,8 @@ class Behavior implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -353,7 +353,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behavior->next();
 			} catch(\Exception $exception) {
@@ -393,7 +394,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behavior->next();
 			} catch(\Exception $exception) {
@@ -439,7 +441,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
 			} catch(\Exception $exception) {
@@ -468,7 +471,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$getAllBehaviors = new getAllBehaviors($row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$getAllBehaviors = new getAllBehaviors($row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$getAllBehaviors[$getAllBehaviors->key()] = $getAllBehaviors;
 				$getAllBehaviors->next();
 			} catch(\Exception $exception) {
