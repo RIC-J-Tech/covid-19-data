@@ -432,7 +432,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 			'startDate' => $startDate->format('Y-m-d H:i:s.u'),
 			'endDate'=>$endDate->format('Y-m-d H:i:s.u')
 		];
-		var_dump($parameters);
+
 		$statement->execute($parameters);
 
 		//Build an array of reports from the returned rows

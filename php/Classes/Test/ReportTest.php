@@ -192,36 +192,36 @@ class ReportTest extends DataDesignTest {
 //	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
 //
 //}
-
-public function testGetValidReportByReportId():void{
-
-	$faker = Faker\Factory::create();
-
-	//get count of profile records in db before we run the test
-	$numRows = $this->getConnection()->getRowCount("report");
-
-	/** @var Uuid $reportId */
-	$reportId = generateUuidV4()->toString();
-
-	$this->VALID_REPORT_DATE=$faker->dateTime;
-
-	$this->VALID_REPORT_CONTENT = $faker->text;
-
-	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
-		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
-	$report->insert($this->getPDO());
-
-	$report->getReportId($this->getPDO(),$report->getReportId());
-	//check count of profile record in the db after the insert
-	$numRowsAfter = $this->getConnection()->getRowCount("report");
-	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
-	$this->assertEquals($report->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
-	$this->assertEquals($report->getReportContent(), $this->VALID_REPORT_CONTENT);
-	$this->assertEquals($report->getReportBusinessId(),$this->business->getBusinessId());
-	$this->assertEquals($report->getReportProfileId(),$this->profile->getProfileId());
-
-
-}
+//
+//public function testGetValidReportByReportId():void{
+//
+//	$faker = Faker\Factory::create();
+//
+//	//get count of profile records in db before we run the test
+//	$numRows = $this->getConnection()->getRowCount("report");
+//
+//	/** @var Uuid $reportId */
+//	$reportId = generateUuidV4()->toString();
+//
+//	$this->VALID_REPORT_DATE=$faker->dateTime;
+//
+//	$this->VALID_REPORT_CONTENT = $faker->text;
+//
+//	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+//		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
+//	$report->insert($this->getPDO());
+//
+//	$report->getReportId($this->getPDO(),$report->getReportId());
+//	//check count of profile record in the db after the insert
+//	$numRowsAfter = $this->getConnection()->getRowCount("report");
+//	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+//	$this->assertEquals($report->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
+//	$this->assertEquals($report->getReportContent(), $this->VALID_REPORT_CONTENT);
+//	$this->assertEquals($report->getReportBusinessId(),$this->business->getBusinessId());
+//	$this->assertEquals($report->getReportProfileId(),$this->profile->getProfileId());
+//
+//
+//}
 
 
 public function testGetValidReportByDate(): void {
@@ -233,27 +233,27 @@ public function testGetValidReportByDate(): void {
 
 	/** @var Uuid $reportId */
 	$reportId = generateUuidV4()->toString();
-	$this->VALID_REPORT_DATE=$this->getTestDate(45);
+	$this->VALID_REPORT_DATE = $this->getTestDate(45);
 	$this->VALID_REPORT_CONTENT = $faker->text;
-	$report = new Report($reportId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+	$report = new Report($reportId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 		$this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE);
 
 	$reportId2 = generateUuidV4()->toString();
-	$VALID_REPORT_DATE2= $this->getTestDate(-5);
+	$VALID_REPORT_DATE2 = $this->getTestDate(-5);
 	$this->VALID_REPORT_CONTENT = $faker->text;
-	$report2 = new Report($reportId2,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+	$report2 = new Report($reportId2, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 		$this->VALID_REPORT_CONTENT, $VALID_REPORT_DATE2);
 
 	$reportId3 = generateUuidV4()->toString();
-	$VALID_REPORT_DATE3=$this->getTestDate(-15);
+	$VALID_REPORT_DATE3 = $this->getTestDate(-15);
 	$this->VALID_REPORT_CONTENT = $faker->text;
-	$report3 = new Report($reportId3,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+	$report3 = new Report($reportId3, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 		$this->VALID_REPORT_CONTENT, $VALID_REPORT_DATE3);
 
 	$reportId4 = generateUuidV4()->toString();
-	$VALID_REPORT_DATE4=$this->getTestDate(-35);
+	$VALID_REPORT_DATE4 = $this->getTestDate(-35);
 	$this->VALID_REPORT_CONTENT = $faker->text;
-	$report4 = new Report($reportId4,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+	$report4 = new Report($reportId4, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 		$this->VALID_REPORT_CONTENT, $VALID_REPORT_DATE4);
 
 	$report->insert($this->getPDO());
@@ -262,24 +262,30 @@ public function testGetValidReportByDate(): void {
 	$report4->insert($this->getPDO());
 
 
-		var_dump($this->VALID_REPORT_DATE);
-	var_dump($VALID_REPORT_DATE2);
-	var_dump($VALID_REPORT_DATE3);
-	var_dump($VALID_REPORT_DATE4);
+//	var_dump($this->VALID_REPORT_DATE);
+//	var_dump($VALID_REPORT_DATE2);
+//	var_dump($VALID_REPORT_DATE3);
+//	var_dump($VALID_REPORT_DATE4);
 
 
 //	$report->getReportId($this->getPDO(),$report->getReportId());
 	//check count of profile record in the db after the insert
 	$numRowsAfter = $this->getConnection()->getRowCount("report");
-	self::assertEquals($numRows + 4, $numRowsAfter,"checked record count");
-	$reports = Report::getReportsByReportDate($this->getPDO(),$this->getMaxDate());
+	self::assertEquals($numRows + 4, $numRowsAfter, "checked record count");
+	$reports = Report::getReportsByReportDate($this->getPDO(), $this->getMaxDate());
 	$this->assertCount(2, $reports);
 
-//	for ($i=0;$i<$reports.length;$i++){
-//		$pdoReport = $reports[$i];
-//		self::assertGreaterThan(getMinDate(), pdoReport->reportDate);
-//    self::assertLessThan(getMaxDate(), pdoReport->reportDate);
+
+//$reports1 = array($report,$report2,$report3,$report4);
+//	for($i = 0; $i <=$reports1; $i++) {
+//
+//		$pdoReport = $reports1[$i]; var_dump($reports1[$i]);
+//		self::assertGreaterThan($this->getMinDate(), $pdoReport->getReportDate());
+//    self::assertLessThan($this->getMaxDate(), $pdoReport->getReportDate());
+//}
+
 }
+
 
 private function getMinDate(): \DateTime{
 return $this->getTestDate(-30);
@@ -294,7 +300,7 @@ private function getMaxDate(): \DateTime{
 
 
 
-private function getTestDate($interval): \DateTime {
+public function getTestDate($interval): \DateTime {
 	//Calculating dates used for testing.
 	$newInterval = "P" . abs($interval ). "D";
 
