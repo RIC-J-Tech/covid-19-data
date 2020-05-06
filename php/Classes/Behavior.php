@@ -426,9 +426,8 @@ class Behavior implements \JsonSerializable {
 
 		// escape any mySQL wild cards
 		$behaviorContent = str_replace("_", "\\_", str_replace("%", "\\%", $behaviorContent));
-
 		// create query template
-		$query = "SELECT behaviorId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorContent LIKE :behaviorContent";
+		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorContent LIKE :behaviorContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the behavior content to the place holder in the template
@@ -441,7 +440,7 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
@@ -454,7 +453,7 @@ class Behavior implements \JsonSerializable {
 	}
 
 	/**
-	 * gets all votes
+	 * gets all behaviors
 	 *
 	 * @param \PDO $pdo PDO connection object.
 	 * @return \SplFixedArray SplFixedArray of votes found or null if not found.
