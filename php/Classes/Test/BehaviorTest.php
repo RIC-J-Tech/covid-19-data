@@ -273,34 +273,34 @@ class BehaviorTest extends DataDesignTest {
 	}
 
 
-//	/**
-//	 * test grabbing all Behaviors
-//	 **/
-//	public function testGetAllValidBehaviors() : void {
-//		// count the number of rows and save it for later
-//		$numRows = $this->getConnection()->getRowCount("behavior");
-//
-//		// create a new Behavior and insert to into mySQL
-//		$behaviorId = generateUuidV4()->toString();
-//		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
-//			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
-//		$behavior->insert($this->getPDO());
-//
-//		// grab the data from mySQL and enforce the fields match our expectations
-//		$results = Behavior::getAllBehaviors($this->getPDO());
-//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
-//		$this->assertCount(1, $results);
-//		$this->assertContainsOnlyInstancesOf("RICJTech\\Covid19Data\\Behavior", $results);
-//
-//		// grab the result from the array and validate it
-//		$pdoBehavior = $results[0];
-//		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
-//		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
-//		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
-//		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content);
-//		//format the date too seconds since the beginning of time to avoid round off error
-//		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
-//	}
+	/**
+	 * test grabbing all Behaviors
+	 **/
+	public function testGetAllValidBehaviors() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("behavior");
+
+		// create a new Behavior and insert to into mySQL
+		$behaviorId = generateUuidV4()->toString();
+		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
+			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+		$behavior->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Behavior::getAllBehaviors($this->getPDO());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("RICJTech\\Covid19Data\\Behavior", $results);
+
+		// grab the result from the array and validate it
+		$pdoBehavior = $results[0];
+		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
+		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
+		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
+	}
 
 
 

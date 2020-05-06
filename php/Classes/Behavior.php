@@ -462,24 +462,24 @@ class Behavior implements \JsonSerializable {
 	 **/
 	public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
 		// create query template
-		$query = "SELECT behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM getAllBehavior";
+		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 		// build an array of behaviors
-		$getAllBehaviors = new \SplFixedArray($statement->rowCount());
+		$behaviors = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$getAllBehaviors = new getAllBehaviors($row["behaviorBusinessId"], $row["behaviorProfileId"],
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
-				$getAllBehaviors[$getAllBehaviors->key()] = $getAllBehaviors;
-				$getAllBehaviors->next();
+				$behaviors[$behaviors->key()] = $behavior;
+				$behaviors->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($getAllBehaviors);
+		return ($behaviors);
 	}
 
 	/**
