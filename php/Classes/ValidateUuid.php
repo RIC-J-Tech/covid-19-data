@@ -39,6 +39,7 @@ trait ValidateUuid {
 				$uuid = Uuid::fromString($newUuid);
 			} else {
 				throw(new \InvalidArgumentException("invalid uuid2"));
+
 			}
 		} else if(gettype($newUuid) === "object" && get_class($newUuid) === "Ramsey\\Uuid\\Uuid") {
 			// if the misquote id is already a valid UUID, press on
@@ -46,7 +47,9 @@ trait ValidateUuid {
 		} else {
 			// throw out any other trash
 
+
 			throw(new \InvalidArgumentException("invalid uuid3"));
+
 		}
 		// verify the uuid is uuid v4
 		if($uuid->getVersion() !== 4) {

@@ -1912,6 +1912,7 @@
                 "polyfill",
                 "portable"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1926,6 +1927,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-02-27T09:26:54+00:00"
         },
         {
@@ -1985,6 +1987,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1999,6 +2002,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
@@ -2061,6 +2065,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2075,6 +2080,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
@@ -2134,6 +2140,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2148,6 +2155,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
@@ -2203,6 +2211,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2217,6 +2226,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-02-27T09:26:54+00:00"
         },
         {
@@ -2276,6 +2286,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2290,6 +2301,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-04-28T17:55:16+00:00"
         },
         {
@@ -2396,6 +2408,8 @@
         "ext-pdo": "*",
         "ext-json": "*"
     },
+
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
+
 }
