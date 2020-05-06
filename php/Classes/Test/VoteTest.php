@@ -67,14 +67,14 @@ class VoteTest extends DataDesignTest {
 
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Vote::getVotesByVoteProfileId ($this->getPDO(), $vote->getVoteProfileId());
+		$results = Vote::getVotesByVoteProfileId ($this->getPDO(), $vote->getVoteProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
 		$this->assertCount(1, $results);
 
 		// grab the result from the array and validate it
 		$pdoVote = $results[0];
 
-		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getVoteProfileId());
+		$this->assertEquals($pdoVote->getVoteProfileId()->toString(), $this->profile->getProfileId()->toString());
 		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());

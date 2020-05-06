@@ -274,7 +274,7 @@ class Vote implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
 				$votes[$votes->key()] = $vote;
 				$votes->next();
 			} catch(\Exception $exception) {
@@ -324,7 +324,7 @@ class Vote implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
 				$votes [$votes->key()] = $vote;
 				$votes->next();
 			} catch(\Exception $exception) {
@@ -417,8 +417,8 @@ class Vote implements \JsonSerializable {
 
 		$fields["voteBehaviorId"] = $this->voteBehaviorId->toString();
 		$fields["voteProfileId"] = $this->voteProfileId->toString();
-		$fields["voteDate"] = $this->voteDate->toString();
 		$fields["voteResult"] = $this->voteResult->toString();
+		$fields["voteDate"] = $this->voteDate->toString();
 
 		//format the date so that the front end can consume it
 		$fields["voteDate"] = round(floatval($this->voteDate->format("U.u")) * 1000);
