@@ -57,7 +57,7 @@ class Behavior implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 
-	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, DateTime $newBehaviorDate) {
+	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, \DateTime $newBehaviorDate) {
 		try {
 			$this->setBehaviorId($newBehaviorId);
 			$this->setBehaviorBusinessId($newBehaviorBusinessId);
@@ -95,7 +95,7 @@ class Behavior implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
-		// convert and store the report id
+		// convert and store the behavior id
 		$this->behaviorId = $uuid;
 	}
 
@@ -314,7 +314,8 @@ class Behavior implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -352,7 +353,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behavior->next();
 			} catch(\Exception $exception) {
@@ -392,7 +394,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behavior->next();
 			} catch(\Exception $exception) {
@@ -438,7 +441,8 @@ class Behavior implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"], $row["behaviorContent"], $row["behaviorDate"]);
+				$behavior = new behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
 			} catch(\Exception $exception) {
@@ -449,6 +453,35 @@ class Behavior implements \JsonSerializable {
 		return ($behaviors);
 	}
 
+	/**
+	 * gets all votes
+	 *
+	 * @param \PDO $pdo PDO connection object.
+	 * @return \SplFixedArray SplFixedArray of votes found or null if not found.
+	 * @throws \PDOException when mySQL related errors.
+	 * @throws \TypeError when variables are not the correct data type.
+	 **/
+	public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
+		// create query template
+		$query = "SELECT behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM getAllBehavior";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+		// build an array of behaviors
+		$getAllBehaviors = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$getAllBehaviors = new getAllBehaviors($row["behaviorBusinessId"], $row["behaviorProfileId"],
+					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$getAllBehaviors[$getAllBehaviors->key()] = $getAllBehaviors;
+				$getAllBehaviors->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($getAllBehaviors);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization

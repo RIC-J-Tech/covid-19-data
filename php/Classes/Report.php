@@ -5,7 +5,7 @@ require_once ("autoload.php");
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use Ramsey\uuid\uuid;
+use Ramsey\Uuid\Uuid;
 use RangeException;
 use SplFixedArray;
 use TypeError;
@@ -423,9 +423,16 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 
 		//create dates for midnight of the date and midnight of the next day.
 		$startDateString = $reportDate->format('Y-m-d').'00:00:00';
+
 		$startDate = new DateTime($startDateString);
+
 		$endDate = new DateTime($startDateString);
+
 		$endDate->add(new \DateInterval('P1D'));
+
+		$endDate = new DateTime($startDateString);
+
+		$startDate;
 
 		//create query template
 		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate >= :endDate";
@@ -434,7 +441,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 		//Bind the beginning and end dates to their placeholders in the template
 		$parameters = [
 			'startDate' => $startDate->format('Y-m-d H:i:s.u'),
-								$endDate->format('Y-m-d H:i:s.u')
+			'endDate'=>$endDate->format('Y-m-d H:i:s.u')
 		];
 		$statement->execute($parameters);
 
