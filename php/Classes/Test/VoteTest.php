@@ -5,7 +5,7 @@ namespace RICJTech\Covid19Data\Test;
 use RICJTech\Covid19Data\{Profile,Behavior, Business, Vote};
 use Ramsey\Uuid\Uuid;
 //use RICJTech\Covid19Data\DataTest;
-
+use Faker;
 //require_once(dirname(__DIR__) . "/Test/DataDesignTest.php");
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
@@ -18,32 +18,42 @@ class VoteTest extends DataDesignTest {
 	private $behavior = null;
 	private $business= null;
 	private $VALID_ACTIVATION_TOKEN;
-	private $VALID_CLOUDINARY_ID = "astrongIdcloud";
-	private $VALID_AVATAR_URL = "byrneindia@gmail.com";
-	private $VALID_PROFILE_EMAIL = "byrneindia@gmail.com";
-	private $VALID_PROFILE_HASH = "byrneindia@gmail.com";
-	private $VALID_PROFILE_PHONE = "5058321940";
-	private $VALID_PROFILE_USERNAME = "Batman";
-	private $VALID_VOTE_DATE = null;
-	private $VALID_VOTE_RESULT =true;
+	private $VALID_CLOUDINARY_ID ="astrongIdcloud";
+	private $VALID_AVATAR_URL;
+	private $VALID_PROFILE_EMAIL;
+	private $VALID_PROFILE_HASH;
+	private $VALID_PROFILE_PHONE ;
+	private $VALID_PROFILE_USERNAME;
+	private $VALID_VOTE_RESULT;
+	private $VALID_VOTE_DATE;
 
 
 	public function setUp(): void {
 		parent::setUp();
-		$faker = \Faker\Factory::create();
+		$faker = Faker\Factory::create();
+
+		$password =$faker->password;
+		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
+		$this->VALID_ACTIVATION_TOKEN= bin2hex(random_bytes(16));
+		$this->VALID_PROFILE_EMAIL = $faker->email;
+		$this->VALID_PROFILE_PHONE = $faker->phoneNumber;
+//		$this->VALID_CLOUDINARY_ID = "astrongIdcloud";
+		$this->VALID_AVATAR_URL = $faker->url;
+		$this->VALID_PROFILE_USERNAME = $faker->userName;
 		$this->VALID_VOTE_DATE = $faker->dateTime;
+		$this->VALID_VOTE_RESULT=true;
 
 		// create and insert a Profile to own the report content
-		$this->profile = new Profile(generateUuidV4(), $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,
+		$this->profile = new Profile(generateUuidV4()->toString(), $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,
 			$this->VALID_ACTIVATION_TOKEN, $this->VALID_PROFILE_EMAIL,
 			$this->VALID_PROFILE_HASH, $this->VALID_PROFILE_PHONE, $this->VALID_PROFILE_USERNAME);
 		$this->profile->insert($this->getPDO());
 
 
-		$this->business = new Business(generateUuidV4(), null,"123.456456", "128.789609", "RICJTECH","https://ricjtech.com");
+		$this->business = new Business(generateUuidV4()->toString(), "myyelpid","123.456456", "128.789609", "RICJTECH","https://ricjtech.com");
 		$this->business->insert($this->getPDO());
 
-		$this->behavior = new Behavior(generateUuidV4(), $this->business->getBusinessId(),$this->profile->getProfileId(),"india", new DateTime());
+		$this->behavior = new Behavior(generateUuidV4()->toString(), $this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),"india", new \DateTime());
 		$this->behavior->insert($this->getPDO());
 	}
 	public function testInsertValidVote(): void {
@@ -52,8 +62,7 @@ class VoteTest extends DataDesignTest {
 
 		//insert a profile record in the db
 
-
-		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(),$this->VALID_VOTE_DATE,$this->VALID_VOTE_RESULT);
+		$vote = new Vote($this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(),$this->VALID_VOTE_RESULT,$this->VALID_VOTE_DATE);
 		$vote->insert($this->getPDO());
 
 

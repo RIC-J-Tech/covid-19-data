@@ -1,11 +1,5 @@
 <?php
-
-
-
 namespace RICJTech\Covid19Data\Test;
-
-
-
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -18,9 +12,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
 
-
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
-
+require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
 
 /**
  * Abstract class containing universal and project specific mySQL parameters
@@ -62,7 +54,6 @@ abstract class DataDesignTest extends TestCase {
 		$dataset->addTable("behavior");
 		$dataset->addTable("vote");
 		$dataset->addTable("report");
-
 		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
 		return($dataset);
 	}
