@@ -1,6 +1,7 @@
 <?php
 
 
+
 namespace RICJTech\Covid19Data\Test;
 
 
@@ -16,8 +17,9 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
+
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 
 /**

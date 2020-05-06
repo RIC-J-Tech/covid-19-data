@@ -72,7 +72,7 @@ private  $reportProfileId;
 	 * @param DateTime $newReportDate
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-public function __construct($newReportId,$newReportBusinessId,$newReportProfileId, string $newReportContent, DateTime $newReportDate) {
+public function __construct($newReportId, $newReportBusinessId,$newReportProfileId, string $newReportContent, \DateTime $newReportDate) {
 	try{
 			$this->setReportId($newReportId);
 			$this->setReportBusinessId($newReportBusinessId);
@@ -94,6 +94,10 @@ public function __construct($newReportId,$newReportBusinessId,$newReportProfileI
 	 */
 	public function getReportId(): Uuid{
 		return $this->reportId;
+	}
+
+	public function getReportProfileId(): Uuid{
+		return $this->reportProfileId;
 	}
 
 
@@ -299,7 +303,7 @@ public function getReportByProfileId(\PDO $pdo, $reportProfileId): SplFixedArray
 				$row["reportBusinessId"],
 				$row["reportProfileId"],
 				$row["reportContent"],
-				$row["reportDate"]);
+				new \DateTime($row["reportDate"]));
 			$reports[$reports->key()] = $report;
 			$reports->next();
 
@@ -321,7 +325,7 @@ return $reports;
 	 * @param $reportBusinessId
 	 * @return SplFixedArray
 	 */
-public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \SplFixedArray{
+public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): ?Report{
 	//create query template
 	$query = "SELECT * FROM report WHERE reportBusinessId = :reportProfileId ";
 	$statement = $pdo->prepare($query);
@@ -340,29 +344,19 @@ public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): \Spl
 	$statement->execute($parameters);
 
 	//build an array of reports
-	$reports = new SplFixedArray($statement->rowCount());
-
+	$reports = null;
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	while(($row = $statement->fetch())!== false){
-		try {
-			//instantiate report object and push data into it
-			$report = new Report($row["reportId"],
-				$row["reportBusinessId"],
-				$row["reportProfileId"],
-				$row["reportContent"],
-				$row["reportDate"]);
-			$reports[$reports->key()] = $report;
-			$reports->next();
+	$row = $statement->fetch();
+	if($row !== false){
+		//instantiate profile object and push data into it
+		$report = new Report($row["reportId"],
+			$row["reportBusinessId"],
+			$row["reportProfileId"],
+			$row["reportContent"],
+			new \DateTime($row["reportDate"]));
 
 		}
-		catch(\Exception $exception){
-			throw (new \PDOException($exception->getMessage(),0,$exception));
-		}
-
-
-	}
-
-	return $reports;
+	return ($reports);
 }
 
 	/**
@@ -399,7 +393,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 											$row["reportBusinessId"],
 											$row["reportProfileId"],
 											$row["reportContent"],
-											$row["reportDate"]);
+											new \DateTime($row["reportDate"]));
 
 		}
 
@@ -419,23 +413,18 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 	 * @throws \PDOException|Exception mySQL related errors being caught
 	 */
 
-	public function getReportByDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
+	public static function getReportsByReportDate(\PDO $pdo, DateTime $reportDate): \SplFixedArray{
 
 		//create dates for midnight of the date and midnight of the next day.
-		$startDateString = $reportDate->format('Y-m-d').'00:00:00';
+		//$startDateString = $reportDate->format('Y-m-d').'00:00:00';
 
-		$startDate = new DateTime($startDateString);
-
-		$endDate = new DateTime($startDateString);
-
-		$endDate->add(new \DateInterval('P1D'));
-
-		$endDate = new DateTime($startDateString);
-
-		$startDate;
+		$endDate = $reportDate;
+		$endDateString = $endDate->format('Y-m-d') . ' 00:00:00'; //get datepart only
+		$startDate = new DateTime($endDateString); //initialize start date
+		$startDate->sub(new \DateInterval('P30D')); //subtract 30 days.
 
 		//create query template
-		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate >= :endDate";
+		$query = "SELECT * FROM report WHERE reportDate >= :startDate AND reportDate <= :endDate";
 		$statement = $pdo->prepare($query);
 
 		//Bind the beginning and end dates to their placeholders in the template
@@ -443,6 +432,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 			'startDate' => $startDate->format('Y-m-d H:i:s.u'),
 			'endDate'=>$endDate->format('Y-m-d H:i:s.u')
 		];
+
 		$statement->execute($parameters);
 
 		//Build an array of reports from the returned rows
@@ -456,7 +446,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 					$row["reportBusinessId"],
 					$row["reportProfileId"],
 					$row["reportContent"],
-					$row["reportDate"]);
+					new \DateTime($row["reportDate"]));
 				$reports[$reports->key()] = $report;
 				$reports->next();
 
@@ -488,6 +478,7 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 		$fields["reportBusinessId"] = $this->reportBusinessId->toString();
 		$fields["reportProfileId"]= $this->reportProfileId->toString();
 
+		return($fields);
 
 	}
 }
