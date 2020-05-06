@@ -52,7 +52,7 @@ class BehaviorTest extends DataDesignTest {
 	private $VALID_PROFILE_PHONE;
 	private $VALID_AVATAR_URL;
 	private $VALID_PROFILE_USERNAME;
-
+/
 
 	public final function setUp()  : void {
 		parent::setUp();
