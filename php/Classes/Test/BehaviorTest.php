@@ -80,32 +80,117 @@ class BehaviorTest extends DataDesignTest {
 		$this->profile->insert($this->getPDO());
 
 	}
+//
+//	public function testInsertValidBehavior() : void {
+//		//get count of behavior records in the database before we run the test.
+//		$numRows = $this->getConnection()->getRowCount("behavior");
+//
+//		//insert a behavior record in the db
+//		$behaviorId = generateUuidV4()->toString();
+//
+//		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
+//			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+//		$behavior->insert($this->getPDO());
+//
+//		// check count of behavior records in the db after the insert
+//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+//
+//// grab the data from mySQL and enforce the fields match our expectations
+//		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
+//		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
+//		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
+//		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
+//		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content);
+//		//format the date too seconds since the beginning of time to avoid round off error
+//		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
+//
+//	}
+//
+//	/**
+//	 * test inserting a Behavior, editing it, and then updating it
+//	 **/
+//	public function testUpdateValidBehavior() : void {
+//		// count the number of rows and save it for later
+//		$numRows = $this->getConnection()->getRowCount("behavior");
+//
+//		// create a new Behavior and insert it into mySQL
+//		$behaviorId = generateUuidV4()->toString();
+//		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
+//			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+//		$behavior->insert($this->getPDO());
+//
+//		// check count of behavior records in the db after the insert
+//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+//
+//		// edit the Behavior and update it in mySQL
+//		$behavior->setbehaviorContent($this->Valid_Behavior_Content2);
+//		$behavior->update($this->getPDO());
+//
+//		// grab the data from mySQL and enforce the fields match our expectations
+//		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
+//		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
+//		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
+//		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
+//		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content2);
+//		//format the date too seconds since the beginning of time to avoid round off error
+//		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
+//	}
+//
+//	/**
+//	 * test creating a Behavior and then deleting it
+//	 **/
+//	public function testDeleteValidBehavior() : void {
+//		// count the number of rows and save it for later
+//		$numRows = $this->getConnection()->getRowCount("behavior");
+//
+//		// create a new Behavior and insert to into mySQL
+//		$behaviorId = generateUuidV4()->toString();
+//		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
+//			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
+//		$behavior->insert($this->getPDO());
+//
+//		// delete the Behavior from mySQL
+//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+//		$behavior->delete($this->getPDO());
+//
+//		// grab the data from mySQL and enforce the Behavior does not exist
+//		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
+//		$this->assertNull($pdoBehavior);
+//		$this->assertEquals($numRows, $this->getConnection()->getRowCount("behavior"));
+//	}
+//
+//	/**
+//	 * test grabbing a Behavior that does not exist
+//	 **/
+//	public function testGetInvalidBehaviorByBehaviorId() : void {
+//		// grab a profile id that exceeds the maximum allowable profile id
+//		$behavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), generateUuidV4()->toString());
+//		$this->assertNull($behavior);
+//	}
 
-	public function testInsertValidBehavior() : void {
-		//get count of behavior records in the database before we run the test.
+	/**
+	 * test inserting a Behavior and regrabbing it from mySQL
+	 *
+	 *
+	 **/
+	public function testGetValidBehaviorByBehaviorBusinessId() {
+		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("behavior");
 
-		//insert a behavior record in the db
+		// create a new Behavior and insert to into mySQL
 		$behaviorId = generateUuidV4()->toString();
-
-	//var_dump($behaviorId);
-//		var_dump($this->business->getBusinessId());
-//		var_dump($this->profile->getProfileId());
-
 		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
 		$behavior->insert($this->getPDO());
 
-		// check count of behavior records in the db after the insert
-//			$numRowsAfterInsert = $this->getConnection()->getRowCount("behavior");
-//			self::assertEquals($numRows + 1, $numRowsAfterInsert, "insert checked record count");
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Behavior::getBehaviorByBehaviorBusinessId($this->getPDO(), $behavior->getBehaviorBusinessId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("RICJTech\\Covid19Data\\Behavior", $results);
 
-// grab the data from mySQL and enforce the fields match our expectations
-		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
-//		self::assertEquals($behaviorId, $pdoBehavior->getbehaviorId());
-//		self::assertEquals($behaviorBusinessId, $pdoBehavior->getBehaviorBusinessId());
-//		self::assertEquals($behaviorProfileId, $pdoBehavior->getBehaviorProfileId());
+		// grab the result from the array and validate it
+		$pdoBehavior = $results[0];
 		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
 		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
 		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
@@ -115,63 +200,43 @@ class BehaviorTest extends DataDesignTest {
 
 	}
 
+
 	/**
-	 * test inserting a Behavior, editing it, and then updating it
+	 * test inserting a Behavior and regrabbing it from mySQL
+	 *
+	 *
 	 **/
-	public function testUpdateValidBehavior() : void {
+	public function testGetValidBehaviorByBehaviorProfileId() {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("behavior");
 
-		// create a new Behavior and insert it into mySQL
+		// create a new Behavior and insert to into mySQL
 		$behaviorId = generateUuidV4()->toString();
 		$behavior = new Behavior($behaviorId, $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(),
 			$this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
 		$behavior->insert($this->getPDO());
 
-		// check count of behavior records in the db after the insert
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
-
-		// edit the Behavior and update it in mySQL
-		$behavior->setbehaviorContent($this->Valid_Behavior_Content2);
-		$behavior->update($this->getPDO());
-
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId()->toString());
+		$results = Behavior::getbehaviorByBehaviorProfileId($this->getPDO(), $behavior->getBehaviorProfileId()->toString());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("RICJTech\\Covid19Data\\Behavior", $results);
+
+		// grab the result from the array and validate it
+		$pdoBehavior = $results[0];
 		$this->assertEquals($pdoBehavior->getBehaviorId(), $behaviorId);
 		$this->assertEquals($pdoBehavior->getBehaviorBusinessId(), $this->business->getBusinessId());
 		$this->assertEquals($pdoBehavior->getBehaviorProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content2);
+		$this->assertEquals($pdoBehavior->getBehaviorContent(), $this->Valid_Behavior_Content);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoBehavior->getBehaviorDate()->getTimestamp(), $this->Valid_Behavior_Date->getTimestamp());
-	}
-
-//	/**
-//	 * test creating a Behavior and then deleting it
-//	 **/
-//	public function testDeleteValidBehavior() : void {
-//		// count the number of rows and save it for later
-//		$numRows = $this->getConnection()->getRowCount("behavior");
-//
-//		// create a new Behavior and insert to into mySQL
-//		$behaviorId = generateUuidV4();
-//		$behavior = new Behavior($behaviorId, $this->business->getBusinessId(), $this->profile->getProfileId(), $this->Valid_Behavior_Content, $this->Valid_Behavior_Date);
-//		$behavior->insert($this->getPDO());
-//
-//		// delete the Behavior from mySQL
-//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("behavior"));
-//		$behavior->delete($this->getPDO());
-//
-//		// grab the data from mySQL and enforce the Behavior does not exist
-//		$pdoBehavior = Behavior::getBehaviorByBehaviorId($this->getPDO(), $behavior->getBehaviorId());
-//		$this->assertNull($pdoBehavior);
-//		$this->assertEquals($numRows, $this->getConnection()->getRowCount("behavior"));
-//	}
-//
-//
-//
-//
-//
-
-
 
 	}
+
+
+
+
+
+
+
+}
