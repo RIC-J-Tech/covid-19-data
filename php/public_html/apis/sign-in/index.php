@@ -24,7 +24,7 @@ try {
 		session_start();
 	}
 	//grab mySQL statement
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 
 	//determine which HTTP method is being used
@@ -47,14 +47,14 @@ try {
 			$profileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 		}
 
-		if(empty($requestObject->profilePassword) === true) {
+		if(empty($requestObject->profileHash) === true) {
 			throw(new \InvalidArgumentException("Must enter a password.", 401));
 		} else {
 			$profilePassword = $requestObject->profilePassword;
 		}
 
 		//grab the profile from the database by the email provided
-		$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
+		$profile = Profile::getProfileByEmail($pdo, $profileEmail);
 		if(empty($profile) === true) {
 			throw(new InvalidArgumentException("Invalid Email", 401));
 		}
@@ -62,7 +62,7 @@ try {
 		$profile->update($pdo);
 
 		//verify hash is correct
-		if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
+		if(password_verify($requestObject->profileHash, $profile->getProfileHash()) === false) {
 			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
 		}
 
@@ -76,7 +76,7 @@ try {
 		//create the Auth payload
 		$authObject = (object) [
 			"profileId" =>$profile->getProfileId(),
-			"profileAtHandle" => $profile->getProfileAtHandle()
+			"profileUsername" => $profile->getProfileUsername()
 		];
 
 		// create and set th JWT TOKEN
