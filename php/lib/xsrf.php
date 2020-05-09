@@ -15,7 +15,7 @@ if(function_exists("apache_request_headers") === false) {
 	function apache_request_headers() {
 		$headers = array();
 		foreach($_SERVER as $header => $value) {
-			// divide the header name by the underbar
+			// divide the header name by the under bar
 			$headerNameArray = explode("_" , $header);
 			// request headers always are prefixed by HTTP_
 			if(array_shift($headerNameArray) === "HTTP") {
