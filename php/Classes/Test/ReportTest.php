@@ -2,14 +2,17 @@
 
 namespace RICJTech\Covid19Data\Test;
 
+require_once(dirname(__DIR__) . "/autoload.php");
+
+use phpDocumentor\Reflection\Types\Self_;
 use RICJTech\Covid19Data\{Profile,Business,Report};
 use Ramsey\Uuid\Uuid;
 
-use RICJTech\Covid19Data\DataDesignTest;
+use RICJTech\Covid19Data\Test\DataDesignTest;
 use Faker;
-require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
+
+//require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
 // grab the class under scrutiny
-require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
@@ -20,7 +23,7 @@ class ReportTest extends DataDesignTest {
 	private $VALID_REPORT_DATE =null;
 	private $VALID_REPORT_CONTENT="some random report of nuisance";
 	private $VALID_REPORT_CONTENT2;
-
+	use setUpTest;
 
 	/**
 	 * @var \RICJTech\Covid19Data\Business
@@ -34,37 +37,13 @@ class ReportTest extends DataDesignTest {
 
 	public function setUp(): void {
 		parent::setUp();
-		$faker = Faker\Factory::create();
-		$this->VALID_REPORT_DATE=$faker->dateTime;
 
-		//insert a profile record in the db
-		/** @var Uuid $profileId */
-		$profileId = generateUuidV4()->toString();
+		$this->profile = self::createProfile();
 
-		$password =$faker->password;
-
-		$VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I,["time_cost"=>45]);
-
-		$VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
-
-
-		// create and insert a Profile to own the report content
-		$this->profile = new Profile($profileId,$this->VALID_CLOUDINARY_ID, $faker->url,
-			$VALID_ACTIVATION_TOKEN, $faker->email,
-			$VALID_PROFILE_HASH, $faker->phoneNumber, $faker->userName);
 		$this->profile->insert($this->getPDO());
 
-
-		//create and insert a Business to own the Report content
-		//insert a profile record in the db
-		/** @var Uuid $businessId */
-			$reportBusinessId =generateUuidV4()->toString();
-		$this->business = new Business($reportBusinessId, "1234567898364527",$faker->longitude, $faker->latitude,
-			"RICJTECH","https://ricjtech.com");
+		$this->business = self::createBusiness();
 		$this->business->insert($this->getPDO());
-
-		// calculate the date (just use the time the unit test was setup...)
-		$this->VALID_REPORT_DATE= new \DateTime();
 
 
 	}
@@ -171,7 +150,7 @@ class ReportTest extends DataDesignTest {
 //	$this->assertEquals($numRows, $this->getConnection()->getRowCount("report"));
 //
 //}
-
+//
 //public function testGetValidReportByBusinessId(): void{
 //	$faker = Faker\Factory::create();
 //
@@ -233,6 +212,7 @@ public function testGetValidReportByDate(): void {
 
 
 	/** @var Uuid $reportId */
+
 	$reportId = generateUuidV4()->toString();
 	$this->VALID_REPORT_DATE = $this->getTestDate(45);
 	$this->VALID_REPORT_CONTENT = $faker->text;
@@ -262,15 +242,8 @@ public function testGetValidReportByDate(): void {
 	$report3->insert($this->getPDO());
 	$report4->insert($this->getPDO());
 
-
-//	var_dump($this->VALID_REPORT_DATE);
-//	var_dump($VALID_REPORT_DATE2);
-//	var_dump($VALID_REPORT_DATE3);
-//	var_dump($VALID_REPORT_DATE4);
-
-
-//	$report->getReportId($this->getPDO(),$report->getReportId());
-	//check count of profile record in the db after the insert
+	$report->getReportId($this->getPDO(),$report->getReportId());
+//	check count of profile record in the db after the insert
 	$numRowsAfter = $this->getConnection()->getRowCount("report");
 	self::assertEquals($numRows + 4, $numRowsAfter, "checked record count");
 	$reports = Report::getReportsByReportDate($this->getPDO(), $this->getMaxDate());
@@ -278,12 +251,13 @@ public function testGetValidReportByDate(): void {
 
 
 //$reports1 = array($report,$report2,$report3,$report4);
-//	for($i = 0; $i <=$reports1; $i++) {
-//
-//		$pdoReport = $reports1[$i]; var_dump($reports1[$i]);
-//		self::assertGreaterThan($this->getMinDate(), $pdoReport->getReportDate());
-//    self::assertLessThan($this->getMaxDate(), $pdoReport->getReportDate());
-//}
+	for($i = 0; $i <$reports->count(); $i++) {
+
+		$pdoReport = $reports[$i];
+
+		self::assertGreaterThan($this->getMinDate(), $pdoReport->getReportDate());
+    self::assertLessThan($this->getMaxDate(), $pdoReport->getReportDate());
+}
 
 }
 
@@ -323,19 +297,19 @@ public function getTestDate($interval): \DateTime {
 
 }
 
-//private function getDateDiff($endDate): int {
-//
-//		$endDate = $this->getTestDate(3);
-//
-//
-//}
-//public function testFunction(): void {
-//
-//		$func = $this->getTestDate(-3);
-//	var_dump($func);
-//	self::assertEquals(true,true);
-//
-//}
+private function getDateDiff($endDate): int {
+
+		$endDate = $this->getTestDate(3);
+
+
+}
+public function testFunction(): void {
+
+		$func = $this->getTestDate(-3);
+	var_dump($func);
+	self::assertEquals(true,true);
+
+}
 
 
 
