@@ -116,7 +116,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	 * Profile Cloudinary Id
 	 *
 	 */
-	public function getProfileCloudinaryId(): string {
+	public function getProfileCloudinaryId(): ?string {
 		return  $this->profileCloudinaryId;
 
 	}
