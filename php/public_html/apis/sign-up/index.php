@@ -51,12 +51,12 @@ try {
 		}
 
 		//verify that profile hash is present
-		if(empty($requestObject->profileHash) === true) {
+		if(empty($requestObject->profilePassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
 		//verify that the confirm password is present
-		if(empty($requestObject->profileHashConfirm) === true) {
+		if(empty($requestObject->profilePasswordConfirm) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
@@ -66,11 +66,11 @@ try {
 		}
 
 		//make sure the password and confirm password match
-		if ($requestObject->profileHash !== $requestObject->profileHashConfirm) {
+		if ($requestObject->profilePassword !== $requestObject->profilePasswordConfirm) {
 			throw(new \InvalidArgumentException("passwords do not match"));
 
 		}
-		$hash = password_hash($requestObject->profileHash, PASSWORD_ARGON2ID, ["time_cost" => 9]);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2ID, ["time_cost" => 9]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
