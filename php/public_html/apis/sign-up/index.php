@@ -75,7 +75,7 @@ try {
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
+		$profile = new Profile(generateUuidV4()->getBytes(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
