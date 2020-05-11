@@ -1,7 +1,7 @@
 <?php
 
 namespace RICJTech\Covid19Data\Test;
-use RICJTech\Covid19Data\{Profile, Business, Report};
+use RICJTech\Covid19Data\{Behavior, Profile, Business, Report};
 use Ramsey\Uuid\Uuid;
 use Faker;
 // grab the uuid generator
@@ -48,6 +48,7 @@ $VALID_BUSINESS_URL = $faker->url;
 
 		return $business;
 }
+
 
 
 private static function createReport(): Report{
