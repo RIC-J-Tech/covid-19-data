@@ -45,7 +45,13 @@ class BehaviorTest extends DataDesignTest {
 	 * @var \Datetime $Valid_Behavior_Date
 	 */
 	protected $Valid_Behavior_Date = null;
+	protected $VALID_PROFILE_HASH;
+	protected $VALID_ACTIVATION_TOKEN;
 
+	private $VALID_PROFILE_EMAIL;
+	private $VALID_PROFILE_PHONE;
+	private $VALID_AVATAR_URL;
+	private $VALID_PROFILE_USERNAME;
 
 
 	public final function setUp()  : void {

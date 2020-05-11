@@ -81,12 +81,110 @@ class VoteTest extends DataDesignTest {
 	}
 
 
-	public function testUpdateValidVote(): void{
+	public function testUpdate():void{
 
+	$faker = Faker\Factory::create();
+	//get count of profile records in database before we run the test
+	$numRows = $this->getConnection()->getRowCount("vote");
+
+	/** @var Uuid $voteBehaviorId */
+	$voteProfileId = generateUuidV4()->toString();
+	$this->VALID_VOTE_RESULT=$faker->text;
+	$this->VALID_VOTE_DATE = $faker->dateTime;
+	$votes = new votes ($this->votes->getVoteBehaviorId()->toString(),$this->voteProfileId->getVoteProfileId()->toString(),
+		$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+	$votes->insert($this->getPDO());
+
+	// edit the vote and update it in mySQL
+	$votes->setVoteResult($this->VALID_VOTE_RESULT=$faker->text);
+	$votes->update($this->getPDO());
+
+	//get a copy of the record just inserted and validate the values
+	//make sure the values that went into the record are the same ones that come out
+	$pdoVotes = vote::getVotesByVoteProfileId($this->getPDO(),$votes->getVoteProfileId()->getBytes());
+
+	$this->assertEquals($pdoVotes->getVoteProfileId(), $this->profile->getVoteProfileId());
+
+	$this->assertEquals($pdoVotes->getVoteBehaviorId(), $this->behavior->getVoteResult());
+
+	$this->assertEquals($pdoVotes->getVoteResult(), $this->VALID_VOTE_RESULT);
+
+	//format the date too seconds since the beginning of time to avoid round off error
+	$this->assertEquals($pdoVotes->getVoteDate()->getTimestamp(), $this->VALID_REPORT_DATE->get());
 	}
+
 	public function testDeleteValidVote(): void{
 
+$faker = Faker\Factory::create();
+
+//count the number of rows and save it for later
+$numRows = $this->getConnection()->getRowCount("votes");
+/** @var Uuid $voteProfileId */
+$voteProfileId = generateUuidV4()->toString();
+$this->VALID_VOTE_RESULT=$faker->dateTime;
+$this->VALID_VOTE_DATE = $faker->text;
+
+$vote = new Vote($voteProfileId,$this->business->getVoteProfileId()->toString(),$this->profile->getProfileId()->toString(),
+$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+
+$vote->insert($this->getPDO());
+// delete the Report from mySQL
+$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("report"));
+
+$vote->delete($this->getPDO());
+
+//grab the data from mySQL and enforce the Report does not exist
+$pdoVote = Vote::getVotesByVoteProfileId()($this->getPDO(),$vote->getVoteProfileId()->getBytes());
+
+$this->assertNull($pdoVote);
+
+$this->assertEquals($numRows, $this->getConnection()->getRowCount("vote"));
 	}
 
+public function testGetValidReportByBusinessId($voteProfileId): void{
+$faker = Faker\Factory::create();
+
+//get count of profile records in db before we run the test
+$numRows = $this->getConnection()->getRowCount("vote");
+
+//	/** @var Uuid $reportId */
+$reportId = generateUuidV4()->toString();
+$this->VALID_VOTE_RESULT=$faker->dateTime;
+$this->VALID_VOTE_DATE = $faker->text;
+
+$vote = new Vote($voteProfileId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+	$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+$vote->insert($this->getPDO());
+$vote->getVoteProfileId()($this->getPDO(),$this->business->getVoteProfileId()->getBytes());
+//	//check count of profile record in the db after the insert
+$numRowsAfter = $this->getConnection()->getRowCount("vote");
+self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+public function testGetVoteByVoteProfileId():void{
+$faker = Faker\Factory::create();
+//get count of profile records in dbc before we run the test
+$numRows = this->getConnection()->getRowCount("vote");
+
+/** @var Uuid $voteProfileId */
+$voteProfileId = generateUuidV4()->toString();
+
+$this->VALID_VOTE_RESULT=$faker->dateTime;
+
+$this->VALID_VOTE_DATE = $faker->text;
+
+	$report = new Report($voteProfileId,$this->business->getBusinessId()->toString(),$this->profile->getProfileId()->toString(),
+		$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+$vote->insert($this->getPDO());
+
+$vote->getVoteProfileId($this->getPDO(),$vote->getVoteProfileId());
+//check count of profile record in the db after the insert
+	$numRowsAfter = $this->getConnection()->getRowCount("vote");
+self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+$this->assertEquals($vote->getVoteProfileId()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
+$this->assertEquals($vote->getVoteBehaviorId(), $this->VALID_REPORT_CONTENT);
+$this->assertEquals($vote->getVoteResult(),$this->business->getBusinessId());
+$this->assertEquals($vote->getVoteDate(),$this->profile->getProfileId());
 }
+	}
+
+	}
 
