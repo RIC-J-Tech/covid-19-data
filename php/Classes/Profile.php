@@ -292,7 +292,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	/**
 	 * @param string $newProfileActivationToken
 	 */
-	public function setProfileActivationToken(string $newProfileActivationToken): void {
+	public function setProfileActivationToken(?string $newProfileActivationToken): void {
 
 		try{
 			if($newProfileActivationToken === null){
@@ -712,6 +712,11 @@ return ($profile);
  *
  */
 	public static function getProfileByActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
+		$profileActivationToken = trim($profileActivationToken);
+		if(ctype_xdigit($profileActivationToken) === false) {
+			throw(new \InvalidArgumentException("profile activation token is empty or in the wrong format"));
+		}
 		//create query template
 		$query = "SELECT profileId,
 					profileCloudinaryId,
