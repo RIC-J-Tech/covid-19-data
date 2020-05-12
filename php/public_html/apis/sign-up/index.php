@@ -42,7 +42,7 @@ try {
 
 		//profile username is a required field
 		if(empty($requestObject->profileUsername) === true) {
-			throw(new \InvalidArgumentException ("No profile @handle", 405));
+			throw(new \InvalidArgumentException ("No profile Username", 405));
 		}
 
 		//profile email is a required field
@@ -57,7 +57,7 @@ try {
 
 		//verify that the confirm password is present
 		if(empty($requestObject->profilePasswordConfirm) === true) {
-			throw(new \InvalidArgumentException ("Must input valid password", 405));
+			throw(new \InvalidArgumentException ("Must input valid password confirmation", 405));
 		}
 
 		//if phone is empty set it to null

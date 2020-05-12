@@ -5,7 +5,7 @@ require_once dirname(__DIR__,3) . "/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
-use UssHopper\DataDesign\Profile;
+use RICJTech\Covid19Data\Profile;
 /**
  * API to check profile activation status
  * @author Gkephart
@@ -21,7 +21,7 @@ $reply->data = null;
 try{
 	// grab the MySQL connection
 
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 
 
@@ -47,7 +47,7 @@ try{
 		setXsrfCookie();
 
 		//find profile associated with the activation token
-		$profile = Profile::getProfileByProfileActivationToken($pdo, $activation);
+		$profile = Profile::getProfileByActivationToken($pdo, $activation);
 
 		//verify the profile is not null
 		if($profile !== null){
