@@ -22,8 +22,8 @@ CREATE TABLE profile(
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
    businessYelpId VARCHAR(32) NOT NULL,
-   businessLng DECIMAL(9,6),
-   businessLat DECIMAL(9,6),
+   businessLng DECIMAL(12,8),
+   businessLat DECIMAL(12,8),
    businessName VARCHAR(128) NOT NULL,
    businessUrl VARCHAR(256) NOT NULL,
    businessYelpId VARCHAR (32),
