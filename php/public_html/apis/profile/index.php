@@ -56,12 +56,12 @@ try {
 		if(empty($id) === false) {
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
 
-		} else if(empty($profileAtHandle) === false) {
-			$reply->data = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
+		} else if(empty($profileUsername) === false) {
+			$reply->data = Profile::getProfileByUsername($pdo, $profileUsername);
 
 		} else if(empty($profileEmail) === false) {
 
-			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
+			$reply->data = Profile::getProfileByEmail($pdo, $profileEmail);
 		}
 
 	} elseif($method === "PUT") {
