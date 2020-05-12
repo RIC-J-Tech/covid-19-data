@@ -795,7 +795,9 @@ public function getAllProfiles(\PDO $pdo): SplFixedArray{
 		$fields = get_object_vars($this);
 
 		$fields["profileId"] = $this->profileId->toString();
-
+		unset($fields["profileActivationToken"]);
+		unset($fields["profileHash"]);
+		return ($fields);
 
 	}
 }
