@@ -53,7 +53,6 @@ class ProfileTest extends DataDesignTest {
 		$this->VALID_PROFILE_USERNAME);
 		$profile->insert($this->getPDO());
 
-
 		//check count of Profile records in the database after the insert
 		$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
 		self::assertEquals($numRows + 1,$numRowsAfterInsert);
@@ -222,6 +221,8 @@ public function testProfileValidateByUsername(): void{
 			$this->VALID_ACTIVATION_TOKEN,$this->VALID_PROFILE_EMAIL,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE,
 			$this->VALID_PROFILE_USERNAME);
 		$profile->insert($this->getPDO());
+
+
 		$profile->getProfileByProfileId($this->getPDO(),$profileId);
 		//check count of profile record in the db after the insert
 		$numRowsAfter = $this->getConnection()->getRowCount("profile");

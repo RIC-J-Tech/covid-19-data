@@ -48,7 +48,7 @@ class Vote implements \JsonSerializable {
 	 * @param string|Uuid $voteBehaviorId id of this behavior or null if a new vote.
 	 * @param string|Uuid $newVoteProfileId id of the business to whom this vote is posted.
 	 * @param string|Uuid $newVoteResult results of the profile that behavior was voted on.
-	 * @param \DateTime|string|null $newVoteDate date and time vote was posted or null if set to current date and time.
+	 * @param \DateTime $newVoteDate date and time vote was posted or null if set to current date and time.
 	 * @throws \InvalidArgumentException if data types are not valid.
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers).
 	 * @throws \TypeError if data types violate type hints.
@@ -56,18 +56,19 @@ class Vote implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 
-	public function __construct($newVoteBehaviorId, $newVoteProfileId, $newVoteDate, $newVoteResult = null) {
+	public function __construct($newVoteBehaviorId, $newVoteProfileId, $newVoteResult,\DateTime $newVoteDate) {
 		try {
 			$this->setVoteBehaviorId($newVoteBehaviorId);
 			$this->setVoteProfileId($newVoteProfileId);
-			$this->setnewVoteResult($newVoteResult) ;
+			$this->setVoteResult($newVoteResult);
 			$this->setVoteDate($newVoteDate);
 		} //determine what exception was thrown.
 
 		catch
-		(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){}
-		$exceptionType = get_class($exception);
-		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
 	}
 
 	/**accessor method for voteBehaviorId
@@ -75,7 +76,7 @@ class Vote implements \JsonSerializable {
 	 * @return Uuid value of voteBehaviorId
 	 * */
 	public function getVoteBehaviorId(): Uuid {
-		return ($this->behaviorId);
+		return ($this->voteBehaviorId);
 	}
 
 	/**mutator method for voteBehaviorId
@@ -89,17 +90,17 @@ class Vote implements \JsonSerializable {
 		}
 
 		catch(\InvalidArgumentException| \RangeException| \Exception|\TypeError $exception) {
-			$exceptionType = get_class(exception);
+			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		//store voteBehaviorId
-		$this->VoteBehaviorId = $uuid;
+		$this->voteBehaviorId = $uuid;
 	}
 
 	/**
 	 * accessor method for voteProfileId.
 	 *
-	 * @return  Uuid value of voteProfileId.
+	 * @return  Uuid value of voteProfileId
 	 */
 	public function getVoteProfileId() {
 		return $this->voteProfileId;
@@ -119,7 +120,7 @@ class Vote implements \JsonSerializable {
 
 		catch(\InvalidArgumentException| \RangeException |\Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
-			throw (new $exceptionType($exception >getMessage(),0,));
+			throw (new $exceptionType($exception->getMessage(),0,$exception));
 		}
 
 //convert and store the voteProfileId
@@ -144,12 +145,12 @@ class Vote implements \JsonSerializable {
 	 *@throws \InvaildArgumentException if $newVote is not vaild object/string.
 	 *@throws \RangeException if $newVoteDate is a date that doesn't exsist.
 	 */
-	public function setVoteDate($newVoteDate = null): void {
+	public function setVoteDate($newVoteDate): void {
 		//case: if the date is null, use current.
-		if(newVoteDate === null) {
-			$this->voteDate = new\DateTime();
-			return;
-		}
+//		if(newVoteDate === null) {
+//			$this->voteDate = new\DateTime();
+//			return;
+//		}
 
 //store the like date using ValidateDate trait.
 		try {
@@ -161,6 +162,19 @@ class Vote implements \JsonSerializable {
 		$this->voteDate = $newVoteDate;
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getVoteResult() {
+		return $this->voteResult;
+	}
+
+	/**
+	 * @param mixed $voteResult
+	 */
+	public function setVoteResult($voteResult): void {
+		$this->voteResult = $voteResult;
+	}
 
 	/**inserts this Vote into mySQL
 	 *
@@ -168,7 +182,7 @@ class Vote implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors.
 	 * @throws \TypeError if $pdo is not a POD connection object.
 	 **/
-	public function insert(PDO $pdo): void {
+	public function insert(\PDO $pdo): void {
 
 //create query template
 		$query = "INSERT INTO vote(voteProfileId, voteBehaviorId, voteDate, voteResult) VALUES(:voteProfileId, :voteBehaviorId, :voteDate, :voteResult)";
@@ -177,7 +191,7 @@ class Vote implements \JsonSerializable {
 //bind the member variables to place holders.
 
 		$formattedDate = $this->voteDate->format("Y-m-d H:i:s.u");
-		$parameters = ["voteProfileId" => $this->voteProfileIdId->getBytes(),
+		$parameters = ["voteProfileId" => $this->voteProfileId->getBytes(),
 			"voteBehaviorId" => $this->voteBehaviorId->getBytes(),
 			"voteResult" => $this->voteResult, "voteDate" => $formattedDate];
 		$statement->execute($parameters);
@@ -260,7 +274,7 @@ class Vote implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
 				$votes[$votes->key()] = $vote;
 				$votes->next();
 			} catch(\Exception $exception) {
@@ -310,7 +324,7 @@ class Vote implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$vote = new Vote ($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"], $row["voteResult"]);
+				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
 				$votes [$votes->key()] = $vote;
 				$votes->next();
 			} catch(\Exception $exception) {
@@ -403,8 +417,8 @@ class Vote implements \JsonSerializable {
 
 		$fields["voteBehaviorId"] = $this->voteBehaviorId->toString();
 		$fields["voteProfileId"] = $this->voteProfileId->toString();
-		$fields["voteDate"] = $this->voteDate->toString();
 		$fields["voteResult"] = $this->voteResult->toString();
+		$fields["voteDate"] = $this->voteDate->toString();
 
 		//format the date so that the front end can consume it
 		$fields["voteDate"] = round(floatval($this->voteDate->format("U.u")) * 1000);
