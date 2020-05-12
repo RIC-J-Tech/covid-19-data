@@ -707,7 +707,7 @@ return ($profile);
  *
  *  gets profile by Activation Token from mySQL
 	 * @param PDO $pdo PDO connection object
-	 * @param string $profileEmail
+	 * @param string $profileActivationToken
 	 * @return Profile
  *
  */
