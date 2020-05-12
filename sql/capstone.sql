@@ -1,7 +1,6 @@
 
 USE cap28_covid;
 
-
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
 	profileCloudinaryId VARCHAR(16),
@@ -14,7 +13,7 @@ CREATE TABLE profile(
 	UNIQUE(profilePhone),
 	UNIQUE(profileEmail),
 	UNIQUE(profileUsername),
-	INDEX(profileEmail),
+	INDEX(profileUsername),
 	PRIMARY KEY(profileId)
 );
 
@@ -22,11 +21,10 @@ CREATE TABLE profile(
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
    businessYelpId VARCHAR(32) NOT NULL,
-   businessLng DECIMAL(9,6),
-   businessLat DECIMAL(9,6),
+   businessLng DECIMAL(9,7),
+   businessLat DECIMAL(9,7),
    businessName VARCHAR(128) NOT NULL,
    businessUrl VARCHAR(256) NOT NULL,
-   businessYelpId VARCHAR (32),
    INDEX(businessName),
    PRIMARY KEY(businessId)
 );
