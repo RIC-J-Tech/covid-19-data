@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use UssHopper\DataDesign\{ Business, Profile, Behavior};
+use Covid19Data\DataDesign\{ Business, Profile, Behavior};
 
 
 /**
@@ -27,7 +27,7 @@ $reply->status = 200;
 $reply->data = null;
 try {
 
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 
 
@@ -38,9 +38,10 @@ try {
 	//sanitize input
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$tweetProfileId = filter_input(INPUT_GET, "tweetProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	var_dump($tweetProfileId);
-	$tweetContent = filter_input(INPUT_GET, "tweetContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$behaviorBusinessId = filter_input(INPUT_GET, "behaviorBus", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$behaviorProfileId = filter_input(INPUT_GET, "behaviorProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+//	var_dump($behaviorProfileId);
+	$behaviorContent = filter_input(INPUT_GET, "behaviorContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	//make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
@@ -48,36 +49,41 @@ try {
 	}
 
 
-	// handle GET request - if id is present, that tweet is returned, otherwise all tweets are returned
+	// handle GET request - if id is present, that behavior post is returned, otherwise all behaviors are returned
 	if($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
 
-		//get a specific tweet or all tweets and update reply
+		//get a specific behavior or all behaviors and update reply
 		if(empty($id) === false) {
-			$reply->data = Tweet::getTweetByTweetId($pdo, $id);
-		} else if(empty($tweetProfileId) === false) {
-			// if the user is logged in grab all the tweets by that user based  on who is logged in
-			$reply->data = Tweet::getTweetByTweetProfileId($pdo, $tweetProfileId)->toArray();
+			$reply->data = Behavior::getBehaviorByBehaviorId($pdo, $id);
+		} else if(empty($behaviorBusinessId) === false) {
+			// if the user is logged in grab all the behaviors by that user based  on who is logged in
+			$reply->data = Behavior::getBehaviorByBehaviorBusinessId($pdo, $behaviorBusinessId)->toArray();
 
-		} else if(empty($tweetContent) === false) {
-			$reply->data = Tweet::getTweetByTweetContent($pdo, $tweetContent)->toArray();
+		} else if(empty($behaviorProfileId) === false) {
+			// if the user is logged in grab all the behaviors by that user based  on who is logged in
+			$reply->data = Behavior::getBehaviorByBehaviorProfileId($pdo, $behaviorProfileId)->toArray();
+
+		} else if(empty($behaviorContent) === false) {
+			$reply->data = Behavior::getBehaviorByBehaviorContent($pdo, $behaviorContent)->toArray();
 
 		} else {
-			$tweets = Tweet::getAllTweets($pdo)->toArray();
-			$tweetProfiles = [];
-			foreach($tweets as $tweet){
-				$profile = 	Profile::getProfileByProfileId($pdo, $tweet->getTweetProfileId());
-				$tweetProfiles[] = (object)[
-					"tweetId"=>$tweet->getTweetId(),
-					"tweetProfileId"=>$tweet->getTweetProfileId(),
-					"tweetContent"=>$tweet->getTweetContent(),
-					"tweetDate"=>$tweet->getTweetDate()->format("U.u") * 1000,
-					"profileAtHandle"=>$profile->getProfileAtHandle(),
+			$behaviors = Behavior::getAllBehaviors($pdo)->toArray();
+			$behaviorProfiles = [];
+			foreach($behaviors as $behavior){
+				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId());
+				$behaviorProfiles[] = (object)[
+					"behaviorId"=>$behavior->getBehaviorId(),
+					"behaviorBusinessId"=>$behavior->getBehaviorBusinessId(),
+					"behaviorProfileId"=>$behavior->getBehaviorProfileId(),
+					"behaviorContent"=>$behavior->getBehaviorContent(),
+					"BehaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+					"profileUsername"=>$profile->getProfileUsername(),
 				];
 			}
-			$reply->data = $tweetProfiles;
+			$reply->data = $behaviorProfiles;
 		}
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
@@ -85,7 +91,7 @@ try {
 
 		// enforce the user is signed in
 		if(empty($_SESSION["profile"]) === true) {
-			throw(new \InvalidArgumentException("you must be logged in to post tweets", 401));
+			throw(new \InvalidArgumentException("you must be logged in to post behaviors", 401));
 		}
 
 		$requestContent = file_get_contents("php://input");
@@ -95,59 +101,59 @@ try {
 		$requestObject = json_decode($requestContent);
 
 		// This Line Then decodes the JSON package and stores that result in $requestObject
-		//make sure tweet content is available (required field)
-		if(empty($requestObject->tweetContent) === true) {
-			throw(new \InvalidArgumentException ("No content for Tweet.", 405));
+		//make sure behavior content is available (required field)
+		if(empty($requestObject->behaviorContent) === true) {
+			throw(new \InvalidArgumentException ("No content for Behavior.", 405));
 		}
 		$requestObject->foo; //value:bar
-		// make sure tweet date is accurate (optional field)
-		if(empty($requestObject->tweetDate) === true) {
-			$requestObject->tweetDate = null;
+		// make sure behavior date is accurate (optional field)
+		if(empty($requestObject->behaviorDate) === true) {
+			$requestObject->behaviorDate = null;
 		}
 
 		//perform the actual put or post
 		if($method === "PUT") {
 
-			// retrieve the tweet to update
-			$tweet = Tweet::getTweetByTweetId($pdo, $id);
-			if($tweet === null) {
-				throw(new RuntimeException("Tweet does not exist", 404));
+			// retrieve the behavior to update
+			$behavior = Behavior::getBehaviorByBehaviorId($pdo, $id);
+			if($behavior === null) {
+				throw(new RuntimeException("Behavior does not exist", 404));
 			}
 
 			//enforce the end user has a JWT token
 
 
-			//enforce the user is signed in and only trying to edit their own tweet
-			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
-				throw(new \InvalidArgumentException("You are not allowed to edit this tweet", 403));
+			//enforce the user is signed in and only trying to edit their own behavior post
+			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $behavior->getBehaviorProfileId()->toString()) {
+				throw(new \InvalidArgumentException("You are not allowed to edit this behavior", 403));
 			}
 
 			validateJwtHeader();
 
 			// update all attributes
-			//$tweet->setTweetDate($requestObject->tweetDate);
-			$tweet->setTweetContent($requestObject->tweetContent);
-			$tweet->update($pdo);
+			//$behavior->setBehaviorDate($requestObject->behaviorDate);
+			$behavior->setBehaviorContent($requestObject->behaviorContent);
+			$behavior->update($pdo);
 
 			// update reply
-			$reply->message = "Tweet updated OK";
+			$reply->message = "Behavior updated OK";
 
 		} else if($method === "POST") {
 
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
-				throw(new \InvalidArgumentException("you must be logged in to post tweets", 403));
+				throw(new \InvalidArgumentException("you must be logged in to post behaviors", 403));
 			}
 
 			//enforce the end user has a JWT token
 			validateJwtHeader();
 
-			// create new tweet and insert into the database
-			$tweet = new Tweet(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->tweetContent, null);
-			$tweet->insert($pdo);
+			// create new behavior and insert into the database
+			$behavior = new Behavior(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, null);
+			$behavior->insert($pdo);
 
 			// update reply
-			$reply->message = "Tweet created OK";
+			$reply->message = "Behavior created OK";
 		}
 
 	} else if($method === "DELETE") {
@@ -155,24 +161,24 @@ try {
 		//enforce that the end user has a XSRF token.
 		verifyXsrf();
 
-		// retrieve the Tweet to be deleted
-		$tweet = Tweet::getTweetByTweetId($pdo, $id);
-		if($tweet === null) {
-			throw(new RuntimeException("Tweet does not exist", 404));
+		// retrieve the Behavior to be deleted
+		$behavior = Behavior::getBehaviorBybBehaviorId($pdo, $id);
+		if($behavior === null) {
+			throw(new RuntimeException("Behavior does not exist", 404));
 		}
 
-		//enforce the user is signed in and only trying to edit their own tweet
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $tweet->getTweetProfileId()->toString()) {
-			throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
+		//enforce the user is signed in and only trying to edit their own behavior post
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $behavior->getBehaviorProfileId()->toString()) {
+			throw(new \InvalidArgumentException("You are not allowed to delete this behavior", 403));
 		}
 
 		//enforce the end user has a JWT token
 		validateJwtHeader();
 
-		// delete tweet
-		$tweet->delete($pdo);
+		// delete behavior
+		$behavior->delete($pdo);
 		// update reply
-		$reply->message = "Tweet deleted OK";
+		$reply->message = "Behavior deleted OK";
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP method request", 418));
 	}
