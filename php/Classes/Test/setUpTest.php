@@ -1,7 +1,7 @@
 <?php
 
 namespace RICJTech\Covid19Data\Test;
-use RICJTech\Covid19Data\{Profile, Business, Report};
+use RICJTech\Covid19Data\{Behavior, Profile, Business, Report};
 use Ramsey\Uuid\Uuid;
 use Faker;
 // grab the uuid generator
@@ -48,6 +48,26 @@ $VALID_BUSINESS_URL = $faker->url;
 
 		return $business;
 }
+
+
+	private static function createBehavior(): Behavior{
+		$faker = Faker\Factory::create();
+
+		$Valid_Behavior_Content = "Respected social distancing rule";
+		$VALID_BEHAVIOR_CONTENT2 = $faker->text;
+		$Valid_Behavior_Date = null;
+
+		$behaviorId = generateUuidV4()->toString();
+		$Valid_Behavior_Content = $faker->text;
+		$Valid_Behavior_Date = $faker->dateTime;
+		$profile = self::createProfile();
+		$business = self::createBusiness();
+
+		$behavior = new Behavior($behaviorId, $business->getBusinessId()->toString(), $profile->getProfileId()->toString(),
+			$Valid_Behavior_Content, $Valid_Behavior_Date);
+
+		return $behavior;
+	}
 
 
 private static function createReport(): Report{
