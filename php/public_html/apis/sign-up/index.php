@@ -157,7 +157,7 @@ EOF;
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating a profile with DDC-Twitter";
+		$reply->message = "Thank you for creating a profile with Pan-Ops. We cherish your honesty";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
