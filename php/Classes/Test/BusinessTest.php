@@ -1,112 +1,155 @@
 <?php
+
 namespace RICJTech\Covid19Data\Test;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\DbUnit\TestCaseTrait;
-use PHPUnit\DbUnit\DataSet\QueryDataSet;
-use PHPUnit\DbUnit\Database\Connection;
-use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
+use Ramsey\Uuid\Uuid;
+use RICJTech\Covid19Data\Business;
+use RICJTech\Covid19Data\DataDesignTest;
+use Faker;
+require_once (dirname(__DIR__). "/Test/DataDesignTest.php");
+// grab the class under scrutiny
+require_once(dirname(__DIR__) . "/autoload.php");
 
-// grab the encrypted properties file
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 
+class BusinessTest extends DataDesignTest {
+	private $VALIDATE_BUSINESS_ID;
+	private $VALID_BUSINESSLNG;
+	private $VALID_BUSINESSLAT;
+	private $VALID_BUSINESSNAME;
+	private $VALID_BUSINESSURL;
+	private $VALID_BUSINESSYELPID;
 
-require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
+	public function setUp(): void {
+		parent::setUp();
+		$faker = Faker\Factory::create();
 
-/**
- * Abstract class containing universal and project specific mySQL parameters
- *
- * This class is designed to lay the foundation of the unit tests per project. It loads the all the database
- * parameters about the project so that table specific tests can share the parameters in on place. To use it:
- *
- * 1. Rename the class from DataDesignTest to a project specific name (e.g., ProjectNameTest)
- * 2. Rename the namespace to be the same as in (1) (e.g., Edu\Cnm\ProjectName\Test)
- * 3. Modify DataDesignTest::getDataSet() to include all the tables in your project.
- * 4. Modify DataDesignTest::getConnection() to include the correct mySQL properties file.
- * 5. Have all table specific tests include this class.
- *
- * *NOTE*: Tables must be added in the order they were created in step (2).
- *
- * @author Dylan McDonald <dmcdonald21@cnm.edu>
- **/
-abstract class DataDesignTest extends TestCase {
-	use TestCaseTrait;
+		$lng = 35.0844;
+		$this->VALID_BUSINESSLNG = floatval($lng);   //todo - need to go back and generate this through faker potentially.
+		$lat = 106.6504;
+		$this->VALID_BUSINESSLAT = floatval($lat);   //todo - how to generate a random float in php
+		$this->VALID_BUSINESSNAME = "Covid Business";   //todo - potentially can pull from faker
+		$this->VALID_BUSINESSURL = $faker->url;
+		$this->VALID_BUSINESSYELPID = "1234567";   //todo - need to generate this somewhere
 
-	/**
-	 * PHPUnit database connection interface
-	 * @var Connection $connection
-	 **/
-	protected $connection = null;
-
-	/**
-	 * assembles the table from the schema and provides it to PHPUnit
-	 *
-	 * @return QueryDataSet assembled schema for PHPUnit
-	 **/
-	public final function getDataSet() : QueryDataSet {
-		$dataset = new QueryDataSet($this->getConnection());
-
-		// add all the tables for the project here
-		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
-		$dataset->addTable("profile");
-		$dataset->addTable("report");
-		$dataset->addTable("vote");
-		$dataset->addTable("business");
-		$dataset->addTable("behavior");
-		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
-		return($dataset);
 	}
 
-	/**
-	 * templates the setUp method that runs before each test; this method expunges the database before each run
-	 *
-	 * @see https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown PHPUnit Fixtures: setUp and tearDown
-	 * @see https://github.com/sebastianbergmann/dbunit/issues/37 TRUNCATE fails on tables which have foreign key constraints
-	 * @return Composite array containing delete and insert commands
-	 **/
-	public final function getSetUpOperation() : Composite {
-		return new Composite([
-			Factory::DELETE_ALL(),
-			Factory::INSERT()
-		]);
+	public function testInsertValidateBusinessId(): void {
+
+
+		$numRows = $this->getConnection()->getRowCount("business");
+
+
+		/** @var Uuid $businessId */
+
+		$businessId = generateUuidV4()->toString();
+		$business = new Business($businessId, $this->VALID_BUSINESSYELPID, $this->VALID_BUSINESSLNG,
+			$this->VALID_BUSINESSLAT, $this->VALID_BUSINESSNAME, $this->VALID_BUSINESSURL);
+		$business->insert($this->getPDO());
+
+
+		$numRowsAfterInsert = $this->getConnection()->getRowCount("business");
+		self::assertEquals($numRows + 1, $numRowsAfterInsert);
+
+
+		$pdoBusiness = Business::getBusinessbyBusinessId($this->getPDO(), $business->getBusinessId()->getBytes());
+		self::assertEquals($this->VALID_BUSINESSYELPID, $pdoBusiness->getBusinessYelpId());
+		self::assertEquals($this->VALID_BUSINESSLNG, $pdoBusiness->getBusinessLng());
+		self::assertEquals($this->VALID_BUSINESSLAT, $pdoBusiness->getBusinessLat());
+		self::assertEquals($this->VALID_BUSINESSNAME, $pdoBusiness->getBusinessName());
+		self::assertEquals($this->VALID_BUSINESSURL, $pdoBusiness->getBusinessUrl());
+		self::assertEquals($this->VALID_BUSINESSYELPID, $pdoBusiness->getBusinessYelpId());
+
 	}
 
-	/**
-	 * templates the tearDown method that runs after each test; this method expunges the database after each run
-	 *
-	 * @return Operation delete command for the database
-	 **/
-	public final function getTearDownOperation() : Operation {
-		return(Factory::DELETE_ALL());
+
+	public function testUpdateValidBusiness(): void {
+
+
+		$numRows = $this->getConnection()->getRowCount("business");
+
+
+		$businessId = generateUuidV4()->toString();
+		$business = new Business($businessId, $this->VALID_BUSINESSYELPID, $this->VALID_BUSINESSLNG, $this->VALID_BUSINESSLAT, $this->VALID_BUSINESSNAME, $this->VALID_BUSINESSURL);
+
+		$business->insert($this->getPDO());
+
+
+		$changedBusinessName = $this->VALID_BUSINESSNAME . "change";
+		$business->setBusinessName($changedBusinessName);
+		$business->update($this->getPDO());
+
+
+		$numRowsAfterInsert = $this->getConnection()->getRowCount("business");
+		self::assertEquals($numRows + 1, $numRowsAfterInsert, "update checked record count");
+
+
+		$pdoBusiness = Business::getBusinessByBusinessId($this->getPDO(), $business->getBusinessId()->toString());
+		self::assertEquals($this->VALID_BUSINESSYELPID, $pdoBusiness->getBusinessYelpId());
+		self::assertEquals($this->VALID_BUSINESSLNG, $pdoBusiness->getBusinessLng());
+		self::assertEquals($this->VALID_BUSINESSLAT, $pdoBusiness->getBusinessLat());
+		self::assertNotEquals($this->VALID_BUSINESSNAME, $pdoBusiness->getBusinessName());
+		self::assertEquals($this->VALID_BUSINESSURL, $pdoBusiness->getBusinessUrl());
+
+		self::assertEquals($changedBusinessName, $pdoBusiness->getBusinessName());
+
 	}
 
-	/**
-	 * sets up the database connection and provides it to PHPUnit
-	 *
-	 * @see <https://phpunit.de/manual/current/en/database.html#database.configuration-of-a-phpunit-database-testcase>
-	 * @return Connection PHPUnit database connection interface
-	 **/
-	public final function getConnection() : Connection {
-		// if the connection hasn't been established, create it
-		if($this->connection === null) {
-			// connect to mySQL and provide the interface to PHPUnit
+	public function testDeleteValidBusiness(): void {
 
 
+		$numRows = $this->getConnection()->getRowCount("business");
 
-			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
-			$pdo = $secrets->getPdoObject();
-			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
+		$insertedRow = 3;
+
+		for($i = 0; $i < $insertedRow; $i++) {
+
+			$businessId = generateUuidV4()->toString();
+			$business = new Business(
+				$businessId, $this->VALID_BUSINESSYELPID, $this->VALID_BUSINESSLNG, $this->VALID_BUSINESSLAT,
+				$this->VALID_BUSINESSNAME, $this->VALID_BUSINESSYELPID);
+
+			$business->insert($this->getPDO());
+
 		}
-		return($this->connection);
+
+		$numRowsAfterInsert = $this->getConnection()->getRowCount("business");
+		self::assertEquals($numRows + $insertedRow, $numRowsAfterInsert);
+
+		$business->delete($this->getPDO());
+
+		$pdoBusiness = Business::getBusinessbyBusinessId($this->getPDO(), $business->getBusinessId()->toString());
+
+		$numRowsAfterDelete = $this->getConnection()->getRowCount("business");
+		self::assertEquals($numRows + $insertedRow - 1, $numRowsAfterDelete);
 	}
 
-	/**
-	 * returns the actual PDO object; this is a convenience method
-	 *
-	 * @return \PDO active PDO object
-	 **/
-	public final function getPDO() {
-		return($this->getConnection()->getConnection());
+	public function testGetBusinessByBusinessName(): void {
+
+		$numRows = $this->getConnection()->getRowCount("business");
+
+		$insertedRow = 3;
+
+		for($i = 65; $i < $insertedRow + 65; $i++) {
+
+			$businessId = generateUuidV4()->toString();
+			$businessName = $this->VALID_BUSINESSNAME . chr($i);
+			$business = new Business(
+				$businessId, $this->VALID_BUSINESSYELPID, $this->VALID_BUSINESSLNG, $this->VALID_BUSINESSLAT,
+				$businessName, $this->VALID_BUSINESSYELPID);
+
+			$business->insert($this->getPDO());
+
+		}
+		$numRowsAfterInsert = $this->getConnection()->getRowCount("business");
+		self::assertEquals($numRows + $insertedRow, $numRowsAfterInsert);
+
+		$pdoBusiness = Business::getBusinessByBusinessName($this->getPDO(), $this->VALID_BUSINESSNAME);
+		self::assertEquals($numRows + $insertedRow, $pdoBusiness->count());
 	}
+
+
+
 }
