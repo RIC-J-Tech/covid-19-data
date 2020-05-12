@@ -662,7 +662,7 @@ return ($profile);
 	}
 
 	/**
-	 * gets profile by Email form mySQL
+	 * gets profile by Email from mySQL
 	 * @param PDO $pdo PDO connection object
 	 * @param string $profileEmail
 	 * @return Profile
@@ -702,6 +702,50 @@ return ($profile);
 		}
 		return ($profile);
 		}
+
+/*
+ *
+ *  gets profile by Activation Token from mySQL
+	 * @param PDO $pdo PDO connection object
+	 * @param string $profileEmail
+	 * @return Profile
+ *
+ */
+	public static function getProfileByActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//create query template
+		$query = "SELECT profileId,
+					profileCloudinaryId,
+					profileAvatarUrl,
+					profileActivationToken,
+					profileEmail,
+					profileHash,
+					profilePhone,
+					profileUsername FROM profile WHERE profileActivationToken = :profileActivationToken";
+		//prepare query
+		$statement = $pdo->prepare($query);
+
+		//bind the object to their respective placeholders in the database
+		$parameters=["profileActivationToken"=>$profileActivationToken];
+		$statement->execute($parameters);
+
+		//grab profile from database
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !== false){
+			//instantiate profile and push data into it
+			$profile = new Profile($row["profileId"],
+				$row["profileCloudinaryId"],
+				$row["profileAvatarUrl"],
+				$row["profileActivationToken"],
+				$row["profileEmail"],
+				$row["profileHash"],
+				$row["profilePhone"],
+				$row["profileUsername"]);
+		}
+		return ($profile);
+	}
+
 
 public function getAllProfiles(\PDO $pdo): SplFixedArray{
 
