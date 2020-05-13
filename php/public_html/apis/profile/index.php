@@ -39,7 +39,7 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$profileAtHandle = filter_input(INPUT_GET, "profileAtHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$profileUsername = filter_input(INPUT_GET, "profileUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
@@ -90,8 +90,8 @@ try {
 		}
 
 
-		//profile at handle
-		if(empty($requestObject->profileAtHandle) === true) {
+		//profile username
+		if(empty($requestObject->profileUsername) === true) {
 			throw(new \InvalidArgumentException ("No profile at handle", 405));
 		}
 
