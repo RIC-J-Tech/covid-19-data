@@ -53,6 +53,7 @@ class ProfileTest extends DataDesignTest {
 		$this->VALID_PROFILE_USERNAME);
 		$profile->insert($this->getPDO());
 
+
 		//check count of Profile records in the database after the insert
 		$numRowsAfterInsert = $this->getConnection()->getRowCount("profile");
 		self::assertEquals($numRows + 1,$numRowsAfterInsert);
@@ -254,6 +255,31 @@ public function testProfileValidateByUsername(): void{
 
 		//validate number of rows coming back from our function.
 		self::assertEquals($numRows + $rowsInserted, $profile->getAllprofiles($this->getPDO())->count());
+	}
+
+
+	public function testValidGetProfileByActivationToken(): void{
+
+		$faker = Faker\Factory::create();
+//get count of Profile records in db before we run the test
+		$numRows = $this->getConnection()->getRowCount("profile");
+
+		$profileId=generateUuidV4()->toString();
+		$profile = new Profile(
+			$profileId, $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,$this->VALID_ACTIVATION_TOKEN,
+			$this->VALID_PROFILE_EMAIL=$faker->email,$this->VALID_PROFILE_HASH,$this->VALID_PROFILE_PHONE=$faker->phoneNumber,
+			$this->VALID_PROFILE_USERNAME=$faker->userName);
+
+		$profile->insert($this->getPDO());
+
+		$profile->getProfileByActivationToken($this->getPDO(),$profile->getProfileActivationToken());
+
+		//check count of profile record in the db after the insert
+		$numRowsAfter = $this->getConnection()->getRowCount("profile");
+
+		self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+
+
 	}
 
 }
