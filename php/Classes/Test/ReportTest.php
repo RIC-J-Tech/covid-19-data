@@ -305,7 +305,7 @@ private function getDateDiff($endDate): int {
 public function testFunction(): void {
 
 		$func = $this->getTestDate(-3);
-	var_dump($func);
+
 	self::assertEquals(true,true);
 
 }
