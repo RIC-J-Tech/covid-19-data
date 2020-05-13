@@ -71,19 +71,31 @@ try {
 
 		} else {
 			$behaviors = Behavior::getAllBehaviors($pdo)->toArray();
+			$behaviorBusinesses = [];
 			$behaviorProfiles = [];
 			foreach($behaviors as $behavior){
+				$business = Business::getBusinessByBusinessId($pdo, $behavior->getBehaviorBusinessId());
+				$behaviorBusinesses[] = (object)[
+					"behaviorId"=>$behavior->getBehaviorId(),
+					"behaviorBusinessId"=>$behavior->getBehaviorBusinessId(),
+					"behaviorProfileId"=>$behavior->getBehaviorProfileId(),
+					"behaviorContent"=>$behavior->getBehaviorContent(),
+					"behaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
+					"businessUrl"=>$business->getBusinessUrl(),
+					"businessName"=>$business->getBusinessName(),
+				];
 				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId());
 				$behaviorProfiles[] = (object)[
 					"behaviorId"=>$behavior->getBehaviorId(),
 					"behaviorBusinessId"=>$behavior->getBehaviorBusinessId(),
 					"behaviorProfileId"=>$behavior->getBehaviorProfileId(),
 					"behaviorContent"=>$behavior->getBehaviorContent(),
-					"BehaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
+					"behaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
 					"profileUsername"=>$profile->getProfileUsername(),
 				];
 			}
+			$reply->data = $behaviorBusinesses;
 			$reply->data = $behaviorProfiles;
 		}
 	} else if($method === "PUT" || $method === "POST") {
@@ -150,7 +162,7 @@ try {
 			validateJwtHeader();
 
 			// create new behavior and insert into the database
-			$behavior = new Behavior(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, null);
+			$behavior = new Behavior(generateUuidV4(), $requestObject->getBusinessId(), $_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, null);
 			$behavior->insert($pdo);
 
 			// update reply
