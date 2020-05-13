@@ -47,7 +47,7 @@ try {
 			$profileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 		}
 
-		if(empty($requestObject->profileHash) === true) {
+		if(empty($requestObject->profilePassword) === true) {
 			throw(new \InvalidArgumentException("Must enter a password.", 401));
 		} else {
 			$profilePassword = $requestObject->profilePassword;
@@ -62,12 +62,12 @@ try {
 		$profile->update($pdo);
 
 		//verify hash is correct
-		if(password_verify($requestObject->profileHash, $profile->getProfileHash()) === false) {
+		if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
 			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
 		}
 
 		//grab profile from database and put into a session
-		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId()->toString());
 
 
 		$_SESSION["profile"] = $profile;
