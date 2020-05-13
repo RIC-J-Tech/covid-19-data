@@ -2,12 +2,13 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 
-use Covid19Data\DataDesign\{ Business, Profile, Behavior};
+use RICJTech\Covid19Data\{ Business, Profile, Behavior};
 
 
 /**
@@ -105,7 +106,7 @@ try {
 		if(empty($requestObject->behaviorContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Behavior.", 405));
 		}
-		$requestObject->foo; //value:bar
+		$requestObject->behaviorContent; //value:bar
 		// make sure behavior date is accurate (optional field)
 		if(empty($requestObject->behaviorDate) === true) {
 			$requestObject->behaviorDate = null;
