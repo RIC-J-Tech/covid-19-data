@@ -51,7 +51,7 @@ for($offset = 0; $offset < 100; $offset = $offset + 20) {
 		echo($business->coordinates->latitude . "<br>");
 		echo($business->coordinates->longitude . "<br>");
 		echo "<br>";
-		$bus = new Business(generateUuidV4()->toString(), $business->name, $business->id, $business->coordinates->longitude, $business->coordinates->latitude, $business->url);
+		$bus = new Business(generateUuidV4()->toString(), $business->id, $business->coordinates->longitude, $business->coordinates->latitude, $business->name, $business->url);
 		$bus->insert($pdo);
 	}
 }
