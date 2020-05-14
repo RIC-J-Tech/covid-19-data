@@ -116,7 +116,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	 * Profile Cloudinary Id
 	 *
 	 */
-	public function getProfileCloudinaryId(): string {
+	public function getProfileCloudinaryId(): ?string {
 		return  $this->profileCloudinaryId;
 
 	}
@@ -292,7 +292,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	/**
 	 * @param string $newProfileActivationToken
 	 */
-	public function setProfileActivationToken(string $newProfileActivationToken): void {
+	public function setProfileActivationToken(?string $newProfileActivationToken): void {
 
 		try{
 			if($newProfileActivationToken === null){
@@ -662,7 +662,7 @@ return ($profile);
 	}
 
 	/**
-	 * gets profile by Email form mySQL
+	 * gets profile by Email from mySQL
 	 * @param PDO $pdo PDO connection object
 	 * @param string $profileEmail
 	 * @return Profile
@@ -703,6 +703,61 @@ return ($profile);
 		return ($profile);
 		}
 
+/*
+ *
+ *  gets profile by Activation Token from mySQL
+	 * @param PDO $pdo PDO connection object
+	 * @param string $profileActivationToken
+	 * @return Profile
+ *
+ */
+	public static function getProfileByActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
+		$profileActivationToken = trim($profileActivationToken);
+		if(ctype_xdigit($profileActivationToken) === false) {
+			throw(new \InvalidArgumentException("profile activation token is empty or in the wrong format"));
+		}
+		//create query template
+		$query = "SELECT profileId,
+					profileCloudinaryId,
+					profileAvatarUrl,
+					profileActivationToken,
+					profileEmail,
+					profileHash,
+					profilePhone,
+					profileUsername FROM profile WHERE profileActivationToken = :profileActivationToken";
+		//prepare query
+		$statement = $pdo->prepare($query);
+
+		//bind the object to their respective placeholders in the database
+		$parameters=["profileActivationToken"=>$profileActivationToken];
+		$statement->execute($parameters);
+
+try {
+	//grab profile from database
+	$profile = null;
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	$row = $statement->fetch();
+	if($row !== false) {
+		//instantiate profile and push data into it
+		$profile = new Profile($row["profileId"],
+			$row["profileCloudinaryId"],
+			$row["profileAvatarUrl"],
+			$row["profileActivationToken"],
+			$row["profileEmail"],
+			$row["profileHash"],
+			$row["profilePhone"],
+			$row["profileUsername"]);
+	}
+}
+catch(\Exception $exception) {
+	// if the row couldn't be converted, rethrow it
+	throw(new \PDOException($exception->getMessage(), 0, $exception));
+}
+		return ($profile);
+	}
+
+
 public function getAllProfiles(\PDO $pdo): SplFixedArray{
 
 
@@ -740,7 +795,9 @@ public function getAllProfiles(\PDO $pdo): SplFixedArray{
 		$fields = get_object_vars($this);
 
 		$fields["profileId"] = $this->profileId->toString();
-
+		unset($fields["profileActivationToken"]);
+		unset($fields["profileHash"]);
+		return ($fields);
 
 	}
 }
