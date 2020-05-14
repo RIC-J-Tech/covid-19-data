@@ -12,6 +12,7 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
+
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 
@@ -93,9 +94,7 @@ abstract class DataDesignTest extends TestCase {
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
 
-
-
-			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
+			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtechtest.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}
