@@ -325,37 +325,42 @@ return $reports;
 	 * @param $reportBusinessId
 	 * @return SplFixedArray
 	 */
-public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): ?Report{
-	//create query template
+public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): ?Report {
+
+	try {
+		$reportBusinessId = self::validateUuid($reportBusinessId);
+
+	} catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw (new $exceptionType($exception->getMessage(), 0, $exception));
+	}
+
+//create query template
 	$query = "SELECT * FROM report WHERE reportBusinessId = :reportBusinessId ";
 	$statement = $pdo->prepare($query);
 
-	try {
-		$reportProfileId = self::validateUuid($reportBusinessId);
-
-	}
-	catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
-		$exceptionType = get_class($exception);
-		throw (new $exceptionType($exception->getMessage(),0,$exception));
-	}
-
 	//bind the object to their respective  placeholders in the table
-	$parameters = ["reportBusinessId"=>$reportBusinessId->getBytes()];
+	$parameters = ["reportBusinessId" => $reportBusinessId->getBytes()];
 	$statement->execute($parameters);
 
-	//build an array of reports
-	$reports = null;
-	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	$row = $statement->fetch();
-	if($row !== false){
-		//instantiate profile object and push data into it
-		$report = new Report($row["reportId"],
-			$row["reportBusinessId"],
-			$row["reportProfileId"],
-			$row["reportContent"],
-			new \DateTime($row["reportDate"]));
-
+	try {
+		//build an array of reports
+		$reports = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+			//instantiate profile object and push data into it
+			$report = new Report($row["reportId"],
+				$row["reportBusinessId"],
+				$row["reportProfileId"],
+				$row["reportContent"],
+				new \DateTime($row["reportDate"]));
 		}
+		}
+	catch(\InvalidArgumentException | \RangeException | \Exception | TypeError $exception){
+			throw (new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
 	return ($reports);
 }
 
