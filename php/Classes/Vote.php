@@ -382,28 +382,28 @@ class Vote implements \JsonSerializable {
 		return($voteResult);
 	}
 	/**
-	 * gets the votes by voteProfileId
+	 * gets the votes by voteBehaviorId
 	 *
 	 * @param \PDO $pdo PDO connection object.
-	 * @param Uuid|string $voteProfileId id to search by.
+	 * @param Uuid|string $voteBehaviorId id to search by.
 	 * @return \SplFixedArray SplFixedArray of votes found.
 	 * @throws \PDOException when mySQL related errors.
 	 * @throws \TypeError when variables are not the correct data type.
 	 **/
-	public static function getVoteByVoteProfileId(\PDO $pdo, $voteProfileId) : \SplFixedArray {
+	public static function getVoteByVoteBehaviorId(\PDO $pdo, $voteBehaviorId) : \SplFixedArray {
 
 		try {
-			$voteProfileId = self::ValidateUuid($voteProfileId);
+			$voteBehaviorId = self::ValidateUuid($voteBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT voteProfileId, voteBehaviorId, voteDate, voteResult FROM vote WHERE voteProfileId = :voteProfileId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteDate, voteResult FROM vote WHERE voteBehaviorId = :voteBehaviorId";
 		$statement = $pdo->prepare($query);
 
-		// bind the vote profile id to the place holder in the template
-		$parameters = ["voteProfileId" => $voteProfileId->getBytes()];
+		// bind the vote behavior id to the place holder in the template
+		$parameters = ["voteBehaviorId" => $voteBehaviorId->getBytes()];
 		$statement->execute($parameters);
 // build an array of votes
 		$votes = new \SplFixedArray($statement->rowCount());
