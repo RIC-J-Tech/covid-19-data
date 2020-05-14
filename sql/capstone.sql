@@ -60,6 +60,7 @@ CREATE TABLE vote(
 	INDEX(voteBehaviorId),
 	FOREIGN KEY(voteProfileId) REFERENCES profile(profileId),
 	FOREIGN KEY(voteBehaviorId) REFERENCES behavior(behaviorId)
+	PRIMARY KEY(voteProfileId,voteBehaviorId)
 );
 
 CREATE TABLE report(
