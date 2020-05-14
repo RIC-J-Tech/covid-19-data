@@ -1,6 +1,6 @@
 <?php
 namespace RICJTech\Covid19Data\Test;
-use RICJTech\Covid19Data\{Profile,Behavior, Business, Vote};
+use RICJTech\Covid19Data\{Profile,Behavior, Vote};
 use Ramsey\Uuid\Uuid;
 //use RICJTech\Covid19Data\DataTest;
 use Faker;
@@ -10,134 +10,209 @@ require_once(dirname(__DIR__) . "/autoload.php");
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 class VoteTest extends DataDesignTest {
-	private $profile = null;
-	private $behavior = null;
-	private $business = null;
-	private $VALID_ACTIVATION_TOKEN;
-	private $VALID_CLOUDINARY_ID = "astrongIdcloud";
-	private $VALID_AVATAR_URL;
-	private $VALID_PROFILE_EMAIL;
-	private $VALID_PROFILE_HASH;
-	private $VALID_PROFILE_PHONE;
-	private $VALID_PROFILE_USERNAME;
-	private $VALID_VOTE_RESULT=1;
-	private $VALID_VOTE_RESULT1=0;
-	private $VALID_VOTE_DATE;
 
-	public function setUp(): void {
+	use setUpTest;
+
+
+	/**
+	 * Profile that created the liked the Behavior; this is for foreign key relations
+	 * @var  Profile $profile
+	 **/
+	protected $profile;
+
+	/**
+	 * Behavior that was liked; this is for foreign key relations
+	 * @var Behavior $behavior
+	 **/
+	protected $behavior;
+
+	/**
+	 * valid hash to use
+	 * @var $VALID_HASH
+	 */
+	protected $VALID_HASH;
+
+	/**
+	 * timestamp of the Vote; this starts as null and is assigned later
+	 * @var \DateTime $VALID_VOTEDATE
+	 **/
+	protected $VALID_VOTEDATE;
+
+	/**
+	 * valid activationToken to create the profile object to own the test
+	 * @var string $VALID_ACTIVATION
+	 */
+	protected $VALID_ACTIVATION;
+
+
+
+
+	/**
+	 * create dependent objects before running each test
+	 **/
+	public final function setUp() : void {
+		// run the default setUp() method first
 		parent::setUp();
 		$faker = Faker\Factory::create();
-		$password = $faker->password;
-		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
-		$this->VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
-		$this->VALID_PROFILE_EMAIL = $faker->email;
-		$this->VALID_PROFILE_PHONE = $faker->phoneNumber;
-//     $this->VALID_CLOUDINARY_ID = "astrongIdcloud";
-		$this->VALID_AVATAR_URL = $faker->url;
-		$this->VALID_PROFILE_USERNAME = $faker->userName;
-		$this->VALID_VOTE_DATE = $faker->dateTime;
-		$this->VALID_VOTE_RESULT = 1;
-		$this->VALID_VOTE_RESULT1 =0;
 
-		// create and insert a Profile to own the report content
-		$this->profile = new Profile(generateUuidV4()->toString(), $this->VALID_CLOUDINARY_ID, $this->VALID_AVATAR_URL,
-			$this->VALID_ACTIVATION_TOKEN, $this->VALID_PROFILE_EMAIL,
-			$this->VALID_PROFILE_HASH, $this->VALID_PROFILE_PHONE, $this->VALID_PROFILE_USERNAME);
+		// create a salt and hash for the mocked profile
+		$password = "abc123";
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
+
+		// create and insert the mocked profile
+		$this->profile = self::createProfile();
 		$this->profile->insert($this->getPDO());
-		$this->business = new Business(generateUuidV4()->toString(), "myyelpid", 123.4564, 128.7896, "RICJTECH", "https://ricjtech.com");
-		$this->business->insert($this->getPDO());
-		$this->behavior = new Behavior(generateUuidV4()->toString(), $this->business->getBusinessId()->toString(), $this->profile->getProfileId()->toString(), "india", new \DateTime());
+
+		// create the and insert the mocked behavior
+		$this->behavior = self::createBehavior();
 		$this->behavior->insert($this->getPDO());
+
+		// calculate the date (just use the time the unit test was setup...)
+		$this->VALID_VOTEDATE = new \DateTime();
 	}
 
-	public function testInsertValidVote(): void {
-		//get count of profile records in db before we run the test
+	/**
+	 * test inserting a valid Vote and verify that the actual mySQL data matches
+	 **/
+	public function testInsertValidVote() : void {
+		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("vote");
-		//insert a profile record in the db
-		$vote = new Vote($this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(), $this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+
+		// create a new Vote and insert to into mySQL
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(), $this->VALID_VOTEDATE);
 		$vote->insert($this->getPDO());
+
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Vote::getVotesByVoteProfileId($this->getPDO(), $vote->getVoteProfileId()->toString());
+		$pdoVote = Vote::getVoteByVoteBehaviorIdAndVoteProfileId($this->getPDO(), $this->profile->getProfileId(), $this->behavior->getBehaviorId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
-		$this->assertCount(1, $results);
-		// grab the result from the array and validate it
-		$pdoVote = $results[0];
-		$this->assertEquals($pdoVote->getVoteProfileId()->toString(), $this->profile->getProfileId()->toString());
-		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT);
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
-	}
-
-	public function testUpdate(): void {
-		$faker = Faker\Factory::create();
-		//get count of profile records in database before we run the test
-		$numRows = $this->getConnection()->getRowCount("vote");
-		/** @var Uuid $voteBehaviorId */
-
-		$this->VALID_VOTE_RESULT = 0;
-		$this->VALID_VOTE_DATE = $faker->dateTime;
-		$vote = new Vote($this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(), $this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
-		$vote->insert($this->getPDO());
-
-		// edit the vote and update it in mySQL
-		$vote->setVoteResult($this->VALID_VOTE_RESULT1);
-		$vote->update($this->getPDO());
-
-		//get a copy of the record just inserted and validate the values
-		//make sure the values that went into the record are the same ones that come out
-		$results = Vote::getVotesByVoteProfileId($this->getPDO(), $vote->getVoteProfileId()->getBytes());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
-		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf( "RICJTech\\Covid19Data\\Vote", $results);
-
-		// grab the result from the array and validate it
-		$pdoVote = $results[0];
-
 		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoVote->getVoteBehaviorId(), $this->behavior->getBehaviorId());
-		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT1);
 		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
+		$this->assertEquals($pdoVote->getVoteDate()->getTimeStamp(), $this->VALID_VOTEDATE->getTimestamp());
 	}
 
-	public function testDeleteValidVote(): void {
-
-//count the number of rows and save it for later
+	/**
+	 * test creating a Vote and then deleting it
+	 **/
+	public function testDeleteValidVote() : void {
+		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("vote");
 
-		$vote = new Vote($this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(), $this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+		// create a new Vote and insert to into mySQL
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(), $this->VALID_VOTEDATE);
 		$vote->insert($this->getPDO());
-// delete the Report from mySQL
+
+		// delete the Vote from mySQL
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
 		$vote->delete($this->getPDO());
-//grab the data from mySQL and enforce the Report does not exist
-		$pdoVote = Vote::getVotesByVoteProfileId($this->getPDO(), $this->profile->getProfileId()->getBytes());
-//		$this->assertNull($pdoVote);
+
+		// grab the data from mySQL and enforce the Behavior does not exist
+		$pdoVote = Vote::getVoteByVoteBehaviorIdAndVoteProfileId($this->getPDO(), $this->profile->getProfileId(), $this->behavior->getBehaviorId());
+		$this->assertNull($pdoVote);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("vote"));
 	}
 
-	public function testGetValidVoteByProfileId(): void {
-//get count of profile records in db before we run the test
+	/**
+	 * test inserting a Vote and regrabbing it from mySQL
+	 **/
+	public function testGetValidVoteByBehaviorIdAndProfileId() : void {
+		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("vote");
-//   /** @var Uuid $reportId */
 
-		$vote = new Vote( $this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(),
-			$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+		// create a new Vote and insert to into mySQL
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(), $this->VALID_VOTEDATE);
 		$vote->insert($this->getPDO());
 
-		$results = Vote::getVotesByVoteProfileId($this->getPDO(), $vote->getVoteProfileId()->getBytes());
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoVote = Vote::getVoteByVoteBehaviorIdAndVoteProfileId($this->getPDO(), $this->profile->getProfileId(), $this->behavior->getBehaviorId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
+		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoVote->getVoteBehaviorId(), $this->behavior->getBehaviorId());
+
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoVote->getVoteDate()->getTimeStamp(), $this->VALID_VOTEDATE->getTimestamp());
+	}
+
+	/**
+	 * test grabbing a Vote that does not exist
+	 **/
+	public function testGetInvalidVoteByBehaviorIdAndProfileId() {
+		// grab a behavior id and profile id that exceeds the maximum allowable behavior id and profile id
+		$vote = Vote::getVoteByVoteBehaviorIdAndVoteProfileId($this->getPDO(), generateUuidV4(), generateUuidV4());
+		$this->assertNull($vote);
+	}
+
+	/**
+	 * test grabbing a Vote by behavior id
+	 **/
+	public function testGetValidVoteByBehaviorId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("vote");
+
+		// create a new Vote and insert to into mySQL
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(), $this->VALID_VOTEDATE);
+		$vote->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Vote::getVoteByVoteBehaviorId($this->getPDO(), $this->behavior->getBehaviorId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf( "RICJTech\\Covid19Data\\Vote", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Vote", $results);
 
 		// grab the result from the array and validate it
 		$pdoVote = $results[0];
-
 		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoVote->getVoteBehaviorId(), $this->behavior->getBehaviorId());
-		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT);
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
 
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoVote->getVoteDate()->getTimeStamp(), $this->VALID_VOTEDATE->getTimestamp());
 	}
+
+	/**
+	 * test grabbing a Vote by a behavior id that does not exist
+	 **/
+	public function testGetInvalidVoteByBehaviorId() : void {
+		// grab a behavior id that exceeds the maximum allowable behavior id
+		$vote = Vote::getVoteByVoteBehaviorId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $vote);
+	}
+
+	/**
+	 * test grabbing a Vote by profile id
+	 **/
+	public function testGetValidVoteByProfileId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("vote");
+
+		// create a new Vote and insert to into mySQL
+		$vote = new Vote($this->profile->getProfileId(), $this->behavior->getBehaviorId(), $this->VALID_VOTEDATE);
+		$vote->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Vote::getVoteByVoteProfileId($this->getPDO(), $this->profile->getProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Vote", $results);
+
+		// grab the result from the array and validate it
+		$pdoVote = $results[0];
+		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoVote->getVoteBehaviorId(), $this->behavior->getBehaviorId());
+
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoVote->getVoteDate()->getTimeStamp(), $this->VALID_VOTEDATE->getTimestamp());
+	}
+
+	/**
+	 * test grabbing a Vote by a profile id that does not exist
+	 **/
+	public function testGetInvalidVoteByProfileId() : void {
+		// grab a behavior id that exceeds the maximum allowable profile id
+		$vote = Vote::getVoteByVoteProfileId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $vote);
+	}
+
 }

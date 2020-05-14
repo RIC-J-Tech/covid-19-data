@@ -51,17 +51,19 @@ CREATE TABLE behavior(
 );
 
 
-CREATE TABLE vote(
+CREATE TABLE `vote` (
+	-- these are not auto_increment because they're still foreign keys
 	voteBehaviorId BINARY(16) NOT NULL,
 	voteProfileId BINARY(16) NOT NULL,
-	voteDate DATETIME(6) NOT NULL,
-	voteResult BOOLEAN NOT NULL,
+	voteDate DATETIME(6) NOT NULL,	-- index the foreign keys
 	INDEX(voteProfileId),
 	INDEX(voteBehaviorId),
-	FOREIGN KEY(voteProfileId) REFERENCES profile(profileId),
+	-- create the foreign key relations
 	FOREIGN KEY(voteBehaviorId) REFERENCES behavior(behaviorId),
-	PRIMARY KEY(voteProfileId,voteBehaviorId)
-);
+	FOREIGN KEY(voteProfileId) REFERENCES profile(profileId),
+	-- finally, create a composite foreign key with the two foreign keys
+	PRIMARY KEY(voteProfileId, voteBehaviorId)
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 CREATE TABLE report(
    reportId BINARY(16) NOT NULL,

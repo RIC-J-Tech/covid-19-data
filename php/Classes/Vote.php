@@ -9,8 +9,8 @@ use Ramsey\Uuid\Uuid;
 /**
  * Cross Section of a Twitter Like
  *
- * This is a cross section of what probably occurs when a user likes a Tweet. It is an intersection table (weak
- * entity) from an m-to-n relationship between Profile and Tweet.
+ * This is a cross section of what probably occurs when a user likes a Behavior. It is an intersection table (weak
+ * entity) from an m-to-n relationship between Profile and Behavior.
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @version 3.0.0
@@ -20,7 +20,7 @@ class Vote implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**
-	 * id of the Tweet being liked; this is a component of a composite primary key (and a foreign key)
+	 * id of the Behavior being liked; this is a component of a composite primary key (and a foreign key)
 	 * @var Uuid $voteBehaviorId
 	 **/
 	private $voteBehaviorId;
@@ -47,8 +47,8 @@ private $voteResult;
 	 *
 	 * @param string|Uuid $newVoteProfileId id of the parent Profile
 	 * @param String|null $newVoteResult vote result
-	 * @param string|Uuid $newVoteBehaviorId id of the parent Tweet
-	 * @param \DateTime|null $newVoteDate date the tweet was liked (or null for current time)
+	 * @param string|Uuid $newVoteBehaviorId id of the parent Behavior
+	 * @param \DateTime|null $newVoteDate date the behavior was liked (or null for current time)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
@@ -56,12 +56,11 @@ private $voteResult;
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
 
-	public function __construct( $newVoteProfileId,$newVoteBehaviorId,$newVoteResult, $newVoteDate = null) {
+	public function __construct( $newVoteProfileId,$newVoteBehaviorId, $newVoteDate = null) {
 		// use the mutator methods to do the work for us!
 		try {
 			$this->setVoteProfileId($newVoteProfileId);
 			$this->setVoteBehaviorId($newVoteBehaviorId);
-			$this->setVoteResult($newVoteResult);
 			$this->setVoteDate($newVoteDate);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 
@@ -99,12 +98,12 @@ private $voteResult;
 	}
 
 	/**
-	 * accessor method for tweet id
+	 * accessor method for behavior id
 	 *
-	 * @return uuid value of tweet id
+	 * @return uuid value of behavior id
 	 **/
-	public function getVoteTweetId() : Uuid{
-		return ($this->voteTweetId);
+	public function getVoteBehaviorId() : Uuid{
+		return ($this->voteBehaviorId);
 	}
 
 	/**
@@ -167,7 +166,7 @@ private $voteResult;
 	 **/
 	public function insert(\PDO $pdo) : void {
 		// create query template
-		$query = "INSERT INTO `vote`(voteProfileId, voteBehaviorId, voteResult,voteDate) VALUES(:voteProfileId, :voteBehaviorId, :voteResult,:voteDate)";
+		$query = "INSERT INTO `vote`(voteProfileId, voteBehaviorId,voteDate) VALUES(:voteProfileId, :voteBehaviorId, :voteResult,:voteDate)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -194,127 +193,127 @@ private $voteResult;
 	}
 
 	/**
-	 * gets the Like by tweet id and profile id
+	 * gets the Vote by behavior id and profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $likeProfileId profile id to search for
-	 * @param string $likeTweetId tweet id to search for
-	 * @return Like|null Like found or null if not found
+	 * @param string $voteProfileId profile id to search for
+	 * @param string $voteBehaviorId behavior id to search for
+	 * @return Vote|null Vote found or null if not found
 	 */
-	public static function getLikeByLikeTweetIdAndLikeProfileId(\PDO $pdo, string $likeProfileId, string $likeTweetId) : ?Like {
+	public static function getVoteByVoteBehaviorIdAndVoteProfileId(\PDO $pdo, string $voteProfileId, string $voteBehaviorId) : ?Vote {
 
 		//
 		try {
-			$likeProfileId = self::validateUuid($likeProfileId);
+			$voteProfileId = self::validateUuid($voteProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		try {
-			$likeTweetId = self::validateUuid($likeTweetId);
+			$voteBehaviorId = self::validateUuid($voteBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT likeProfileId, likeTweetId, likeDate FROM `like` WHERE likeProfileId = :likeProfileId AND likeTweetId = :likeTweetId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteDate FROM `vote` WHERE voteProfileId = :voteProfileId AND voteBehaviorId = :voteBehaviorId";
 		$statement = $pdo->prepare($query);
 
-		// bind the tweet id and profile id to the place holder in the template
-		$parameters = ["likeProfileId" => $likeProfileId->getBytes(), "likeTweetId" => $likeTweetId->getBytes()];
+		// bind the behavior id and profile id to the place holder in the template
+		$parameters = ["voteProfileId" => $voteProfileId->getBytes(), "voteBehaviorId" => $voteBehaviorId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the like from mySQL
+		// grab the vote from mySQL
 		try {
-			$like = null;
+			$vote = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$like = new Like($row["likeProfileId"], $row["likeTweetId"], $row["likeDate"]);
+				$vote = new Vote($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return ($like);
+		return ($vote);
 	}
 
 	/**
-	 * gets the Like by profile id
+	 * gets the Vote by profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $likeProfileId profile id to search for
-	 * @return \SplFixedArray SplFixedArray of Likes found or null if not found
+	 * @param string $voteProfileId profile id to search for
+	 * @return \SplFixedArray SplFixedArray of Votes found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public static function getLikeByLikeProfileId(\PDO $pdo, string $likeProfileId) : \SPLFixedArray {
+	public static function getVoteByVoteProfileId(\PDO $pdo, string $voteProfileId) : \SPLFixedArray {
 		try {
-			$likeProfileId = self::validateUuid($likeProfileId);
+			$voteProfileId = self::validateUuid($voteProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT likeProfileId, likeTweetId, likeDate FROM `like` WHERE likeProfileId = :likeProfileId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteDate FROM `vote` WHERE voteProfileId = :voteProfileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeProfileId" => $likeProfileId->getBytes()];
+		$parameters = ["voteProfileId" => $voteProfileId->getBytes()];
 		$statement->execute($parameters);
 
-		// build an array of likes
-		$likes = new \SplFixedArray($statement->rowCount());
+		// build an array of votes
+		$votes = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$like = new Like($row["likeProfileId"], $row["likeTweetId"], $row["likeDate"]);
-				$likes[$likes->key()] = $like;
-				$likes->next();
+				$vote = new Vote($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"]);
+				$votes[$votes->key()] = $vote;
+				$votes->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($likes);
+		return ($votes);
 	}
 
 	/**
-	 * gets the Like by tweet it id
+	 * gets the Vote by behavior it id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $likeTweetId tweet id to search for
-	 * @return \SplFixedArray array of Likes found or null if not found
+	 * @param string $voteBehaviorId behavior id to search for
+	 * @return \SplFixedArray array of Votes found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 **/
-	public static function getLikeByLikeTweetId(\PDO $pdo, string $likeTweetId) : \SplFixedArray {
+	public static function getVoteByVoteBehaviorId(\PDO $pdo, string $voteBehaviorId) : \SplFixedArray {
 		try {
-			$likeTweetId = self::validateUuid($likeTweetId);
+			$voteBehaviorId = self::validateUuid($voteBehaviorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT likeProfileId, likeTweetId, likeDate FROM `like` WHERE likeTweetId = :likeTweetId";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteDate FROM `vote` WHERE voteBehaviorId = :voteBehaviorId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["likeTweetId" => $likeTweetId->getBytes()];
+		$parameters = ["voteBehaviorId" => $voteBehaviorId->getBytes()];
 		$statement->execute($parameters);
 
-		// build the array of likes
-		$likes = new \SplFixedArray($statement->rowCount());
+		// build the array of votes
+		$votes = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$like = new Like($row["likeProfileId"], $row["likeTweetId"], $row["likeDate"]);
-				$likes[$likes->key()] = $like;
-				$likes->next();
+				$vote = new Vote($row["voteProfileId"], $row["voteBehaviorId"], $row["voteDate"]);
+				$votes[$votes->key()] = $vote;
+				$votes->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($likes);
+		return ($votes);
 	}
 
 	/**
@@ -327,9 +326,9 @@ private $voteResult;
 
 
 		//format the date so that the front end can consume it
-		$fields["likeProfileId"] = $this->likeProfileId;
-		$fields["likeTweetId"] = $this->likeTweetId;
-		$fields["likeDate"] = round(floatval($this->likeDate->format("U.u")) * 1000);
+		$fields["voteProfileId"] = $this->voteProfileId;
+		$fields["voteBehaviorId"] = $this->voteBehaviorId;
+		$fields["voteDate"] = round(floatval($this->voteDate->format("U.u")) * 1000);
 
 		return ($fields);
 	}
