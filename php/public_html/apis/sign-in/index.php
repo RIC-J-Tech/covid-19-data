@@ -40,7 +40,7 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//check to make sure the password and email field is not empty.s
+		//check to make sure the password and email field is not empty
 		if(empty($requestObject->profileEmail) === true) {
 			throw(new \InvalidArgumentException("email address not provided.", 401));
 		} else {
