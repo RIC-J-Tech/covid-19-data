@@ -165,11 +165,11 @@ public function testProfileValidateByUsername(): void{
 
 
 	//Returns an array
-//	var_dump($profile->getProfileUsername());
+
 	$results = Profile::getProfileByUsername($this->getPDO(),$profile->getProfileUsername());
 
 
-//var_dump($results);
+
 	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
 	//$this->assertCount(0, $results);
 

@@ -1,9 +1,16 @@
 
-USE cap28_covid;
+USE cap28_covid_test;
+
+DROP TABLE IF EXISTS report;
+DROP TABLE IF EXISTS vote;
+DROP TABLE IF EXISTS behavior;
+DROP TABLE IF EXISTS business;
+DROP TABLE IF EXISTS profile;
+
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
-	profileCloudinaryId VARCHAR(16),
+	profileCloudinaryId VARCHAR(32),
 	profileActivationToken CHAR(32),
 	profileAvatarUrl VARCHAR(256) NOT NULL,
 	profileEmail VARCHAR(128) NOT NULL,
@@ -21,8 +28,8 @@ CREATE TABLE profile(
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
    businessYelpId VARCHAR(32) NOT NULL,
-   businessLng DECIMAL(9,7),
-   businessLat DECIMAL(9,7),
+   businessLng DECIMAL(11,8),
+   businessLat DECIMAL(11,8),
    businessName VARCHAR(128) NOT NULL,
    businessUrl VARCHAR(256) NOT NULL,
    INDEX(businessName),

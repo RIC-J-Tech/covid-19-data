@@ -327,7 +327,7 @@ return $reports;
 	 */
 public static function getReportByBusinessId(\PDO $pdo, $reportBusinessId): ?Report{
 	//create query template
-	$query = "SELECT * FROM report WHERE reportBusinessId = :reportProfileId ";
+	$query = "SELECT * FROM report WHERE reportBusinessId = :reportBusinessId ";
 	$statement = $pdo->prepare($query);
 
 	try {

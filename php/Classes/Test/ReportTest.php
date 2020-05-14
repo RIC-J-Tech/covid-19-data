@@ -169,6 +169,11 @@ public function testGetValidReportByBusinessId(): void{
 	//check count of profile record in the db after the insert
 	$numRowsAfter = $this->getConnection()->getRowCount("report");
 	self::assertEquals($numRows + 1, $numRowsAfter,"checked record count");
+	$this->assertEquals($report->getReportDate()->getTimestamp(), $this->VALID_REPORT_DATE->getTimestamp());
+	$this->assertEquals($report->getReportContent(), $this->VALID_REPORT_CONTENT);
+	$this->assertEquals($report->getReportBusinessId(),$this->business->getBusinessId());
+	$this->assertEquals($report->getReportProfileId(),$this->profile->getProfileId());
+
 
 }
 
