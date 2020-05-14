@@ -40,6 +40,7 @@ try {
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$behaviorBusinessId = filter_input(INPUT_GET, "behaviorBus", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	var_dump($behaviorBusinessId);
 	$behaviorProfileId = filter_input(INPUT_GET, "behaviorProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 //	var_dump($behaviorProfileId);
 	$behaviorContent = filter_input(INPUT_GET, "behaviorContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -160,9 +161,10 @@ try {
 
 			//enforce the end user has a JWT token
 			validateJwtHeader();
-
+//var_dump(generateUuidV4()->toString());
 			// create new behavior and insert into the database
-			$behavior = new Behavior(generateUuidV4(), $requestObject->getBusinessId(), $_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, null);
+			$behavior = new Behavior(generateUuidV4()->toString(),  "AC539910-1294-49DC-ACA4-13041ECD9F6C",
+				$_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, new DateTime());
 			$behavior->insert($pdo);
 
 			// update reply
