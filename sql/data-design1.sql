@@ -54,5 +54,6 @@ CREATE TABLE vote(
 	INDEX(voteProfileId),
 	INDEX(voteBehaviorId),
 	FOREIGN KEY(voteProfileId) REFERENCES profile(profileId),
-	FOREIGN KEY(voteBehaviorId) REFERENCES behavior(behaviorId)
+	FOREIGN KEY(voteBehaviorId) REFERENCES behavior(behaviorId),
+	PRIMARY KEY (voteProfileId,voteBehaviorId)
 );
