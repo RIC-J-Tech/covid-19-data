@@ -301,7 +301,7 @@ class Vote implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors.
 	 * @throws \TypeError when variables are not the correct data type.
 	 **/
-	public static function getVoteByVoteBehaviorId(\PDO $pdo, $voteBehaviorId) : \SplFixedArray {
+	public static function getVotesByVoteBehaviorId(\PDO $pdo, $voteBehaviorId) : \SplFixedArray {
 
 		try {
 			$voteBehaviorId = self::ValidateUuid($voteBehaviorId);

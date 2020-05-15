@@ -143,4 +143,31 @@ class VoteTest extends DataDesignTest {
 		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
 
 	}
+
+	public function testGetValidVoteByBehaviorId(): void {
+//get count of profile records in db before we run the test
+		$numRows = $this->getConnection()->getRowCount("vote");
+//   /** @var Uuid $reportId */
+
+		$vote = new Vote( $this->behavior->getBehaviorId()->toString(), $this->profile->getProfileId()->toString(),
+			$this->VALID_VOTE_RESULT, $this->VALID_VOTE_DATE);
+		$vote->insert($this->getPDO());
+
+		$results = Vote::getVotesByVoteBehaviorId($this->getPDO(), $vote->getVoteBehaviorId()->getBytes());
+
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("vote"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf( "RICJTech\\Covid19Data\\Vote", $results);
+
+		// grab the result from the array and validate it
+		$pdoVote = $results[0];
+
+		$this->assertEquals($pdoVote->getVoteProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoVote->getVoteBehaviorId(), $this->behavior->getBehaviorId());
+		$this->assertEquals($pdoVote->getVoteResult(), $this->VALID_VOTE_RESULT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoVote->getVoteDate()->getTimestamp(), $this->VALID_VOTE_DATE->getTimestamp());
+
+	}
+
 }
