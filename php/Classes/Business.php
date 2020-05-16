@@ -180,14 +180,34 @@ class Business implements \JsonSerializable {
 		}
 		return($businesses);
 	}
+
+
+	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
+		// create query template
+		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of business
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$business = new business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($businesses);
+	}
+
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["businessId"] = $this->businessId->toString();
-		$fields["businessYelpId"] = round(floatval($this->businessYelpId->format("")) * 1000);
-		$fields["businessLng"] = round(floatval($this->businessLng->format("")) * 1000);
-		$fields["businessLat"] = round(floatval($this->businessLat->format("")) * 1000);
-		$fields["businessName"] = $this->businessName->toString();
-		$fields["businessUrl"] = $this->businessUrl->toString();
 		return ($fields);
 	}
 }
