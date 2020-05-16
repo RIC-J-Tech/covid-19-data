@@ -39,9 +39,9 @@ try {
 	//sanitize input
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$behaviorBusinessId = filter_input(INPUT_GET, "behaviorBus", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	var_dump($behaviorBusinessId);
-	$behaviorProfileId = filter_input(INPUT_GET, "behaviorProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$behaviorBusinessId = filter_input(INPUT_GET, "behaviorBusinessId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	//var_dump($behaviorBusinessId);
+	$behaviorProfileId = filter_input(INPUT_GET, "behaviorProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 //	var_dump($behaviorProfileId);
 	$behaviorContent = filter_input(INPUT_GET, "behaviorContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -153,7 +153,6 @@ try {
 			$reply->message = "Behavior updated OK";
 
 		} else if($method === "POST") {
-
 			// enforce the user is signed in
 			if(empty($_SESSION["profile"]) === true) {
 				throw(new \InvalidArgumentException("you must be logged in to post behaviors", 403));
@@ -161,10 +160,10 @@ try {
 
 			//enforce the end user has a JWT token
 			validateJwtHeader();
-//var_dump(generateUuidV4()->toString());
 			// create new behavior and insert into the database
-			$behavior = new Behavior(generateUuidV4()->toString(),  "AC539910-1294-49DC-ACA4-13041ECD9F6C",
-				$_SESSION["profile"]->getProfileId(), $requestObject->behaviorContent, new DateTime());
+
+			$behavior = new Behavior(generateUuidV4()->toString(),  $requestObject->behaviorBusinessId,
+				$_SESSION["profile"]->getProfileId()->toString(), $requestObject->behaviorContent, new DateTime());
 			$behavior->insert($pdo);
 
 			// update reply
