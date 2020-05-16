@@ -96,7 +96,7 @@ try {
 
 			validateJwtHeader();
 
-			$vote = new Vote($_SESSION["profile"]->getProfileId(), $requestObject->voteBehaviorId);
+			$vote = new Vote($_SESSION["profile"]->getProfileId(), $requestObject->voteBehaviorId,$requestObject->voteResult, new DateTime());
 			$vote->insert($pdo);
 			$reply->message = "voted behavior successful";
 
