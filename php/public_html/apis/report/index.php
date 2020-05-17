@@ -6,7 +6,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
+require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 
 use RICJTech\Covid19Data\{ Business, Profile, Report};
 
@@ -28,7 +28,7 @@ $reply->status = 200;
 $reply->data = null;
 try {
 
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ricjtech.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 
 
@@ -39,8 +39,8 @@ try {
 	//sanitize input
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$reportBusinessId = filter_input(INPUT_GET, "reportBus", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$reportProfileId = filter_input(INPUT_GET, "reportProf", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$reportBusinessId = filter_input(INPUT_GET, "reportBusinessId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$reportProfileId = filter_input(INPUT_GET, "reportProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 //	var_dump($reportProfileId);
 	$reportContent = filter_input(INPUT_GET, "reportContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -70,20 +70,32 @@ try {
 			$reply->data = Report::getReportByReportContent($pdo, $reportContent)->toArray();
 
 		} else {
-			$reports = Report::getAllRepports($pdo)->toArray();
+			$reports = Report::getAllReports($pdo)->toArray();
 			$reportProfiles = [];
 			foreach($reports as $report){
-				$profile = 	Profile::getProfileByProfileId($pdo, $report->getReportProfileId());
-				$reportProfiles[] = (object)[
-					"repoertId"=>$report->getReportId(),
+				$business = Business::getBusinessByBusinessId($pdo, $report->getReportBusinessId());
+				$reportBusinesses[] = (object)[
+					"reportId"=>$report->getReportId(),
 					"reportBusinessId"=>$report->getReportBusinessId(),
 					"reportProfileId"=>$report->getReportProfileId(),
 					"reportContent"=>$report->getReportContent(),
-					"ReportDate"=>$report->getReportDate()->format("U.u") * 1000,
-					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
-					"profileUsername"=>$profile->getProfileUsername(),
+					"reportDate"=>$report->getReportDate()->format("U.u") * 1000,
+					"businessUrl"=>$business->getBusinessUrl(),
+					"businessName"=>$business->getBusinessName(),
+				];
+				
+					$profile = 	Profile::getProfileByProfileId($pdo, $report->getReportProfileId());
+					$reportProfiles[] = (object)[
+							"reportId"=>$report->getReportId(),
+							"reportBusinessId"=>$report->getReportBusinessId(),
+							"reportProfileId"=>$report->getReportProfileId(),
+							"reportContent"=>$report->getReportContent(),
+							"ReportDate"=>$report->getReportDate()->format("U.u") * 1000,
+							"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+							"profileUsername"=>$profile->getProfileUsername(),
 				];
 			}
+			$reply->data = $reportBusinesses;
 			$reply->data = $reportProfiles;
 		}
 	} else if($method === "PUT" || $method === "POST") {
@@ -106,7 +118,7 @@ try {
 		if(empty($requestObject->reportContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Report.", 405));
 		}
-		$requestObject->foo; //value:bar
+		$requestObject->reportContent; //value:bar
 		// make sure report date is accurate (optional field)
 		if(empty($requestObject->reportDate) === true) {
 			$requestObject->reportDate = null;
@@ -150,7 +162,8 @@ try {
 			validateJwtHeader();
 
 			// create new report and insert into the database
-			$report = new Report(generateUuidV4(), $_SESSION["profile"]->getProfileId(), $requestObject->reportContent, null);
+			$report = new Report(generateUuidV4()->toString(),  $requestObject->reportBusinessId,
+				$_SESSION["profile"]->getProfileId()->toString(), $requestObject->reportContent, new DateTime());
 			$report->insert($pdo);
 
 			// update reply
