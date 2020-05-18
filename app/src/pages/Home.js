@@ -28,12 +28,14 @@ export const Home = () => {
             					</Nav>
             					<Form inline>
             						<FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            						<Button variant="outline-success">Search</Button>
             					</Form>
+            					<Form inline>
+									 <Button variant="outline-success">Search</Button>
+									 </Form>
             				</Navbar.Collapse>
             			</Navbar>
 
-				<Card style={{ width: '18rem' }}>
+				<Card style={{ width: '50rem' }}>
 					<Card.Img variant="top" src="holder.js/100px180" alt="photo" />
 					<div className="red">
 					<Card.Body>

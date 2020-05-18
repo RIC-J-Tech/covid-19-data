@@ -39,9 +39,10 @@ export const BusinessPage = () => {
                   </Navbar>
 
             			<h1 className="blue">Business Page</h1>
+            			<h3>Name of Business</h3>
 
 				<div className="center">
-				<Card className="blue center" style={{ width: '18rem' }}>
+				<Card className="blue center" style={{ width: '45rem'}}>
               <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
               <Card.Body>
                 <Card.Title>Card Title</Card.Title>
