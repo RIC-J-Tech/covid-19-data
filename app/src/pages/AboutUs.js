@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import FormControl from "react-bootstrap/FormControl";
 
 
-export const Home = () => {
+export const AboutUs = () => {
 	return (
 		<>
 						<Navbar bg="light" expand="lg">
@@ -33,9 +33,9 @@ export const Home = () => {
             				</Navbar.Collapse>
             			</Navbar>
 
+            			<div className="">
 				<Card style={{ width: '18rem' }}>
-					<Card.Img variant="top" src="holder.js/100px180" alt="photo" />
-					<div className="red">
+					<Card.Img variant="top" src="holder.js/100px180" />
 					<Card.Body>
 						<Card.Title>Card Title</Card.Title>
 						<Card.Text>
@@ -43,8 +43,8 @@ export const Home = () => {
 							the card's content.
 						</Card.Text>
 					</Card.Body>
-					</div>
 				</Card>
+				</div>
 		</>
 	)
 };
