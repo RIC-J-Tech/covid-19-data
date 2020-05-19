@@ -70,7 +70,7 @@ $voteDate = new \DateTime();
 
 
 			if($vote !== null) {
-				$vote->delete();
+				$vote->delete($pdo);
 				$reply->message = "Vote successfully deleted";
 			}
 
@@ -109,7 +109,7 @@ $voteDate = new \DateTime();
 
 			//validateJwtHeader();
 
-			$vote = new Vote( $requestObject->voteBehaviorId,$_SESSION["profile"]->getProfileId(),
+			$vote = new Vote( $requestObject->voteBehaviorId,$_SESSION["profile"]->getProfileId()->toString(),
 				$requestObject->voteResult,
 			$voteDate);
 
