@@ -1,12 +1,16 @@
 import React from "react"
 import Card from "react-bootstrap/Card";
+import {BehaviorPost} from "../components/behaviorpost";
+
 
 export const Home = () => {
 	return (
 		<>
-			<>
-				<Card style={{ width: '18rem' }}>
-					<Card.Img variant="top" src="holder.js/100px180" />
+	<BehaviorPost behaviorContent="Wear mask" behaviorRating = {5} />
+
+				<Card style={{ width: '50rem' ,zIndex:'4'}}>
+					<Card.Img variant="top" src="holder.js/100px180" alt="photo" />
+					<div className="red">
 					<Card.Body>
 						<Card.Title>Card Title</Card.Title>
 						<Card.Text>
@@ -14,8 +18,9 @@ export const Home = () => {
 							the card's content.
 						</Card.Text>
 					</Card.Body>
+					</div>
 				</Card>
-			</>
+
 		</>
 	)
 };
