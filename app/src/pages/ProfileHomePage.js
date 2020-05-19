@@ -1,6 +1,9 @@
 import React from 'react'
+import Navbars from "../components/Navbars";
 export const ProfileHomePage = ({match}) => {
 	console.log(match);
 
-	return <h1>About</h1>
+	return <div>
+		<Navbars />
+	</div>
 };
