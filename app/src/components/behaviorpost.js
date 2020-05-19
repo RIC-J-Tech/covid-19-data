@@ -1,6 +1,13 @@
 import React from 'react'
-export const behaviorpost = ({match}) => {
-	console.log(match);
 
-	return <h1>behaviorpost</h1>
+
+
+export const BehaviorPost = ({behaviorContent,behaviorRating}) => {
+
+	return (
+	<>
+	<h1>{behaviorContent}</h1>
+				<h1>{behaviorRating}</h1>
+		</>
+	)
 };

@@ -10,7 +10,8 @@ import Navbars from "./components/Navbars";
 import Footer from "./components/Footer";
 
 const Routing = () => (
-	<><Navbars />
+	<>
+		<Navbars />
 		<BrowserRouter>
 			<Switch>
 
