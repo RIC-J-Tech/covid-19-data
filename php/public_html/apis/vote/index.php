@@ -142,7 +142,7 @@ $voteDate = new \DateTime();
 			$vote->update($pdo);
 
 			//update the message
-			$reply->message = "Vote successfully updta";
+			$reply->message = "Vote successfully updated";
 		}
 
 		// if any other HTTP request is sent throw an exception
