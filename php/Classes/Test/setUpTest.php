@@ -50,6 +50,7 @@ $VALID_BUSINESS_URL = $faker->url;
 }
 
 
+<<<<<<< HEAD
 	private static function createBehavior(): Behavior{
 		$faker = Faker\Factory::create();
 
@@ -69,6 +70,8 @@ $VALID_BUSINESS_URL = $faker->url;
 		return $behavior;
 	}
 
+=======
+>>>>>>> api-behavior
 
 private static function createReport(): Report{
 	$faker = Faker\Factory::create();
