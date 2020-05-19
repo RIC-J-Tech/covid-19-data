@@ -98,7 +98,7 @@ $voteDate = new \DateTime();
 		if($method === "POST") {
 
 			//enforce that the end user has a XSRF token.
-			//verifyXsrf();
+			verifyXsrf();
 
 			//enforce the end user has a JWT token
 
@@ -107,7 +107,7 @@ $voteDate = new \DateTime();
 				throw(new \InvalidArgumentException("you must be logged in too vote posts", 403));
 			}
 
-			//validateJwtHeader();
+			validateJwtHeader();
 
 			$vote = new Vote( $requestObject->voteBehaviorId,$_SESSION["profile"]->getProfileId()->toString(),
 				$requestObject->voteResult,
@@ -120,10 +120,10 @@ $voteDate = new \DateTime();
 		} else if($method === "PUT") {
 
 			//enforce the end user has a XSRF token.
-			//verifyXsrf();
+			verifyXsrf();
 
 			//enforce the end user has a JWT token
-		//	validateJwtHeader();
+			validateJwtHeader();
 
 			//grab the vote by its composite key
 			$vote = Vote::getVoteByVoteBehaviorIdAndVoteProfileId($pdo,$requestObject->voteBehaviorId, $requestObject->voteProfileId);
@@ -136,7 +136,7 @@ $voteDate = new \DateTime();
 				throw(new \InvalidArgumentException("You are not allowed to update this vote", 403));
 			}
 
-			//validateJwtHeader();
+			validateJwtHeader();
 			$vote->setVoteResult($requestObject->voteResult);
 			//preform the actual delete
 			$vote->update($pdo);
