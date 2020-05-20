@@ -21,6 +21,7 @@ export const getBehaviorByBehaviorProfileId =()=> async (dispatch) => {
 
 export const getBehaviorByBehaviorBusinessId =()=> async (dispatch)=>{
 	const payload = await httpConfig.get(`/apis/behavior/${behaviorBusinessId}`)
-	dispatch({type: "GET_BEHAVIOR_BY_BEHAVIOR_BUSINESS_ID", payload : payload.data})
+	dispatch({type: "GET_BEHAVIOR_BY_BEHAVIOR_BUSINESS_ID", payload : payload.data});
 
-}
+};
+
