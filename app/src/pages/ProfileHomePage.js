@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbars from "../components/Navbars";
+import Navbars from "../shared/components/Navbars";
 export const ProfileHomePage = ({match}) => {
 	console.log(match);
 

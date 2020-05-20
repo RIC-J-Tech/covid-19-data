@@ -9,7 +9,7 @@ require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 use RICJTech\Covid19Data\Profile;
 
 /**
- * api for handling sign-in
+ * api for handling sign-up
  *
  * @author Gkephart
  **/
