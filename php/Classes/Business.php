@@ -1,11 +1,8 @@
 <?php
-
 namespace RICJTech\Covid19Data;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
-
 use Ramsey\Uuid\Uuid;
-
 class Business implements \JsonSerializable {
 	use ValidateUuid;
 	private $businessId;
@@ -14,7 +11,6 @@ class Business implements \JsonSerializable {
 	private $businessName;
 	private $businessUrl;
 	private $businessYelpId;
-
 	public function __construct($newBusinessId, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
 		try {
 			$this->setBusinessId($newBusinessId);
@@ -28,11 +24,9 @@ class Business implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
-
-	public function getBusinessId(): Uuid {
+	public function getBusinessId():Uuid {
 		return $this->businessId;
 	}
-
 	public function setBusinessId($newBusinessId): void {
 		try {
 			$uuid = self::validateUuid($newBusinessId);
@@ -42,11 +36,9 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessId = $uuid;
 	}
-
 	public function getBusinessLng() {
 		return $this->businessLng;
 	}
-
 	public function setBusinessLng($newBusinessLng): void {
 		try {
 			$newBusinessLng = filter_var($newBusinessLng, FILTER_VALIDATE_FLOAT);
@@ -55,12 +47,10 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessLng = $newBusinessLng;
 	}
-
 	public function getBusinessLat() {
 		return $this->businessLat;
 	}
-
-	public function setBusinessLat($newBusinessLat) {
+	public function setBusinessLat($newBusinessLat)  {
 		try {
 			$newBusinessLat = filter_var($newBusinessLat, FILTER_VALIDATE_FLOAT);
 		} catch(\TypeError $exception) {
@@ -68,11 +58,9 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessLat = $newBusinessLat;
 	}
-
-	public function getBusinessName(): string {
+	public function getBusinessName():string {
 		return $this->businessName;
 	}
-
 	public function setBusinessName(string $newBusinessName) {
 		$newBusinessName = filter_var($newBusinessName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newBusinessName) === true) {
@@ -83,11 +71,9 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessName = $newBusinessName;
 	}
-
-	public function getBusinessUrl(): string {
+	public function getBusinessUrl():string {
 		return $this->businessUrl;
 	}
-
 	public function setBusinessUrl(string $newBusinessUrl) {
 		try {
 			$newBusinessUrl = filter_var($newBusinessUrl, FILTER_VALIDATE_URL);
@@ -100,21 +86,18 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessUrl = $newBusinessUrl;
 	}
-
 	/**
 	 * @return mixed
 	 */
-	public function getBusinessYelpId(): string {
+	public function getBusinessYelpId():string {
 		return $this->businessYelpId;
 	}
-
 	public function setBusinessYelpId(string $newBusinessYelpId) {
 		if(strlen($newBusinessYelpId) > 32) {
 			throw(new \RangeException("Yelp Id is longer than 32 characters."));
 		}
 		$this->businessYelpId = $newBusinessYelpId;
 	}
-
 	public function insert(\PDO $pdo): void {
 		$query = "INSERT INTO business(businessId,businessYelpId,businessLng,businessLat,businessName,
           businessUrl) VALUES(:businessId,:businessYelpId,:businessLng,:businessLat,:businessName,
@@ -125,14 +108,12 @@ class Business implements \JsonSerializable {
 				$this->businessUrl];
 		$statement->execute($parameters);
 	}
-
 	public function delete(\PDO $pdo): void {
 		$query = "DELETE FROM business WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 		$parameters = ["businessId" => $this->businessId->getBytes()];
 		$statement->execute($parameters);
 	}
-
 	public function update(\PDO $pdo): void {
 		$query = "UPDATE business SET
             businessYelpId = :businessYelpId,
@@ -150,7 +131,6 @@ class Business implements \JsonSerializable {
 			"businessUrl" => $this->businessUrl];
 		$statement->execute($parameter);
 	}
-
 	public static function getBusinessByBusinessId(\PDO $pdo, $businessId): ?Business {
 		try {
 			$businessId = self::validateUuid($businessId);
@@ -173,8 +153,7 @@ class Business implements \JsonSerializable {
 		}
 		return ($business);
 	}
-
-	public static function getBusinessByBusinessName(\PDO $pdo, string $newBusinessName): \SplFixedArray {
+	public static function getBusinessByBusinessName(\PDO $pdo, string $newBusinessName) : \SplFixedArray {
 		$newBusinessName = trim($newBusinessName);
 		$businessName = filter_var($newBusinessName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($businessName) === true) {
@@ -199,17 +178,36 @@ class Business implements \JsonSerializable {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
+		return($businesses);
+	}
+
+
+	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
+		// create query template
+		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of business
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$business = new business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
 		return ($businesses);
 	}
+
 
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["businessId"] = $this->businessId->toString();
-		$fields["businessYelpId"] = round(floatval($this->businessYelpId->format("")) * 1000);
-		$fields["businessLng"] = round(floatval($this->businessLng->format("")) * 1000);
-		$fields["businessLat"] = round(floatval($this->businessLat->format("")) * 1000);
-		$fields["businessName"] = $this->businessName->toString();
-		$fields["businessUrl"] = $this->businessUrl->toString();
 		return ($fields);
 	}
 }

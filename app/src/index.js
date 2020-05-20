@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter} from "react-router-dom";
 import {Route, Switch} from "react-router";
-import {Home} from "./pages/Home";
+import {Home} from "./pages/Home/businessList";
 import {ProfileHomePage} from "./pages/ProfileHomePage";
 import {BusinessPage} from "./pages/BusinessPage";
 import Navbars from "./components/Navbars";
