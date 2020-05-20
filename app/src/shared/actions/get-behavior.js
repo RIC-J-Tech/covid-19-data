@@ -6,7 +6,7 @@ export const getAllBehaviors = () => async (dispatch) => {
 };
 
 //Get payload from behavior Id
-export const getBehaviorByBehaviorId =()=> async (dispatch) => {
+export const getBehaviorByBehaviorId =(id)=> async (dispatch) => {
 	const payload = await httpConfig.get(`/apis/behavior/${Id}`)
 	dispatch({type: "GET_BEHAVIOR_BY_BEHAVIOR_ID", payload : payload.data});
 

@@ -1,12 +1,19 @@
 import React from 'react';
 import { Route } from 'react-router';
 
-const BusinessListComponent = ({business}) => {
+// business.businessName = undefined;
+const BusinessListComponent = ({businesses}) => {
 
 	return (
 		<Route render={ ({history}) => (
 			<tbody>
-			{console.log(business)}
+			{businesses.map(business => (
+				<tr key={business.businessId} onClick={() => {history.push(`business/${business.businessId}`)}}>
+					<td>{business.businessId}</td>
+					<td>{business.businessName}</td>
+					
+				</tr>
+			))}
 			</tbody>
 		)}/>
 	)
