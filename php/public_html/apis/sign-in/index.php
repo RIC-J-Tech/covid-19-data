@@ -49,22 +49,17 @@ try {
 			$profileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 		}
 
-<<<<<<< HEAD
-		if(empty($requestObject->profileHash) === true) {
-=======
+
 		if(empty($requestObject->profilePassword) === true) {
->>>>>>> 506032b... sign-up api and profile api created
 			throw(new \InvalidArgumentException("Must enter a password.", 401));
 		} else {
 			$profilePassword = $requestObject->profilePassword;
 		}
 
 		//grab the profile from the database by the email provided
-<<<<<<< HEAD
+
 		$profile = Profile::getProfileByEmail($pdo, $profileEmail);
-=======
-		$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
->>>>>>> 506032b... sign-up api and profile api created
+
 		if(empty($profile) === true) {
 			throw(new InvalidArgumentException("Invalid Email", 401));
 		}
@@ -72,11 +67,8 @@ try {
 		$profile->update($pdo);
 
 		//verify hash is correct
-<<<<<<< HEAD
-		if(password_verify($requestObject->profileHash, $profile->getProfileHash()) === false) {
-=======
+
 		if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
->>>>>>> 506032b... sign-up api and profile api created
 			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
 		}
 
@@ -90,11 +82,8 @@ try {
 		//create the Auth payload
 		$authObject = (object) [
 			"profileId" =>$profile->getProfileId(),
-<<<<<<< HEAD
 			"profileUsername" => $profile->getProfileUsername()
-=======
-			"profileAtHandle" => $profile->getProfileAtHandle()
->>>>>>> 506032b... sign-up api and profile api created
+
 		];
 
 		// create and set th JWT TOKEN
