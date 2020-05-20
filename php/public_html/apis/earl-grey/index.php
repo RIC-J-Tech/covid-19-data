@@ -6,7 +6,7 @@ $reply = new stdClass();
 $reply->status = 200;
 $reply->data = null;
 
-use UssHopper\DataDesign\Profile;
+use RICJTech\Covid19Data\Profile;
 
 try {
 	//verify the HTTP method being used
