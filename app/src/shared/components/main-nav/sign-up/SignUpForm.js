@@ -38,11 +38,18 @@ export const SignUpForm = () => {
 			.then(reply => {
 					let {message, type} = reply;
 
+						// console.log(reply.data)
+
 					if(reply.status === 200) {
 						resetForm();
 						alert("You have successfully created an account!")
 					}
-					setStatus({message, type});
+
+					else {
+						alert("Not sure what happened!")
+					}
+
+				setStatus({message, type});
 				}
 			);
 	};
