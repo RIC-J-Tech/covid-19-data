@@ -1,7 +1,7 @@
 import {httpConfig} from "../utils/http-config";
 
 export const getAllBusinesses =()=> async (dispatch) =>{
-	const payload = await httpConfig.get(`/apis/business/`)
+	const payload = await httpConfig.get('/apis/business/')
 	dispatch({type: "GET_ALL_BUSINESSES", payload: payload.data});
 
 };
