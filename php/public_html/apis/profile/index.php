@@ -7,7 +7,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
-require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
+
 
 use RICJTech\Covid19Data\Profile;
 
@@ -39,7 +39,7 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$profileAtHandle = filter_input(INPUT_GET, "profileAtHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$profileUsername = filter_input(INPUT_GET, "profileUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
@@ -56,12 +56,12 @@ try {
 		if(empty($id) === false) {
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
 
-		} else if(empty($profileAtHandle) === false) {
-			$reply->data = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
+		} else if(empty($profileUsername) === false) {
+			$reply->data = Profile::getProfileByUsername($pdo, $profileUsername);
 
 		} else if(empty($profileEmail) === false) {
 
-			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
+			$reply->data = Profile::getProfileByEmail($pdo, $profileEmail);
 		}
 
 	} elseif($method === "PUT") {
