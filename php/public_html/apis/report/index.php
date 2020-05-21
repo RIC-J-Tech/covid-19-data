@@ -7,6 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
+
 use RICJTech\Covid19Data\{ Business, Profile, Report};
 
 
@@ -67,36 +68,36 @@ try {
 
 		} else if(empty($reportContent) === false) {
 			$reply->data = Report::getReportByReportContent($pdo, $reportContent)->toArray();
+
+		} else {
+			$reports = Report::getAllReports($pdo)->toArray();
+			$reportProfiles = [];
+			foreach($reports as $report){
+				$business = Business::getBusinessByBusinessId($pdo, $report->getReportBusinessId());
+				$reportBusinesses[] = (object)[
+					"reportId"=>$report->getReportId(),
+					"reportBusinessId"=>$report->getReportBusinessId(),
+					"reportProfileId"=>$report->getReportProfileId(),
+					"reportContent"=>$report->getReportContent(),
+					"reportDate"=>$report->getReportDate()->format("U.u") * 1000,
+					"businessUrl"=>$business->getBusinessUrl(),
+					"businessName"=>$business->getBusinessName(),
+				];
+
+				$profile = 	Profile::getProfileByProfileId($pdo, $report->getReportProfileId());
+				$reportProfiles[] = (object)[
+					"reportId"=>$report->getReportId(),
+					"reportBusinessId"=>$report->getReportBusinessId(),
+					"reportProfileId"=>$report->getReportProfileId(),
+					"reportContent"=>$report->getReportContent(),
+					"ReportDate"=>$report->getReportDate()->format("U.u") * 1000,
+					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+					"profileUsername"=>$profile->getProfileUsername(),
+				];
+			}
+			$reply->data = $reportBusinesses;
+			$reply->data = $reportProfiles;
 		}
-//		 else {
-//			$reports = Report::getReportsByReportDate($pdo)->toArray();
-//			$reportProfiles = [];
-//			foreach($reports as $report){
-//				$business = Business::getBusinessByBusinessId($pdo, $report->getReportBusinessId());
-//				$reportBusinesses[] = (object)[
-//					"reportId"=>$report->getReportId(),
-//					"reportBusinessId"=>$report->getReportBusinessId(),
-//					"reportProfileId"=>$report->getReportProfileId(),
-//					"reportContent"=>$report->getReportContent(),
-//					"reportDate"=>$report->getReportDate()->format("U.u") * 1000,
-//					"businessUrl"=>$business->getBusinessUrl(),
-//					"businessName"=>$business->getBusinessName(),
-//				];
-//
-//					$profile = 	Profile::getProfileByProfileId($pdo, $report->getReportProfileId());
-//					$reportProfiles[] = (object)[
-//							"reportId"=>$report->getReportId(),
-//							"reportBusinessId"=>$report->getReportBusinessId(),
-//							"reportProfileId"=>$report->getReportProfileId(),
-//							"reportContent"=>$report->getReportContent(),
-//							"ReportDate"=>$report->getReportDate()->format("U.u") * 1000,
-//							"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
-//							"profileUsername"=>$profile->getProfileUsername(),
-//				];
-//			}
-//			$reply->data = $reportBusinesses;
-//			$reply->data = $reportProfiles;
-//		}
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
 		verifyXsrf();
