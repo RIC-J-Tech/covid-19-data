@@ -1,19 +1,20 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from "react-redux";
-import {BusinessList} from "./BusinessList";
-import {getAllBusinesses} from "../../shared/actions/get-businesses";
+import {ProfileList} from "../profile/ProfileList";
+import {getAllProfiles} from "../../shared/actions/get-profile";
+
 
 export const Home= () => {
 
 	// use selector to set users to users stored in state
-	const businesses = useSelector(state => state.businesses);
+	const profiles = useSelector(state => state.profiles);
 
 	// use dispatch from redux to dispatch actions
 	const dispatch = useDispatch();
 
-	// get businesses
+	// get profiles
 	const effects = () => {
-		dispatch(getAllBusinesses())
+		dispatch(getAllProfiles())
 	};
 
 	// set inputs to an empty array before update
@@ -27,15 +28,14 @@ export const Home= () => {
 				<table className="table table-responsive table-hover table-dark">
 					<thead>
 					<tr>
-						<th><h4>Business Id</h4></th>
-						<th><h4>Business Name</h4></th>
-						<th><h4>Longitude</h4></th>
-						<th><h4>Latitude</h4></th>
-						<th><h4>Yelp Id</h4></th>
-						<th><h4>Website</h4></th>
+						<th><h4>Profile Id</h4></th>
+						<th><h4>User Name</h4></th>
+						<th><h4>Email</h4></th>
+						<th><h4>Phone No.</h4></th>
+						<th><h4>Avatar Url</h4></th>
 					</tr>
 					</thead>
-					<BusinessList businesses={businesses}/>
+					<ProfileList profiles={profiles}/>
 				</table>
 		</main>
 	)

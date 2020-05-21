@@ -96,7 +96,7 @@ export const SignUpFormContent = (props) => {
 
 
 				<div className="form-group">
-					<label htmlFor="profileHandle">@Handle</label>
+					<label htmlFor="profileUsername">Usernamer</label>
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
@@ -105,19 +105,19 @@ export const SignUpFormContent = (props) => {
 						</div>
 						<input
 							className="form-control"
-							id="profileHandle"
+							id="profileUsername"
 							type="text"
-							value={values.profileAtHandle}
-							placeholder="@Handle"
+							value={values.profileUsername}
+							placeholder="Username"
 							onChange={handleChange}
 							onBlur={handleBlur}
 
 						/>
 					</div>
 					{
-						errors.profileAtHandle && touched.profileAtHandle && (
+						errors.profileUsername && touched.profileUsername && (
 							<div className="alert alert-danger">
-								{errors.profileAtHandle}
+								{errors.profileUsername}
 							</div>
 						)
 					}
@@ -137,7 +137,7 @@ export const SignUpFormContent = (props) => {
 							id="profilePhone"
 							type="text"
 							value={values.profilePhone}
-							placeholder="Enter email"
+							placeholder="Enter Phone number"
 							onChange={handleChange}
 							onBlur={handleBlur}
 						/>
