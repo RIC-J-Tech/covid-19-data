@@ -14,7 +14,7 @@ export const Home= () => {
 
 	// get profiles
 	const effects = () => {
-		dispatch(getAllProfiles())
+		dispatch(getProfileByEmail())
 	};
 
 	// set inputs to an empty array before update
@@ -36,7 +36,6 @@ export const Home= () => {
 					</tr>
 					</thead>
 					<ProfileList profiles={profiles}/>
-					<h1>{profiles.profileEmail}</h1>
 				</table>
 		</main>
 	)
