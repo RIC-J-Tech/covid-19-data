@@ -94,7 +94,7 @@ function validateJwtHeader () : \Lcobucci\JWT\Token   {
 	if ($_SESSION["JWT-TOKEN"] !== (string)$headerJwt) {
 		$_COOKIE = [];
 		$_SESSION = [];
-		throw (new InvalidArgumentException("please log in again", 400));
+		throw (new InvalidArgumentException("please sign in again", 400));
 	}
 
 	return $headerJwt;

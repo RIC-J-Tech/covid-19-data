@@ -4,7 +4,6 @@ require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
-require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 
 use RICJTech\Covid19Data\Profile;
 
@@ -75,7 +74,7 @@ try {
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
+		$profile = new Profile(generateUuidV4()->toString(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
@@ -157,7 +156,7 @@ EOF;
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating a profile with DDC-Twitter";
+		$reply->message = "Thank you for creating a profile with Pan-Ops";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}

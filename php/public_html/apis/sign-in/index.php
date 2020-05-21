@@ -4,7 +4,7 @@ require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
-require_once("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
+
 
 use RICJTech\Covid19Data\Profile;
 
@@ -73,7 +73,7 @@ try {
 		}
 
 		//grab profile from database and put into a session
-		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+		$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId()->toString());
 
 
 		$_SESSION["profile"] = $profile;
@@ -81,7 +81,7 @@ try {
 
 		//create the Auth payload
 		$authObject = (object) [
-			"profileId" =>$profile->getProfileId(),
+			"profileId" =>$profile->getProfileId()->toString(),
 			"profileUsername" => $profile->getProfileUsername()
 
 		];
