@@ -792,7 +792,7 @@ public function getAllProfiles(\PDO $pdo): SplFixedArray{
 	 * @return array resulting state variables to serialize
 	 **/
 	public function jsonSerialize() : array {
-		 var_dump($this);
+
 		$fields = get_object_vars($this);
 
 		$fields["profileId"] = $this->profileId->toString();

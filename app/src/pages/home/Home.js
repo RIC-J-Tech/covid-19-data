@@ -36,7 +36,6 @@ export const Home= () => {
 					</tr>
 					</thead>
 					<ProfileList profiles={profiles}/>
-					<h1>{profiles.profileEmail}</h1>
 				</table>
 		</main>
 	)

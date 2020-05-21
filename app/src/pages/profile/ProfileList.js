@@ -7,8 +7,8 @@ const ProfileListComponent = ({profiles}) => {
 		<Route render={ ({history}) => (
 			<tbody>
 			{profiles.map(profile => (
-				<tr key={profile.id} onClick={() => {history.push(`profile/${profile.id}`)}}>
-					<td>{profile.id}</td>
+				<tr key={profile.profileId} onClick={() => {history.push(`profile/${profile.profileId}`)}}>
+					<td>{profile.profileId}</td>
 					<td>{profile.profileUsername}</td>
 					<td>{profile.profileEmail}</td>
 					<td>{profile.profilePhone}</td>
