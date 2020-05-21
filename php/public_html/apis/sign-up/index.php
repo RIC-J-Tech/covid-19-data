@@ -41,7 +41,7 @@ try {
 
 		//profile username is a required field
 		if(empty($requestObject->profileUsername) === true) {
-			throw(new \InvalidArgumentException ("No profile @handle", 405));
+			throw(new \InvalidArgumentException ("No profile Username", 405));
 		}
 
 		//profile email is a required field
@@ -50,13 +50,13 @@ try {
 		}
 
 		//verify that profile hash is present
-		if(empty($requestObject->profileHash) === true) {
+		if(empty($requestObject->profilePassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
 		//verify that the confirm password is present
-		if(empty($requestObject->profileHashConfirm) === true) {
-			throw(new \InvalidArgumentException ("Must input valid password", 405));
+		if(empty($requestObject->profilePasswordConfirm) === true) {
+			throw(new \InvalidArgumentException ("Must input valid password confirmation", 405));
 		}
 
 		//if phone is empty set it to null
@@ -65,16 +65,16 @@ try {
 		}
 
 		//make sure the password and confirm password match
-		if ($requestObject->profileHash !== $requestObject->profileHashConfirm) {
+		if ($requestObject->profilePassword !== $requestObject->profilePasswordConfirm) {
 			throw(new \InvalidArgumentException("passwords do not match"));
 
 		}
-		$hash = password_hash($requestObject->profileHash, PASSWORD_ARGON2ID, ["time_cost" => 9]);
+		$hash = password_hash($requestObject->profilePassword, PASSWORD_ARGON2I, ["time_cost" => 9]);
 
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4()->toString(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
+		$profile = new Profile(generateUuidV4()->getBytes(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
@@ -156,7 +156,7 @@ EOF;
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating a profile with Pan-Ops";
+		$reply->message = "Thank you for creating a profile with Pan-Ops. We cherish your honesty";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}

@@ -96,7 +96,7 @@ export const SignUpFormContent = (props) => {
 
 
 				<div className="form-group">
-					<label htmlFor="profileUsername">Usernamer</label>
+					<label htmlFor="profileUsername">Username</label>
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
@@ -164,12 +164,8 @@ export const SignUpFormContent = (props) => {
 
 				<FormDebugger {...props} />
 			</form>
-			{/*{console.log(*/}
-			{/*	submitStatus*/}
-			{/*)}*/}
-			{/*{*/}
-			{/*	status && (<div className={status.type}>{status.message}</div>)*/}
-			{/*}*/}
+
+			{/*{status && (<div className={status.type}>{status.message}</div>)}*/}
 		</>
 
 

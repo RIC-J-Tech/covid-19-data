@@ -11,7 +11,7 @@ export const MainNav = (props) => {
 	return(
 		<Navbar bg="primary" variant="dark">
 			<LinkContainer exact to="/" >
-				<Navbar.Brand>Navbar</Navbar.Brand>
+				<Navbar.Brand>Pan-Ops</Navbar.Brand>
 			</LinkContainer>
 			<Nav className="mr-auto">
 				<LinkContainer exact to="/profile">
