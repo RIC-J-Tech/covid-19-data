@@ -164,12 +164,12 @@ export const SignUpFormContent = (props) => {
 
 				<FormDebugger {...props} />
 			</form>
-			{console.log(
-				submitStatus
-			)}
-			{
-				status && (<div className={status.type}>{status.message}</div>)
-			}
+			{/*{console.log(*/}
+			{/*	submitStatus*/}
+			{/*)}*/}
+			{/*{*/}
+			{/*	status && (<div className={status.type}>{status.message}</div>)*/}
+			{/*}*/}
 		</>
 
 

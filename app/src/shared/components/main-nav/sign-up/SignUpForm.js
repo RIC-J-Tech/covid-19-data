@@ -8,11 +8,11 @@ import {SignUpFormContent} from "./SignUpFormContent";
 export const SignUpForm = () => {
 	const signUp = {
 		profileEmail: "",
-		profileAtHandle: "",
+		profileUsername: "",
 		profilePassword: "",
 		profilePasswordConfirm: "",
 		profilePhone: "",
-		profileAvatar: "",
+		profileAvatarUrl: "",
 	};
 
 	const [status, setStatus] = useState(null);
@@ -20,7 +20,7 @@ export const SignUpForm = () => {
 		profileEmail: Yup.string()
 			.email("email must be a valid email")
 			.required('email is required'),
-		profileAtHandle: Yup.string()
+		profileUsername: Yup.string()
 			.required("profile handle is required"),
 		profilePassword: Yup.string()
 			.required("Password is required")

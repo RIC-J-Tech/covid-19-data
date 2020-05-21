@@ -10,21 +10,35 @@ import {Provider} from "react-redux";
 import {Route,BrowserRouter, Switch} from "react-router-dom";
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 import {Home} from "./pages/home/Home";
+import {Profile} from "./pages/profile/Profile";
+// import {Image} from "./pages/image/Image"
+import {MainNav} from "./shared/components/main-nav/MainNav";
 
 
-const store = createStore(reducers,applyMiddleware(thunk));
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {faDove, faEnvelope, faKey, faPhone, faStroopwafel} from '@fortawesome/free-solid-svg-icons'
+import {combinedReducers} from "./shared/reducers/index";
+
+
+const store = createStore(combinedReducers, applyMiddleware(thunk));
+
+library.add(faStroopwafel, faEnvelope, faKey, faDove, faPhone);
 
 const Routing = (store) => (
 	<>
-	<Provider store={store}>
-		<BrowserRouter>
-			<Switch>
-				<Route exact path="/" component={Home}/>
-				<Route component={FourOhFour}/>
-			</Switch>
-		</BrowserRouter>
-	</Provider>
+		<Provider store={store}>
+			<BrowserRouter>
+				<MainNav/>
+				<Switch>
+					<Route exact path="/profile/:profileUsername" component={Profile}/>
+					{/*<Route exact path="/image" component={Image}/>*/}
+					<Route exact path="/" component={Home}/>
+					<Route component={FourOhFour}/>
+				</Switch>
+			</BrowserRouter>
+		</Provider>
 	</>
 );
 
 ReactDOM.render(Routing(store) , document.querySelector("#root"));
+

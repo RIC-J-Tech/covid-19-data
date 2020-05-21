@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap"
 import {SignUpModal} from "./sign-up/SignUpModal";
-import {SignInModal} from "./sign-in/SigninModal";
+import {SignInModal} from "./sign-in/SignInModal";
 
 
 
