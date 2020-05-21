@@ -43,7 +43,7 @@ try {
 	$reportProfileId = filter_input(INPUT_GET, "reportProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 //	var_dump($reportProfileId);
 	$reportContent = filter_input(INPUT_GET, "reportContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+	$reportDate = new \DateTime();
 	//make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
 		throw(new InvalidArgumentException("id cannot be empty or negative", 402));
@@ -69,35 +69,11 @@ try {
 		} else if(empty($reportContent) === false) {
 			$reply->data = Report::getReportByReportContent($pdo, $reportContent)->toArray();
 
-		} else {
-			$reports = Report::getAllReports($pdo)->toArray();
-			$reportProfiles = [];
-			foreach($reports as $report){
-				$business = Business::getBusinessByBusinessId($pdo, $report->getReportBusinessId());
-				$reportBusinesses[] = (object)[
-					"reportId"=>$report->getReportId(),
-					"reportBusinessId"=>$report->getReportBusinessId(),
-					"reportProfileId"=>$report->getReportProfileId(),
-					"reportContent"=>$report->getReportContent(),
-					"reportDate"=>$report->getReportDate()->format("U.u") * 1000,
-					"businessUrl"=>$business->getBusinessUrl(),
-					"businessName"=>$business->getBusinessName(),
-				];
-
-				$profile = 	Profile::getProfileByProfileId($pdo, $report->getReportProfileId());
-				$reportProfiles[] = (object)[
-					"reportId"=>$report->getReportId(),
-					"reportBusinessId"=>$report->getReportBusinessId(),
-					"reportProfileId"=>$report->getReportProfileId(),
-					"reportContent"=>$report->getReportContent(),
-					"ReportDate"=>$report->getReportDate()->format("U.u") * 1000,
-					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
-					"profileUsername"=>$profile->getProfileUsername(),
-				];
-			}
-			$reply->data = $reportBusinesses;
-			$reply->data = $reportProfiles;
+		}else if(empty($reportDate) === false) {
+			$reply->data = Report::getReportsByReportDate($pdo, $reportDate)->toArray();
 		}
+
+
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
 		verifyXsrf();
