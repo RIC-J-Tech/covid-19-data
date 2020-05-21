@@ -7,9 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
-
 use RICJTech\Covid19Data\{ Business, Profile, Behavior};
-
 
 /**
  * api for the Behavior class
@@ -31,8 +29,6 @@ try {
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 
-
-
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
@@ -40,9 +36,9 @@ try {
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$behaviorBusinessId = filter_input(INPUT_GET, "behaviorBusinessId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	//var_dump($behaviorBusinessId);
+
 	$behaviorProfileId = filter_input(INPUT_GET, "behaviorProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-//	var_dump($behaviorProfileId);
+
 	$behaviorContent = filter_input(INPUT_GET, "behaviorContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	//make sure the id is valid for methods that require it
