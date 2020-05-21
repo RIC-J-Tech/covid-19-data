@@ -90,8 +90,8 @@ try {
 		}
 
 
-		//profile at handle
-		if(empty($requestObject->profileAtHandle) === true) {
+		//profile username
+		if(empty($requestObject->profileUsername) === true) {
 			throw(new \InvalidArgumentException ("No profile at handle", 405));
 		}
 

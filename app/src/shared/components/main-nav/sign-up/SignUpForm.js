@@ -12,7 +12,7 @@ export const SignUpForm = () => {
 		profilePassword: "",
 		profilePasswordConfirm: "",
 		profilePhone: "",
-		profileAvatar: "",
+		profileAvatarUrl: "",
 	};
 
 	const [status, setStatus] = useState(null);
@@ -40,6 +40,7 @@ export const SignUpForm = () => {
 
 					if(reply.status === 200) {
 						resetForm();
+						alert("You have successfully created an account!")
 					}
 					setStatus({message, type});
 				}

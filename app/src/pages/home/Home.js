@@ -14,7 +14,7 @@ export const Home= () => {
 
 	// get profiles
 	const effects = () => {
-		dispatch(getProfileByEmail())
+		dispatch(getAllProfiles())
 	};
 
 	// set inputs to an empty array before update
