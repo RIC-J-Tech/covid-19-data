@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from "react-redux";
-import {BusinessList} from "./UserList";
-import {getAllBusinesses} from "../../shared/actions/get-users";
+import {BusinessList} from "./BusinessList";
+import {getAllBusinesses} from "../../shared/actions/get-businesses";
 
 export const Home= () => {
 
