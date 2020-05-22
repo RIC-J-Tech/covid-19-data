@@ -31,7 +31,7 @@ $reply->data = null;
 try {
 
 	// Grab the MySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/ricjtech.ini");
 	$pdo = $secrets->getPdoObject();
 	$cloudinary = $secrets->getSecret("cloudinary");
 

@@ -758,7 +758,7 @@ catch(\Exception $exception) {
 	}
 
 
-public function getAllProfiles(\PDO $pdo): SplFixedArray{
+public static function getAllProfiles(\PDO $pdo): SplFixedArray{
 
 
 	// create query template

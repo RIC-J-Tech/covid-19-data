@@ -71,7 +71,7 @@ try {
 			$behaviorBusinesses = [];
 			$behaviorProfiles = [];
 			foreach($behaviors as $behavior){
-				$business = Business::getBusinessByBusinessId($pdo, $behavior->getBehaviorBusinessId());
+				$business = Business::getBusinessByBusinessId($pdo, $behavior->getBehaviorBusinessId()->toString());
 				$behaviorBusinesses[] = (object)[
 					"behaviorId"=>$behavior->getBehaviorId(),
 					"behaviorBusinessId"=>$behavior->getBehaviorBusinessId(),
@@ -81,7 +81,7 @@ try {
 					"businessUrl"=>$business->getBusinessUrl(),
 					"businessName"=>$business->getBusinessName(),
 				];
-				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId());
+				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId()->toString());
 				$behaviorProfiles[] = (object)[
 					"behaviorId"=>$behavior->getBehaviorId(),
 					"behaviorBusinessId"=>$behavior->getBehaviorBusinessId(),
