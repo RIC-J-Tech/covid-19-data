@@ -64,7 +64,7 @@ try {
 			$reply->data = Profile::getProfileByEmail($pdo, $profileEmail);
 		}
 		else {
-			$profiles = Profile::getAllProfiles($pdo)->toArray();
+			$reply->data = Profile::getAllProfiles($pdo)->toArray();
 		}
 
 	} elseif($method === "PUT") {
