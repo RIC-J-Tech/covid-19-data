@@ -4,9 +4,9 @@ export default (state = [], action) => {
 		case "GET_ALL_BUSINESSES":
 			return action.payload;
 		case "GET_BUSINESS_BY_BUSINESS_ID":
-			return action.payload;
+			return [...action.payload];
 		case "GET_BUSINESS_BY_BUSINESS_NAME":
-			return [...state, action.payload];
+			return  action.payload;
 		default:
 			return state;
 	}

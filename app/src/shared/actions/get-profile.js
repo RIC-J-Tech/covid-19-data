@@ -14,14 +14,14 @@ export const getProfileByProfileId =(id)=> async(dispatch) =>{
 
 export const getProfileByUsername =(profileUsername)=> async(dispatch) =>{
 
-	const payload = await httpConfig.get(`/apis/profile/${profileUsername}`)
+	const payload = await httpConfig.get(`/apis/profile/?profileUsername=${profileUsername}`)
 	dispatch({type:"GET_PROFILE_BY_USERNAME" ,payload: payload.data});
 
 };
 
 export const getProfileByEmail =(profileEmail)=> async(dispatch) =>{
 
-	const payload = await httpConfig.get(`/apis/profile/${profileEmail}`)
+	const payload = await httpConfig.get(`/apis/profile/?profileEmail=${profileEmail}`)
 	dispatch({type:"GET_PROFILE_BY_EMAIL" ,payload: payload.data});
 
 };

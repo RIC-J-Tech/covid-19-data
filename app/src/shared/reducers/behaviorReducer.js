@@ -4,7 +4,7 @@ export default (state = [], action) => {
 		case "GET_ALL_BEHAVIORS":
 			return action.payload;
 		case "GET_BEHAVIOR_BY_BEHAVIOR_ID":
-			return action.payload;
+			return [...action.payload];
 		case "GET_BEHAVIOR_BY_BEHAVIOR_BUSINESS_ID":
 			return [...state, action.payload];
 		case "GET_BEHAVIOR_BY_BEHAVIOR_PROFILE_ID":

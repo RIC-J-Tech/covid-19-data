@@ -7,14 +7,14 @@ export const getAllBehaviors = () => async dispatch => {
 
 export const getBehaviorByBehaviorProfileId =(behaviorProfileId)=> async(dispatch) =>{
 
-	const payload = await httpConfig.get(`/apis/behavior/${behaviorProfileId}`)
+	const payload = await httpConfig.get(`/apis/behavior/?behaviorProfileId=${behaviorProfileId}`)
 	dispatch({type:"GET_BEHAVIOR_BY_BEHAVIOR_PROFILE_ID" ,payload: payload.data});
 
 };
 
 export const getBehaviorByBehaviorBusinessId =(behaviorBusinessId)=> async(dispatch) =>{
 
-	const payload = await httpConfig.get(`/apis/behavior/${behaviorBusinessId}`)
+	const payload = await httpConfig.get(`/apis/behavior/?behaviorProfileId=${behaviorBusinessId}`)
 	dispatch({type:"GET_BEHAVIOR_BY_BEHAVIOR_BUSINESS_ID" ,payload: payload.data});
 
 };
@@ -29,7 +29,7 @@ export const getBehaviorByBehaviorId =(id)=> async(dispatch) =>{
 
 export const getBehaviorByBehaviorContent =(behaviorContent)=> async(dispatch) =>{
 
-	const payload = await httpConfig.get(`/apis/behavior/${behaviorContent}`)
+	const payload = await httpConfig.get(`/apis/behavior/?behaviorContent${behaviorContent}`)
 	dispatch({type:"GET_BEHAVIOR_BY_BEHAVIOR_CONTENT" ,payload: payload.data});
 
 };
