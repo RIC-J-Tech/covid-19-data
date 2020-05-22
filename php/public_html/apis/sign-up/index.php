@@ -63,6 +63,13 @@ try {
 		if(empty($requestObject->profilePhone) === true) {
 			$requestObject->profilePhone = null;
 		}
+		if(empty($requestObject->profileCloudinaryId)===true){
+			$requestObject->profileCloudinaryId = null;
+		}
+
+		if(empty($requestObject->profileAvatarUrl)===true){
+			$requestObject->profileAvatarUrl = null;
+		}
 
 		//make sure the password and confirm password match
 		if ($requestObject->profilePassword !== $requestObject->profilePasswordConfirm) {
@@ -74,13 +81,15 @@ try {
 		$profileActivationToken = bin2hex(random_bytes(16));
 
 		//create the profile object and prepare to insert into the database
-		$profile = new Profile(generateUuidV4()->getBytes(),$requestObject->profileCloudinaryId, $requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
+		$profile = new Profile(generateUuidV4()->getBytes(),
+			$requestObject->profileCloudinaryId,
+			$requestObject->profileAvatarUrl,$profileActivationToken,  $requestObject->profileEmail, $hash,$requestObject->profilePhone, $requestObject->profileUsername);
 
 		//insert the profile into the database
 		$profile->insert($pdo);
 
 		//compose the email message to send with th activation token
-		$messageSubject = "One step closer to Sticky Head -- Account Activation";
+		$messageSubject = "One step closer to Pan-Ops App -- Account Activation";
 
 		//building the activation link that can travel to another server and still work. This is the link that will be clicked to confirm the account.
 		//make sure URL is /public_html/api/activation/$activation

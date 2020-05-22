@@ -41,7 +41,7 @@ try {
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$reportBusinessId = filter_input(INPUT_GET, "reportBusinessId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$reportProfileId = filter_input(INPUT_GET, "reportProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-//	var_dump($reportProfileId);
+
 	$reportContent = filter_input(INPUT_GET, "reportContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$reportDate = new \DateTime();
 	//make sure the id is valid for methods that require it
