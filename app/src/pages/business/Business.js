@@ -16,13 +16,20 @@ export const Business = ({business,behaviors}) => {
 
 			<>
 
-			<Card className="my-5 border border-dark alternate-bg mx-5">
+			<Card className="my-5 border border-dark alternate-bg mx-5 ">
 				<Card.Title>{business.businessName}</Card.Title>
 				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
-				<Card.Body className="row my-3 px-3">
-			<BehaviorPost behaviorBusinessId = {business.businessId}/>
+				<Card.Body className="row my-3 px-5">
+				<div className="col-8">
 					<BehaviorList behaviors={behaviors} />
+				</div>
+					<div className="col-4">
+						<BehaviorPost behaviorBusinessId = {business.businessId}/>
+					</div>
+
+
 				</Card.Body>
+
 			</Card>
 
 			</>
