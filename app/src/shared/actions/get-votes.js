@@ -26,5 +26,3 @@ export const getVoteByVoteBehaviorIdAndVoteProfileId =(voteBehaviorId, voteProfi
 	dispatch({type:"GET_VOTE_BY_VOTE_BEHAVIOR_ID_AND_VOTE_PROFILE_ID" ,payload: payload.data});
 
 };
-
-

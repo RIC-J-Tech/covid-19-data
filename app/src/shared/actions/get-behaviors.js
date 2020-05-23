@@ -33,4 +33,3 @@ export const getBehaviorByBehaviorContent =(behaviorContent)=> async(dispatch) =
 	dispatch({type:"GET_BEHAVIOR_BY_BEHAVIOR_CONTENT" ,payload: payload.data});
 
 };
-

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {getProfileByEmail} from "../../shared/actions/get-profile";
+import { getAllProfiles} from "../../shared/actions/get-profile";
 import {ProfileList} from "./ProfileList";
 
 
@@ -14,7 +14,7 @@ export const Profile = () => {
 
 	// get profiles
 	const effects = () => {
-		dispatch(getProfileByEmail(`gabill@gabill.com`))
+		dispatch(getAllProfiles())
 	};
 
 	// set inputs to an empty array before update

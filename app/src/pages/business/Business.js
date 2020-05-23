@@ -1,42 +1,24 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch} from "react-redux";
-import {BusinessList} from "./BusinessList";
-import {getAllBusinesses} from "../../shared/actions/get-businesses";
+import React from 'react';
+import { Route } from 'react-router';
+import Card from "react-bootstrap/Card";
+import {Link} from "react-router-dom";
 
-export const Business= () => {
+// import logo from "./../images/recipe-placeholder.jpg";
+import {POCBehaviorList} from "./BehaviorList"
 
-	// use selector to set users to users stored in state
-	const businesses = useSelector(state => state.businesses);
-
-	// use dispatch from redux to dispatch actions
-	const dispatch = useDispatch();
-
-	// get businesses
-	const effects = () => {
-		dispatch(getAllBusinesses())
-	};
-
-	// set inputs to an empty array before update
-	const inputs = [];
-
-	// do this effect on component update
-	useEffect(effects, inputs);
-
+export const POCBusinessCard = ({business}) => {
 	return (
-		<main className="container">
-			<table className="table table-responsive table-hover table-dark">
-				<thead>
-				<tr>
-					<th><h4>Business Id</h4></th>
-					<th><h4>Business Name</h4></th>
-					<th><h4>Longitude</h4></th>
-					<th><h4>Latitude</h4></th>
-					<th><h4>Yelp Id</h4></th>
-					<th><h4>Website</h4></th>
-				</tr>
-				</thead>
-				<BusinessList businesses={businesses}/>
-			</table>
-		</main>
+
+//this gives form to the recipes in the list on DOM
+		<Route render={ ({history}) => (
+			<Card className="my-5 border border-dark alternate-bg mx-5" key={business.businessId}>
+				<Card.Title>{business.businessName}</Card.Title>
+				<Card.Subtitle>{business.businessId}</Card.Subtitle>
+				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
+				<Card.Body className="row my-3 px-3">
+					<POCBehaviorList businessId={business.businessId} />
+				</Card.Body>
+			</Card>
+		)}/>
 	)
 };

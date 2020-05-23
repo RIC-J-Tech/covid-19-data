@@ -1,24 +1,10 @@
 import React from 'react';
-import { Route } from 'react-router';
+import {POCBusinessCard} from "./BusinessCard"
 
-const BusinessListComponent = ({businesses}) => {
-
+export const POCBusinessList = ({businesses}) => {
 	return (
-		<Route render={ ({history}) => (
-			<tbody>
-				{businesses.map(business => (
-					<tr key={business.businessId} onClick={() => {history.push(`business/${business.businessId}`)}}>
-						<td>{business.businessId}</td>
-						<td>{business.businessName}</td>
-						<td>{business.businessLat}</td>
-						<td>{business.businessLng}</td>
-						<td>{business.businessYelpId}</td>
-						<td>{business.businessUrl}</td>
-					</tr>
-				))}
-			</tbody>
-		)}/>
+		businesses.map(
+			business => <POCBusinessCard key={business.businessId} business={business}/>
+		)
 	)
-};
-
-export const BusinessList = (BusinessListComponent);
+}
