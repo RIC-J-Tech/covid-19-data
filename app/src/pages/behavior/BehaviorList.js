@@ -3,7 +3,7 @@ import {ListGroup, ListGroupItem } from 'react-bootstrap';
 import {useDispatch, useSelector} from "react-redux";
 import {getBehaviorByBehaviorBusinessId} from "../../shared/actions/get-behaviors";
 
-export const POCBehaviorList = ({businessId}) => {
+export const BehaviorList = ({businessId}) => {
 	// use selector to set users to users stored in state
 	const behaviors = useSelector(state => state.behaviors ? state.behaviors : []);
 

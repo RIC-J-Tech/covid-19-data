@@ -4,9 +4,9 @@ import Card from "react-bootstrap/Card";
 import {Link} from "react-router-dom";
 
 // import logo from "./../images/recipe-placeholder.jpg";
-import {POCBehaviorList} from "./BehaviorList"
+import {BehaviorList} from "../behavior/BehaviorList"
 
-export const POCBusinessCard = ({business}) => {
+export const Business = ({business}) => {
 	return (
 
 //this gives form to the recipes in the list on DOM
@@ -16,7 +16,7 @@ export const POCBusinessCard = ({business}) => {
 				<Card.Subtitle>{business.businessId}</Card.Subtitle>
 				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
 				<Card.Body className="row my-3 px-3">
-					<POCBehaviorList businessId={business.businessId} />
+					<BehaviorList businessId={business.businessId} />
 				</Card.Body>
 			</Card>
 		)}/>

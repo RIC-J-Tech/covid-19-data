@@ -1,10 +1,10 @@
 import React from 'react';
-import {POCBusinessCard} from "./BusinessCard"
+import {Business} from "./Business"
 
-export const POCBusinessList = ({businesses}) => {
+export const BusinessList = ({businesses}) => {
 	return (
 		businesses.map(
-			business => <POCBusinessCard key={business.businessId} business={business}/>
+			business => <Business key={business.businessId} business={business}/>
 		)
 	)
 }
