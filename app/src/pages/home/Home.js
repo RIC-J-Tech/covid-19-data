@@ -36,7 +36,7 @@ export const Home= () => {
 	return (
 		<main className="container">
 			<h1>I am the home page</h1>
-			<POCBusinessList businesses={businesses}/>
+			<BusinessList businesses={businesses}/>
 		</main>
 	)
 };
