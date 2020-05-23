@@ -41,7 +41,8 @@ export const Home= () => {
 		<main className="container">
 			<h1>I am the home page</h1>
 
-			{businesses.map(
+			{
+				businesses.map(
 			business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
 				behavior.behaviorBusinessId === business.businessId
 			)}
@@ -49,6 +50,7 @@ export const Home= () => {
 			/>)}
 
 			{/*<BusinessList businesses={businesses}/>*/}
+
 		</main>
 	)
 };

@@ -4,6 +4,8 @@ import React from 'react';
 import {httpConfig} from "../../utils/http-config";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../FormDebugger";
+import {useDispatch} from "react-redux";
+import {getAllBehaviors} from "../../actions/get-behaviors";
 
 
 export const BehaviorPost = ({behaviorBusinessId}) => {
@@ -11,6 +13,7 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 		behaviorContent: ""
 
 	};
+	 const dispatch = useDispatch();
 
 	const validator = Yup.object().shape({
 		behaviorContent: Yup.string()
@@ -30,8 +33,7 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 					if(reply.status === 200) {
 						resetForm();
 						//TODO dispatch new Behavior
-
-
+						dispatch(getAllBehaviors())
 
 					}
 
