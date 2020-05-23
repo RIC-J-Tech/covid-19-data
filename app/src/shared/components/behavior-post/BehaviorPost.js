@@ -6,11 +6,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../FormDebugger";
 
 
-export const BehaviorPost = () => {
+export const BehaviorPost = ({behaviorBusinessId}) => {
 	const behaviorPost = {
-		behaviorContent: "",
-		behaviorBusinessId:"",
-		behaviorProfileId:""
+		behaviorContent: ""
 
 	};
 
@@ -22,7 +20,8 @@ export const BehaviorPost = () => {
 	});
 
 	const submitPost = (values, {resetForm, setStatus}) => {
-		httpConfig.post("./apis/behavior/", values)
+		const behavior = {...values, behaviorBusinessId}
+		httpConfig.post("./apis/behavior/", behavior)
 			.then(reply => {
 					let {message, type} = reply;
 

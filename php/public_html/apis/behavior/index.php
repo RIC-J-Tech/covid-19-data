@@ -155,7 +155,7 @@ try {
 			}
 
 			//enforce the end user has a JWT token
-			validateJwtHeader();
+//			validateJwtHeader();
 			// create new behavior and insert into the database
 
 			$behavior = new Behavior(generateUuidV4()->toString(),  $requestObject->behaviorBusinessId,

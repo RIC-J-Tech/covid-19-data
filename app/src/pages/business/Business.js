@@ -21,8 +21,8 @@ export const Business = ({business,behaviors}) => {
 				<Card.Subtitle>{business.businessId}</Card.Subtitle>
 				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
 				<Card.Body className="row my-3 px-3">
-			<BehaviorPost businessId={business.businessId}/>
-					{/*<BehaviorList behaviors={behaviors} />*/}
+			<BehaviorPost behaviorBusinessId = {business.businessId}/>
+					<BehaviorList behaviors={behaviors} />
 				</Card.Body>
 			</Card>
 
