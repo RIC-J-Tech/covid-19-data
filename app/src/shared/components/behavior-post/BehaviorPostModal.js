@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {Button} from "react-bootstrap";
 import {Modal} from "react-bootstrap";
-import {SignInForm} from "./SignInForm";
+import {BehaviorPost} from "./BehaviorPost";
 
 
-export const SignInModal = () => {
+export const BehaviorPostModal = () => {
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => setShow(false);
@@ -13,25 +13,25 @@ export const SignInModal = () => {
 	return (
 		<>
 			<Button variant="primary" onClick={handleShow}>
-				Sign In
+				Post
 			</Button>
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Sign In</Modal.Title>
+					<Modal.Title>Sign Up</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<SignInForm handleClose ={handleClose}/>
+					<BehaviorPost/>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>
 						Close
 					</Button>
-					<Button variant="primary" onClick={handleClose}>
-						Save Changes
-					</Button>
+
 				</Modal.Footer>
 			</Modal>
+
+
 		</>
 	);
 }

@@ -27,7 +27,6 @@ import {BusinessList} from "./pages/business/BusinessList";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 // import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import { BehaviorList } from './pages/behavior/BehaviorList';
 
 
 
@@ -57,7 +56,6 @@ const Routing = (store) => (
 				<Switch>
 					<Route exact path="/profile" component={Profile}/>
 					<Route exact path="/business" component={Business}/>
-					<Route exact path="/behavior" component={BehaviorList}/>
 
 					{/*<Route exact path="/image" component={Image}/>*/}
 					<Route exact path="/" component={Home}/>

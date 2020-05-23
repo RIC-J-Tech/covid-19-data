@@ -5,18 +5,18 @@ import {ProfileList} from "../profile/ProfileList";
 // import {getAllProfiles, getProfileByEmail} from "../../shared/actions/get-profile";
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Behavior, { Behaviors } from '../behavior/BehaviorList'
 import Profile from '../profile/Profile'
-
-
 
 import {getAllBusinesses, getBusinessByBusinessName} from "../../shared/actions/get-businesses";
 import {BusinessList} from "../business/BusinessList";
+import {getAllBehaviors} from "../../shared/actions/get-behaviors";
+import {Business} from "../business/Business";
 
 export const Home= () => {
 
 	// use selector to set users to users stored in state
 	const businesses = useSelector(state => state.businesses ? state.businesses : []);
+	const behaviors = useSelector(state => state.behaviors ? state.behaviors : []);
 
 	// use dispatch from redux to dispatch actions
 	const dispatch = useDispatch();
@@ -24,7 +24,8 @@ export const Home= () => {
 	// get profiles
 	const effects = () => {
 		// dispatch(getAllBusinesses())
-		dispatch(getBusinessByBusinessName("bistro"))
+		dispatch(getBusinessByBusinessName(""))
+		dispatch(getAllBehaviors())
 	};
 
 	// set inputs to an empty array before update
@@ -36,7 +37,15 @@ export const Home= () => {
 	return (
 		<main className="container">
 			<h1>I am the home page</h1>
-			<BusinessList businesses={businesses}/>
+
+			{businesses.map(
+			business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
+				behavior.behaviorBusinessId === business.businessId
+			)}
+
+			/>)}
+
+			{/*<BusinessList businesses={businesses}/>*/}
 		</main>
 	)
 };
