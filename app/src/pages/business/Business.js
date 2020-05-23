@@ -18,7 +18,6 @@ export const Business = ({business,behaviors}) => {
 
 			<Card className="my-5 border border-dark alternate-bg mx-5">
 				<Card.Title>{business.businessName}</Card.Title>
-				<Card.Subtitle>{business.businessId}</Card.Subtitle>
 				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
 				<Card.Body className="row my-3 px-3">
 			<BehaviorPost behaviorBusinessId = {business.businessId}/>

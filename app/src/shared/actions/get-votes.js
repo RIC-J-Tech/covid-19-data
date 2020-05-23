@@ -12,7 +12,7 @@ export const getVoteByVoteProfileId =(voteProfileId)=> async(dispatch) =>{
 
 };
 
-export const getVoteByVoteBusinessId =(voteBusinessId)=> async(dispatch) =>{
+export const getVoteByVoteBusinessId =(voteBehaviorId)=> async(dispatch) =>{
 
 	const payload = await httpConfig.get(`/apis/vote/?voteBehaviorId=${voteBehaviorId}`)
 	dispatch({type:"GET_VOTE_BY_VOTE_BUSINESS_ID" ,payload: payload.data});

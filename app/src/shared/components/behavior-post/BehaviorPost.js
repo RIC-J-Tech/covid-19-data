@@ -29,12 +29,10 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 
 					if(reply.status === 200) {
 						resetForm();
+						//TODO dispatch new Behavior
 
-						alert("You have successfully posted a behavior!")
-					}
 
-					else {
-						alert("Not sure what happened!")
+
 					}
 
 					setStatus({message, type});

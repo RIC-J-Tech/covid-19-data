@@ -11,12 +11,14 @@ import {getAllBusinesses, getBusinessByBusinessName} from "../../shared/actions/
 import {BusinessList} from "../business/BusinessList";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {Business} from "../business/Business";
+import {getAllVotes} from "../../shared/actions/get-votes";
 
 export const Home= () => {
 
 	// use selector to set users to users stored in state
 	const businesses = useSelector(state => state.businesses ? state.businesses : []);
 	const behaviors = useSelector(state => state.behaviors ? state.behaviors : []);
+	const votes = useSelector(state => state.votes ? state.votes : [])
 
 	// use dispatch from redux to dispatch actions
 	const dispatch = useDispatch();
@@ -26,6 +28,7 @@ export const Home= () => {
 		// dispatch(getAllBusinesses())
 		dispatch(getBusinessByBusinessName(""))
 		dispatch(getAllBehaviors())
+		dispatch(getAllVotes())
 	};
 
 	// set inputs to an empty array before update
