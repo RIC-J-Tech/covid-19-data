@@ -14,7 +14,7 @@ export const getBusinessByBusinessId =(id)=> async(dispatch) =>{
 
 export const getBusinessByBusinessName =(businessName)=> async(dispatch) =>{
 
-const payload = await httpConfig.get(`/apis/business/?businessName${businessName}`)
+const payload = await httpConfig.get(`/apis/business/?businessName=${businessName}`)
 dispatch({type:"GET_BUSINESS_BY_BUSINESS_NAME" ,payload: payload.data});
 
 };
