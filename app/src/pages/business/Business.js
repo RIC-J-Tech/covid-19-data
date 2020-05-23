@@ -7,6 +7,8 @@ import {BehaviorPost} from "../../shared/components/behavior-post/BehaviorPost";
 
 // import logo from "./../images/recipe-placeholder.jpg";
 
+
+
 export const Business = ({business,behaviors}) => {
 	return (
 
@@ -18,13 +20,14 @@ export const Business = ({business,behaviors}) => {
 
 			<Card className="my-5 border border-dark alternate-bg mx-5 ">
 				<Card.Title>{business.businessName}</Card.Title>
-				<Card.Link href={business.businessUrl}>Yelp Link for business</Card.Link>
+				<a style={{textDecorationColor:"null"}} href={business.businessUrl}>Yelp Link for business</a>
 				<Card.Body className="row my-3 px-5">
-				<div className="col-8">
-					<BehaviorList behaviors={behaviors} />
+				<div className="col-4 pt-5" style={{width:25}}>
+					<BehaviorPost behaviorBusinessId = {business.businessId}/>
 				</div>
-					<div className="col-4">
-						<BehaviorPost behaviorBusinessId = {business.businessId}/>
+					<div style={{width: 50, order: 1}
+					} className="col-8">
+						<BehaviorList behaviors={behaviors} />
 					</div>
 
 

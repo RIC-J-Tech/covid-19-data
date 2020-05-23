@@ -9,8 +9,20 @@ export const BehaviorList = ({behaviors}) => {
 		<>
 			{/*todo only want to list behaviors if they exist. maybe check for behavior count or null here and only render if there are behaviors.*/}
 			<ListGroup>
-				{behaviors.map(behavior => <ListGroup.Item>{behavior.behaviorContent}</ListGroup.Item>)}
+				{behaviors.map(behavior => {
+						return(
+
+							<ListGroup.Item key={behavior.behaviorId}>{behavior.behaviorContent}</ListGroup.Item>
+
+
+						)
+					}
+
+				)}
+
 			</ListGroup>
+
+
 		</>
 	)
 }

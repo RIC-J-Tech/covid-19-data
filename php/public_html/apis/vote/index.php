@@ -59,10 +59,10 @@ try {
 			//get all the votes associated with the behaviorId
 		} else if(empty($voteBehaviorId) === false) {
 			$reply->data = Vote::getVotesByVoteBehaviorId($pdo, $voteBehaviorId)->toArray();
-		} else {
-			throw new InvalidArgumentException("incorrect search parameters ", 404);
 		}
-
+		else {
+			$reply->data = Vote::getAllVotes($pdo)->toArray();
+		}
 	}
 	else if($method ==="DELETE"){
 		if($voteProfileId !== null && $voteBehaviorId !== null) {

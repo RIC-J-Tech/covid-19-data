@@ -19,6 +19,8 @@ export const  BehaviorCard = ({votes,behavior,profile}) => {
 				<Card className="my-5 border border-dark alternate-bg mx-5">
 					<Card.Body className="row my-3 px-3">
 						<BehaviorList behavior={behavior} />
+
+
 					</Card.Body>
 				</Card>
 
