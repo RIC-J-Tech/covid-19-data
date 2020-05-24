@@ -62,6 +62,7 @@ try {
 		}
 		else {
 			$reply->data = Vote::getAllVotes($pdo)->toArray();
+
 		}
 	}
 	else if($method ==="DELETE"){
@@ -140,7 +141,7 @@ try {
 			$vote->setVoteResult($requestObject->voteResult);
 			//preform the actual delete
 			$vote->update($pdo);
-
+			
 			//update the message
 			$reply->message = "Vote successfully updated";
 		}

@@ -5,11 +5,11 @@ import {ProfileCard} from "../../shared/components/profile-component/ProfileCard
 
 
 
-export const ProfileList = ({profiles}) => {
-
+export const ProfileList = ({profiles,behaviors}) => {
+console.log(behaviors)
 	return (
 		profiles.map(
-profile => <ProfileCard key={profile.profileId} profile={profile}/>
+profile => <ProfileCard key={profile.profileId} profile={profile} behaviors={behaviors}/>
 		)
 	)
 }

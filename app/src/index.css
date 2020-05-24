@@ -5,7 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(42, 146, 130);
+  background-color: #e1bee7;
+  color: #9c27b0
+  ;
 }
 
 code {
@@ -13,7 +15,10 @@ code {
     monospace;
 }
 
-
+.navBar{
+  background-color: #e1bee7;
+  color: #9c27b0
+}
 .container {
   margin: 80px auto 0 auto;
   max-width: 1200px;
@@ -24,4 +29,13 @@ code {
 
 .card-group {
   display: inline-block;
+}
+
+a{
+  text-decoration:none;
+  
+}
+
+.contentClass{
+  color: blue;
 }
