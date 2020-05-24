@@ -6,16 +6,18 @@ use Ramsey\Uuid\Uuid;
 class Business implements \JsonSerializable {
 	use ValidateUuid;
 	private $businessId;
-	private $newBusinessAvatarCloudinaryId;
+	private $businessAvatar;
 	private $businessLng;
 	private $businessLat;
 	private $businessName;
 	private $businessUrl;
 	private $businessYelpId;
-	public function __construct($newBusinessId, $newBusinessAvatarCloudinaryId, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
+
+
+	public function __construct($newBusinessId, $newBusinessAvatar, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
 		try {
 			$this->setBusinessId($newBusinessId);
-			$this->setBusinessAvatarCloudinaryId($newBusinessAvatarCloudinaryId);
+			$this->setBusinessAvatar($newBusinessAvatar);
 			$this->setBusinessYelpId($newBusinessYelpId);
 			$this->setBusinessLng($newBusinessLng);
 			$this->setBusinessLat($newBusinessLat);
@@ -39,28 +41,25 @@ class Business implements \JsonSerializable {
 		$this->businessId = $uuid;
 	}
 
-	public function getBusinessAvatarCloudinaryId(): string {
-		return ($this->businessAvatarCloudinaryId);
+	/**
+	 * accessor method for restaurantAvatar
+	 *
+	 * @return string
+	 */
+	public function getBusinessAvatar(): string {
+		return $this->businessAvatar;
 	}
 
 	/**
-	 * mutator method for image cloudinary token
+	 * mutator method for restaurantAvatar
 	 *
-	 * @param string $newBusinessAvatarCloudinaryId new value of image cloudinary token
-	 * @throws InvalidArgumentException if $newBusinessAvatarCloudinaryId is not a string or insecure
-	 * @throws TypeError if $newBusinessAvatarCloudinaryId is not a string
-	 **/
-	public function setBusinessAvatarCloudinaryId($newBusinessAvatarCloudinaryId): void {
-		// verify the image cloudinary token content is secure
-		$newBusinessAvatarCloudinaryId = filter_var($newBusinessAvatarCloudinaryId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	 * @param string $newBusinessAvatar
+	 */
+	public function setBusinessAvatar(string $newBusinessAvatar): void {
 
-		if(strlen($newBusinessAvatarCloudinaryId) > 32) {
-			throw(new RangeException("image id too large"));
-		}
-
-		// store the image cloudinary token
-		$this->BusinessAvatarCloudinaryId = $newBusinessAvatarCloudinaryId;
+		$this->businessAvatar = $newBusinessAvatar;
 	}
+
 	public function getBusinessLng() {
 		return $this->businessLng;
 	}
@@ -124,11 +123,11 @@ class Business implements \JsonSerializable {
 		$this->businessYelpId = $newBusinessYelpId;
 	}
 	public function insert(\PDO $pdo): void {
-		$query = "INSERT INTO business(businessId,businessAvatarCloudinaryId,businessYelpId,businessLng,businessLat,businessName,
-          businessUrl) VALUES(:businessId,:businessAvatarCloudinaryId,:businessYelpId,:businessLng,:businessLat,:businessName,
+		$query = "INSERT INTO business(businessId,businessAvatar,businessYelpId,businessLng,businessLat,businessName,
+          businessUrl) VALUES(:businessId,:businessAvatar,:businessYelpId,:businessLng,:businessLat,:businessName,
           :businessUrl)";
 		$statement = $pdo->prepare($query);
-		$parameters = ["businessId" => $this->businessId->getBytes(), "businessAvatarCloudinaryId" => $this->businessAvatarCloudinaryId, "businessYelpId" => $this->businessYelpId, "businessLng" => $this->businessLng,
+		$parameters = ["businessId" => $this->businessId->getBytes(), "businessAvatar" => $this->businessAvatar, "businessYelpId" => $this->businessYelpId, "businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat, "businessName" => $this->businessName, "businessUrl" =>
 				$this->businessUrl];
 		$statement->execute($parameters);
@@ -141,7 +140,7 @@ class Business implements \JsonSerializable {
 	}
 	public function update(\PDO $pdo): void {
 		$query = "UPDATE business SET
-				businessAvatarCloudinaryId = :businessAvatarCloudinaryId,
+				businessAvatar = :businessAvatar,
             businessYelpId = :businessYelpId,
             businessLng = :businessLng,
             businessLat = :businessLat,
@@ -150,7 +149,7 @@ class Business implements \JsonSerializable {
             WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 		$parameter = ["businessId" => $this->businessId->getBytes(),
-			"businessAvatarCloudinaryId" => $this->businessAvatarCloudinaryId,
+			"businessAvatar" => $this->businessAvatar,
 			"businessYelpId" => $this->businessYelpId,
 			"businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat,
@@ -164,7 +163,7 @@ class Business implements \JsonSerializable {
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		$query = "SELECT businessId, businessAvatarCloudinaryId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
+		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 		$parameters = ["businessId" => $businessId->getBytes()];
 		$statement->execute($parameters);
@@ -173,7 +172,7 @@ class Business implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$business = new Business($row["businessId"], $row["businessAvatarCloudinaryId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new Business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
 			}
 		} catch(Exception $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -188,7 +187,7 @@ class Business implements \JsonSerializable {
 		}
 		$businessName = str_replace("_", "\\_", str_replace("%", "\\%", $businessName));
 		// create query template
-		$query = "SELECT businessId, businessAvatarCloudinaryId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessName LIKE :businessName";
+		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessName LIKE :businessName";
 		$statement = $pdo->prepare($query);
 		$businessName = "%$businessName%";
 		$parameters = ["businessName" => $businessName];
@@ -197,7 +196,7 @@ class Business implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$business = new business($row["businessId"], $row["businessAvatarCloudinaryId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();
 			} catch(\Exception $exception) {
@@ -211,7 +210,7 @@ class Business implements \JsonSerializable {
 
 	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
 		// create query template
-		$query = "SELECT businessId, businessAvatarCloudinaryId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business";
+		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
@@ -220,7 +219,7 @@ class Business implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$business = new business($row["businessId"], $row["businessAvatarCloudinaryId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();
 			} catch(\Exception $exception) {
