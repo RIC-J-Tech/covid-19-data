@@ -1,23 +1,15 @@
 import React from 'react';
-import { Route } from 'react-router';
+import {ListGroup, ListGroupItem } from 'react-bootstrap';
+import Grid from "@material-ui/core/Grid"
+import {ProfileCard} from "../../shared/components/profile-component/ProfileCard"
 
-const ProfileListComponent = ({profiles}) => {
+
+
+export const ProfileList = ({profiles}) => {
 
 	return (
-		<Route render={ ({history}) => (
-			<tbody>
-			{profiles.map(profile => (
-				<tr key={profile.profileId} onClick={() => {history.push(`profile/${profile.profileId}`)}}>
-					<td>{profile.profileId}</td>
-					<td>{profile.profileUsername}</td>
-					<td>{profile.profileEmail}</td>
-					<td>{profile.profilePhone}</td>
-					<td>{profile.profileAvatarUrl}</td>
-				</tr>
-			))}
-			</tbody>
-		)}/>
+		profiles.map(
+profile => <ProfileCard key={profile.profileId} profile={profile}/>
+		)
 	)
-};
-
-export const ProfileList = (ProfileListComponent);
+}

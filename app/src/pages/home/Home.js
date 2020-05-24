@@ -36,7 +36,7 @@ export const Home= () => {
 
 	// do this effect on component update
 	useEffect(effects, inputs);
-console.log(votes);
+// console.log(votes);
 	return (
 		<main className="container">
 			<h1>I am the home page</h1>
@@ -47,7 +47,8 @@ console.log(votes);
 				behavior.behaviorBusinessId === business.businessId
 			)}
 
-			/>)}
+			/>)
+			}
 
 			{/*<BusinessList businesses={businesses}/>*/}
 

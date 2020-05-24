@@ -1,12 +1,11 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import { getAllProfiles} from "../../shared/actions/get-profile";
-import {BehaviorCard} from "../../shared/components/behavior-post/BehaviorCard";
-import {getBusinessByBusinessName} from "../../shared/actions/get-businesses";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
-import {Business} from "../business/Business";
-import {BehaviorList} from "../behavior/BehaviorList";
+
+import {ProfileList} from "../profile/ProfileList"
+
 
 
 export const Profile = () => {
@@ -35,16 +34,27 @@ export const Profile = () => {
 	return (
 		<main className="container">
 			<h1>I am the Profile page</h1>
-			<h3>List of Behaviors</h3>
+			{/* <h3>List of Behaviors</h3> */}
+			<h3>Profile</h3>
+			<div>
+			<ProfileList key={profiles.profileId} profiles={profiles} behaviors={behaviors.filter(behavior =>
+				behavior.behaviorBusinessId === profiles.profileId
+			)}/>
+</div>
+			{/* <ProfileCard profiles={profiles}/> */}
 
-			{profiles.map(
+
+			{/* {profiles.map(
 				profile => <BehaviorList key={profile.profileId} profile={profile} behaviors={behaviors.filter(behavior =>
 					behavior.behaviorProfileId === profile.profileId
 				)}
 
-				/>)}
+				/> )
+				}				 */}
 
 			{/*<profileList profilees={businesses}/>*/}
 		</main>
 	)
 };
+
+export default Profile

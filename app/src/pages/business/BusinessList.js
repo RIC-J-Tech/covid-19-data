@@ -5,7 +5,7 @@ export const BusinessList = ({businesses}) => {
 
 	return (
 		businesses.map(
-			business => <Business key={business.businessId} business={business}/>
+business => <Business key={business.businessId} business={business}/>
 		)
 	)
 }
