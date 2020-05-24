@@ -65,7 +65,7 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 				} = props;
 				return (
 					<>
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit} className={classes.root} noValidate autoComplete="off">
 							{/*controlId must match what is passed to the initialValues prop*/}
 							<div className="form-group">
 								<label htmlFor="behaviorPost">Post Behavior</label>
