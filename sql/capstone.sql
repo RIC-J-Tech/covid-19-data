@@ -2,7 +2,11 @@
 USE cap28_covid_test;
 
 ALTER DATABASE cap28_covid_test CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
+DROP TABLE IF EXISTS report;
+DROP TABLE IF EXISTS vote;
+DROP TABLE IF EXISTS behavior;
+DROP TABLE IF EXISTS business;
+DROP TABLE IF EXISTS profile;
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
@@ -23,8 +27,8 @@ CREATE TABLE profile(
 
 CREATE TABLE business(
    businessId BINARY(16) NOT NULL,
-   businessAvatarCloudinaryId VARCHAR(32) NOT NULL,
-   businessYelpId VARCHAR(32) NOT NULL,
+   businessAvatar VARCHAR(255) NOT NULL,
+   businessYelpId VARCHAR(64),
    businessLng DECIMAL(11,8),
    businessLat DECIMAL(11,8),
    businessName VARCHAR(128) NOT NULL,

@@ -117,7 +117,7 @@ class Business implements \JsonSerializable {
 		return $this->businessYelpId;
 	}
 	public function setBusinessYelpId(string $newBusinessYelpId) {
-		if(strlen($newBusinessYelpId) > 32) {
+		if(strlen($newBusinessYelpId) > 64) {
 			throw(new \RangeException("Yelp Id is longer than 32 characters."));
 		}
 		$this->businessYelpId = $newBusinessYelpId;
