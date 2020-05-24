@@ -28,7 +28,7 @@ const styles ={
 
 
 export const ProfileCard = ({profile,behaviors}) => {
-  
+  console.log(behaviors)
    
 	return (
 <Route render={ ({history}) => (
@@ -42,7 +42,7 @@ export const ProfileCard = ({profile,behaviors}) => {
             <CardContent  >
                 <Typography variant ="h5" color="primary">{profile.profileUsername}</Typography>
                 <Typography variant ="body2" color ="textSecondary">{profile.profilePhone}</Typography>
-                <Typography variant ="body1">{profile.profileEmail}</Typography>
+                {behaviors.map(behavior=> <Typography key={behavior.behaviorId} variant ="body1">{behavior.behaviorContent}</Typography>)}
                 
 
             </CardContent>

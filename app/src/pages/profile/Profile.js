@@ -4,6 +4,7 @@ import { getAllProfiles} from "../../shared/actions/get-profile";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import {ProfileList} from "../profile/ProfileList"
+import {ProfileCard} from "../../shared/components/profile-component/ProfileCard"
 
 import Grid from "@material-ui/core/Grid"
 
@@ -31,7 +32,7 @@ export const Profile = () => {
 
 	// do this effect on component update
 	useEffect(effects, inputs);
-
+console.log(behaviors)
 	return (
 		<main className="container">
 			<h1>I am the Profile page</h1>
@@ -40,9 +41,13 @@ export const Profile = () => {
 
 			<Grid container spacing={10}>
 			<Grid item sm={8} xs={12}>
-	<ProfileList key={profiles.profileId} profiles={profiles} behaviors={behaviors.filter(behavior =>
-				behavior.behaviorBusinessId === profiles.profileId
-			)}/>
+
+			{profiles.map(
+profile => <ProfileCard key={profile.profileId} profile={profile} behaviors={behaviors.filter(behavior=>
+behavior.behaviorProfileId === profile.profileId
+)}/>
+		)
+			}
 			</Grid>
 
 			<Grid item sm={4} xs={12}>

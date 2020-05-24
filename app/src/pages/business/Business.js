@@ -9,7 +9,7 @@ import {BehaviorPost} from "../../shared/components/behavior-post/BehaviorPost";
 
 
 
-export const Business = ({business,behaviors}) => {
+export const Business = ({business,behaviors, votes}) => {
 	return (
 
 //this gives form to the recipes in the list on DOM
@@ -28,6 +28,7 @@ export const Business = ({business,behaviors}) => {
 					<div style={{width: 50, order: 1}
 					} className="col-8">
 						<BehaviorList behaviors={behaviors} />
+
 						
 					</div>
 				</Card.Body>

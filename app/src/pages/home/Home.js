@@ -12,6 +12,7 @@ import {BusinessList} from "../business/BusinessList";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {Business} from "../business/Business";
 import {getAllVotes} from "../../shared/actions/get-votes";
+import profileReducer from '../../shared/reducers/profileReducer';
 
 export const Home= () => {
 
@@ -36,18 +37,20 @@ export const Home= () => {
 
 	// do this effect on component update
 	useEffect(effects, inputs);
-// console.log(votes);
+	// console.log(behaviors)
+console.log(votes);
 	return (
 		<main className="container">
 			<h1>I am the home page</h1>
 
 			{
 				businesses.map(
-			business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
+			business => <Business key={business.businessId} business={business}  behaviors={behaviors.filter(behavior =>
 				behavior.behaviorBusinessId === business.businessId
-			)}
+			)} 
 
 			/>)
+
 			}
 
 			{/*<BusinessList businesses={businesses}/>*/}
@@ -55,6 +58,7 @@ export const Home= () => {
 		</main>
 	)
 };
-
-
-
+// businesses.map(
+// 	business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
+// 		behavior.behaviorBusinessId === business.businessId
+// 	)}
