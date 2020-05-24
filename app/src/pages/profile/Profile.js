@@ -3,8 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 import { getAllProfiles} from "../../shared/actions/get-profile";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
-
 import {ProfileList} from "../profile/ProfileList"
+
+import Grid from "@material-ui/core/Grid"
 
 
 
@@ -36,11 +37,19 @@ export const Profile = () => {
 			<h1>I am the Profile page</h1>
 			{/* <h3>List of Behaviors</h3> */}
 			<h3>Profile</h3>
-			<div>
-			<ProfileList key={profiles.profileId} profiles={profiles} behaviors={behaviors.filter(behavior =>
+
+			<Grid container spacing={10}>
+			<Grid item sm={8} xs={12}>
+	<ProfileList key={profiles.profileId} profiles={profiles} behaviors={behaviors.filter(behavior =>
 				behavior.behaviorBusinessId === profiles.profileId
 			)}/>
-</div>
+			</Grid>
+
+			<Grid item sm={4} xs={12}>
+				<p>SOmething Goes HERE...</p>
+			</Grid>
+		
+</Grid>
 			{/* <ProfileCard profiles={profiles}/> */}
 
 

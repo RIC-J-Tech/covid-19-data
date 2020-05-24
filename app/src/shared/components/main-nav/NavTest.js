@@ -175,7 +175,7 @@ export const NavTest =(props)=>{
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            Pan-Ops
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
