@@ -12,7 +12,8 @@ import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 import {Home} from "./pages/home/Home";
 import {Profile} from "./pages/profile/Profile";
 // import {Image} from "./pages/image/Image"
-import {NavTest} from "./shared/components/main-nav/NavTest";
+// import {NavTest} from "./shared/components/main-nav/NavTest";
+import {MainNav} from "./shared/components/main-nav/MainNav"
 import {Business} from "./pages/business/Business"
 //components
 //pages
@@ -52,7 +53,7 @@ const Routing = (store) => (
 		
 			<MuiThemeProvider theme={theme}>
 				<BrowserRouter>
-				<NavTest/>
+				<MainNav/>
 				<Switch>
 					<Route exact path="/profile" component={Profile}/>
 					<Route exact path="/business" component={Business}/>

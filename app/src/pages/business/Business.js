@@ -25,11 +25,8 @@ export const Business = ({business,behaviors, votes}) => {
 				<div className="col-4 pt-5" style={{width:25}}>
 					<BehaviorPost behaviorBusinessId = {business.businessId}/>
 				</div>
-					<div style={{width: 50, order: 1}
-					} className="col-8">
+					<div style={{width: 50, order: 1}} className="col-8">
 						<BehaviorList behaviors={behaviors} />
-
-						
 					</div>
 				</Card.Body>
 			</Card>

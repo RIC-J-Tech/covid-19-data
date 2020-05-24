@@ -5,6 +5,7 @@ import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import {ProfileList} from "../profile/ProfileList"
 import {ProfileCard} from "../../shared/components/profile-component/ProfileCard"
+import {getBusinessByBusinessName} from "../../shared/actions/get-businesses"
 
 import Grid from "@material-ui/core/Grid"
 
@@ -14,7 +15,8 @@ export const Profile = () => {
 
    const profiles = useSelector(state => state.profiles ? state.profiles : []);
 	const behaviors = useSelector(state => state.behaviors ? state.behaviors : []);
-	const votes = useSelector(state => state.votes ? state.votes : [])
+	const votes = useSelector(state => state.votes ? state.votes : []);
+	const businesses = useSelector(state => state.businesses ? state.businesses : []);
 
 	// use dispatch from redux to dispatch actions
 	const dispatch = useDispatch();
@@ -24,6 +26,7 @@ export const Profile = () => {
 		// dispatch(getAllBusinesses())
 		dispatch(getAllProfiles())
 		dispatch(getAllBehaviors())
+		dispatch(getBusinessByBusinessName(""))
 		dispatch(getAllVotes())
 	};
 

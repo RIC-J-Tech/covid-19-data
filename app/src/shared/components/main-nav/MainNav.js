@@ -5,6 +5,7 @@ import {LinkContainer} from "react-router-bootstrap"
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {SignInModal} from "./sign-in/SignInModal";
 import {Profile} from "../../../pages/profile/Profile"
+ 
 
 
 export const MainNav = (props) => {

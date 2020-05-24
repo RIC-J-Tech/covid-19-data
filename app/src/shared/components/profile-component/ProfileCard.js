@@ -9,46 +9,50 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import {BehaviorList} from '../../../pages/behavior/BehaviorList'
+import { ListGroup } from 'react-bootstrap';
+import {Business} from '../../../pages/business/Business'
 
 // import logo from "./../images/recipe-placeholder.jpg";
-const styles ={
-    card:{
-        display:'flex',
-        marginBottom: 20
-    },
-    image:{
+const card ={
+    
+       
+    }
+const image= {
         minWidth: 200
-    },
-    content:{
+    }
+
+   const content={
         padding:25
     }
     
-};
 
 
 
-export const ProfileCard = ({profile,behaviors}) => {
+
+export const ProfileCard = ({profile,behaviors,businesses}) => {
   console.log(behaviors)
    
 	return (
 <Route render={ ({history}) => (
 <>
         
-        <Card styles={styles.card}>
-              <CardMedia>
-                  <img src='https://via.placeholder.com/150' styles={styles.image} />
+        <Card style={{
+        marginBottom: 50}}>
+              <CardMedia image ={profile.profileAvaterUrl}>
+                  <img src='https://via.placeholder.com/150' styles={image} />
               </CardMedia>
               
-            <CardContent  >
+            <CardContent style={content} >
                 <Typography variant ="h5" color="primary">{profile.profileUsername}</Typography>
-                <Typography variant ="body2" color ="textSecondary">{profile.profilePhone}</Typography>
-                {behaviors.map(behavior=> <Typography key={behavior.behaviorId} variant ="body1">{behavior.behaviorContent}</Typography>)}
+                <Typography variant ="body2" color ="Secondary">{profile.profilePhone}</Typography>
                 
-
-            </CardContent>
-             
+               <p>
+               {behaviors.map(behavior=> <ListGroup.Item color="warning" key={behavior.behaviorId} variant ="body1">{behavior.behaviorContent} </ListGroup.Item> )}
+            </p></CardContent>
+            
 
         </Card>
+
         </>
 
         

@@ -35,7 +35,6 @@ export const SignInForm = ({handleClose}) => {
 					window.localStorage.setItem("jwt-token", reply.headers["x-jwt-token"]);
 					resetForm()
 					handleClose();
-
 					alert(message);
 
 				}
