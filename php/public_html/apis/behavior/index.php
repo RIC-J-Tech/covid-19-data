@@ -81,6 +81,7 @@ try {
 					"businessUrl"=>$business->getBusinessUrl(),
 					"businessName"=>$business->getBusinessName(),
 				];
+
 				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId()->toString());
 				$behaviorProfiles[] = (object)[
 					"behaviorId"=>$behavior->getBehaviorId(),
@@ -90,6 +91,7 @@ try {
 					"behaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
 					"profileUsername"=>$profile->getProfileUsername(),
+
 				];
 			}
 			$reply->data = $behaviorBusinesses;

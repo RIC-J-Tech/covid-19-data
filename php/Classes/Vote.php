@@ -372,30 +372,27 @@ class Vote implements \JsonSerializable {
 
 
 		// create query template
-		$query = "SELECT voteProfileId, voteBehaviorId, voteResult,voteDate FROM `vote`";
+		$query = "SELECT voteProfileId, voteBehaviorId, voteResult, voteDate FROM vote";
 
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
-		$votes = new SPLFixedArray($statement->rowCount());
+		$votes = new \SPLFixedArray($statement->rowCount());
 
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$vote = null;
-				$statement->setFetchMode(\PDO::FETCH_ASSOC);
-				$row = $statement->fetch();
-				if($row !== false) {
-					$vote = new Vote($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
-				}
+				$vote = new Vote($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
+				$votes[$votes->key()] = $vote;
+				$votes->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 
 		}
-		return ($vote);
+		return ($votes);
 	}
 
 
