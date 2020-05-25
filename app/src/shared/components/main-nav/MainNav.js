@@ -5,7 +5,8 @@ import {LinkContainer} from "react-router-bootstrap";
 import {Form, FormControl, Button} from "react-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {SignInModal} from "./sign-in/SignInModal";
-import {Profile} from "../../../pages/profile/Profile"
+//import {BehaviorList} from "../../../pages/behavior/BehaviorList";
+//import {Profile} from "../../../pages/profile/Profile"
  
 
 
@@ -25,6 +26,9 @@ export const MainNav = (props) => {
 				><Nav.Link>image</Nav.Link>
 				</LinkContainer>
 			</Nav>
+			{/*<label htmlFor="search">Search by Business Name</label>*/}
+			{/*<input type="text" value ={props.inputValue} onChange={props.businessFilterOnChange}/>*/}
+
 			<Form inline>
 				<FormControl type="text" placeholder="Search" className="mr-sm-2" />
 			</Form>

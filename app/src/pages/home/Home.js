@@ -7,12 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Profile from '../profile/Profile'
 
-import {getTopBusinesses} from "../../shared/actions/get-businesses";
+import {getBusinessesByBusinessName, getTopBusinesses} from "../../shared/actions/get-businesses";
 import {BusinessList} from "../business/BusinessList";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {Business} from "../business/Business";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import profileReducer from '../../shared/reducers/profileReducer';
+import {Button, Form, FormControl} from "react-bootstrap";
+import Navbar from "react-bootstrap/Navbar";
 
 export const Home= () => {
 
@@ -32,16 +34,28 @@ export const Home= () => {
 		dispatch(getAllVotes())
 	};
 
+
+	const search = (businessName)=> {
+		dispatch (getBusinessesByBusinessName(businessName))
+	};
+
 	// set inputs to an empty array before update
 	const inputs = [];
 
 	// do this effect on component update
 	useEffect(effects, inputs);
-	// console.log(behaviors)
-console.log(votes);
+
+
 	return (
 		<main className="container">
-			<h1>I am the home page</h1>
+			<Navbar bg="white" variant="dark">
+				<Form inline>
+					<FormControl type="text" placeholder="Search" className="mr-sm-2" />
+				</Form>
+				<Form inline>
+					<Button variant="outline-info" onClick={search}>Search</Button>
+				</Form>
+			</Navbar>
 
 			{
 				businesses.map(
