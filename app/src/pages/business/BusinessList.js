@@ -8,4 +8,6 @@ export const BusinessList = ({businesses}) => {
 business => <Business key={business.businessId} business={business}/>
 		)
 	)
-};
+}
+
+export default BusinessList;
