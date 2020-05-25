@@ -18,7 +18,8 @@ export const Business = ({business,behaviors, votes}) => {
 
 			<>
 
-			<Card className="my-5 border border-dark alternate-bg mx-5 ">
+			<Card className="my-5 border border-dark alternate-bg ml-5 ">
+			{/* <Card.Media image={business.businessAvatar} /> */}
 				<Card.Title>{business.businessName}</Card.Title>
 				<a href={business.businessUrl}>Yelp Link for business</a>
 				<Card.Body className="row my-3 px-5">

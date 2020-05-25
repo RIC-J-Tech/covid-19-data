@@ -6,16 +6,26 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../FormDebugger";
 import {useDispatch} from "react-redux";
 import {getAllBehaviors} from "../../actions/get-behaviors";
+import { TextField } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 
+const useStyles = makeStyles((theme) => ({
+		root: {
+		  '& .MuiTextField-root': {
+			margin: theme.spacing(1),
+			width: '25ch',
+		  },
+		},
+	  }));
 
 
 export const BehaviorPost = ({behaviorBusinessId}) => {
+	const classes = useStyles();
 	const behaviorPost = {
 		behaviorContent: ""
 
 	};
+	
 	 const dispatch = useDispatch();
 
 	const validator = Yup.object().shape({
@@ -68,27 +78,23 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 				} = props;
 				return (
 					<>
-						<form onSubmit={handleSubmit} noValidate autoComplete="off">
+						<form  className={classes.root} onSubmit={handleSubmit}>
 							{/*controlId must match what is passed to the initialValues prop*/}
-							<div className="form-group mt-5">
-								<div className="input-group">
-									<div className="input-group-prepend">
-									
-									</div>
-									<TextField
-										id="filled-multiline-flexible"
-										label="Post a behavior"
-										multiline
-										rowsMax={4}
+									<div className="mt-5">
+
+											<TextField
+										className="form-control mt-5"
+										id="behaviorContent"
+										type="text"
 										value={values.behaviorContent}
+										placeholder="Post a behavior"
 										onChange={handleChange}
 										onBlur={handleBlur}
-										variant="filled"
-										/>
-									
-								</div>
-
-							</div>
+									/>
+										<button className="btn btn-primary mt-5" type="submit">Post</button>
+									</div>
+								
+						
 							{/*<FormDebugger {...props} />*/}
 						</form>
 
