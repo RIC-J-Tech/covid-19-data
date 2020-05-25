@@ -27,7 +27,7 @@ export const Home= () => {
 	// get profiles
 	const effects = () => {
 		// dispatch(getAllBusinesses())
-		dispatch(getBusinessByBusinessName(""))
+		dispatch(getTopBusinesses())
 		dispatch(getAllBehaviors())
 		dispatch(getAllVotes())
 	};

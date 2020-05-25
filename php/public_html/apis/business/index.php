@@ -41,7 +41,7 @@ try {
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$businessName = filter_input(INPUT_GET, "businessName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+	$resultCount = filter_input(INPUT_GET, "resultCount", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
 	// handle GET request - if id is present, that business is returned, otherwise all business are returned
@@ -60,7 +60,7 @@ try {
 
 
 		else {
-			$reply->data = Business::getAllBusiness($pdo)->toArray();
+			$reply->data = Business::getTopBusinesses($pdo,$resultCount)->toArray();
 		}
 
 	}

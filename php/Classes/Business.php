@@ -230,6 +230,7 @@ class Business implements \JsonSerializable {
 		if(empty($resultCount) === true) {
 			$resultCount = 3;
 		}
+		$resultCount = 4;
 		// create query template
 		$query = "
 		select count(voteBehaviorId) as voteCount, businessId, businessName, businessUrl, 
@@ -241,7 +242,7 @@ class Business implements \JsonSerializable {
 							businessLat, businessLng, 
 							businessYelpId
 							order by count(voteBehaviorId) desc, businessName
-							limit :resultCount
+					
 		";
 		$statement = $pdo->prepare($query);
 		$parameters = ["resultCount" => $resultCount];
