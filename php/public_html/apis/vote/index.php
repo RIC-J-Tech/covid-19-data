@@ -59,10 +59,10 @@ try {
 			$reply->data = Vote::getVotesByVoteProfileId($pdo, $voteProfileId)->toArray();
 			//get all the votes associated with the behaviorId
 		} else if(empty($voteBehaviorId) === false) {
-			$reply->data = Vote::getVoteCountByVoteBehaviorId($pdo, $voteBehaviorId)->toArray();
+			$reply->data = Vote::getVoteCountByVoteBehaviorId($pdo, $voteBehaviorId);
 		}
 		else if(empty($businessId)=== false){
-			$reply->data = Vote::getVoteCountByBusinessId($pdo, $businessId)->toArray();
+			$reply->data = Vote::getVoteCountByBusinessId($pdo, $businessId);
 
 		}
 
