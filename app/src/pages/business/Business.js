@@ -17,17 +17,18 @@ export const Business = ({business,behaviors, votes}) => {
 
 
 			<>
-			{/* <img src = "https://s3-media3.fl.yelpcdn.com/bphoto/yRsxU5SyPhsSxMa9d8SZjw/o.jpg" alt=""/> */}
+
+			<img src ={business.businessAvatar} alt=""/>
 		
 			
 			<Card className="my-5 border border-dark alternate-bg ml-5 ">
-			<Card.Media
+			{/* <Card.Media
 			component = "img"
 			height="150"
 			width="150"
 			 image={business.businessAvatar} 
 				 title="business photo"
-			 />
+			 /> */}
 				<Card.Title>{business.businessName}</Card.Title>
 
 				<a href={business.businessUrl}>Yelp Link for business</a>

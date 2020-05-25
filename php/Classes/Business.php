@@ -12,6 +12,7 @@ class Business implements \JsonSerializable {
 	private $businessName;
 	private $businessUrl;
 	private $businessYelpId;
+	private $voteCount = 0;
 
 
 	public function __construct($newBusinessId, $newBusinessAvatar, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
@@ -59,6 +60,22 @@ class Business implements \JsonSerializable {
 
 		$this->businessAvatar = $newBusinessAvatar;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getVoteCount(): int {
+
+		return $this->voteCount;
+	}
+
+	/**
+	 * @param mixed $voteCount
+	 */
+	public function setVoteCount(int $voteCount): void {
+		$this->voteCount = $voteCount;
+	}
+
 
 	public function getBusinessLng() {
 		return $this->businessLng;
@@ -206,6 +223,45 @@ class Business implements \JsonSerializable {
 		}
 		return($businesses);
 	}
+
+
+	public static function getTopBusinesses(\PDO $pdo, int $resultCount) : \SplFixedArray {
+		$resultCount = filter_var($resultCount, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($resultCount) === true) {
+			$resultCount = 3;
+		}
+		// create query template
+		$query = "
+		select count(voteBehaviorId) as voteCount, businessId, businessName, businessUrl, 
+							businessAvatar, businessLat, businessLng, businessYelpId
+							from vote
+							inner join behavior on behaviorId = voteBehaviorId
+							inner join business on businessId = behaviorBusinessId
+							group by businessId, businessName, businessUrl, businessAvatar,  
+							businessLat, businessLng, 
+							businessYelpId
+							order by count(voteBehaviorId) desc, businessName
+							limit :resultCount
+		";
+		$statement = $pdo->prepare($query);
+		$parameters = ["resultCount" => $resultCount];
+		$statement->execute($parameters);
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($businesses);
+	}
+
 
 
 	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
