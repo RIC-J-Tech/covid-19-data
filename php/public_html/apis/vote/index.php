@@ -39,6 +39,7 @@ try {
 	$voteProfileId = filter_input(INPUT_GET, "voteProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$voteBehaviorId = filter_input(INPUT_GET, "voteBehaviorId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$voteDate = new \DateTime();
+	$businessId = filter_input(INPUT_GET, "businessId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
 	if($method === "GET") {
