@@ -10,7 +10,7 @@ import Profile from '../profile/Profile'
 import {getTopBusinesses} from "../../shared/actions/get-businesses";
 import {BusinessList} from "../business/BusinessList";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
-import {Business} from "../business/Business";
+import {TestBusiness} from "../business/TestBusiness";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import profileReducer from '../../shared/reducers/profileReducer';
 
@@ -45,7 +45,7 @@ console.log(votes);
 
 			{
 				businesses.map(
-			business => <Business key={business.businessId} business={business}  behaviors={behaviors.filter(behavior =>
+			business => <TestBusiness key={business.businessId} business={business}  behaviors={behaviors.filter(behavior =>
 				behavior.behaviorBusinessId === business.businessId
 			)} 
 
