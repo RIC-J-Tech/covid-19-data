@@ -230,7 +230,6 @@ class Business implements \JsonSerializable {
 		if(empty($resultCount) === true) {
 			$resultCount = 3;
 		}
-		$resultCount = 4;
 		// create query template
 		$query = "
 		select count(voteBehaviorId) as voteCount, businessId, businessName, businessUrl, 
@@ -245,13 +244,17 @@ class Business implements \JsonSerializable {
 					
 		";
 		$statement = $pdo->prepare($query);
-		$parameters = ["resultCount" => $resultCount];
-		$statement->execute($parameters);
+//		$parameters = ["resultCount" => $resultCount];
+
+		$statement->bindParam(':resultCount',$resultCount, \PDO::PARAM_INT);
+		$statement->execute();
+
 		$businesses = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"],
+					$row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
 				$business->setVoteCount($row["voteCount"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();

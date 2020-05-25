@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import Profile from '../profile/Profile'
 
-import {getAllBusinesses, getBusinessByBusinessName} from "../../shared/actions/get-businesses";
+import {getTopBusinesses} from "../../shared/actions/get-businesses";
 import {BusinessList} from "../business/BusinessList";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {Business} from "../business/Business";

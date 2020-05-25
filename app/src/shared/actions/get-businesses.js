@@ -1,11 +1,10 @@
   
 import {httpConfig} from "../utils/http-config";
 
-export const getAllBusinesses = () => async dispatch => {
-	const {data} = await httpConfig('/apis/business/');
-	let result = await dispatch({type: "GET_ALL_BUSINESSES", payload: data });
-	console.log('data from getAllBusinesses:', result);
-	return result;
+export const getTopBusinesses = () => async dispatch => {
+	const {data} = await httpConfig('/apis/business/?resultCount=3');
+	dispatch({type: "GET_TOP_BUSINESSES", payload: data });
+	
 };
 
 export const getBusinessByBusinessId =(id)=> async(dispatch) =>{

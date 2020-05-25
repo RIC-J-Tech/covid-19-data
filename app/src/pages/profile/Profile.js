@@ -5,7 +5,7 @@ import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import {ProfileList} from "../profile/ProfileList"
 import {ProfileCard} from "../../shared/components/profile-component/ProfileCard"
-import {getBusinessByBusinessName} from "../../shared/actions/get-businesses"
+
 
 import Grid from "@material-ui/core/Grid"
 
@@ -23,10 +23,8 @@ export const Profile = () => {
 
 	// get profiles
 	const effects = () => {
-		// dispatch(getAllBusinesses())
 		dispatch(getAllProfiles())
 		dispatch(getAllBehaviors())
-		dispatch(getBusinessByBusinessName(""))
 		dispatch(getAllVotes())
 	};
 
