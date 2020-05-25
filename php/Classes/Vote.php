@@ -400,7 +400,7 @@ class Vote implements \JsonSerializable {
 	public static function getVoteCountByBusinessId(\PDO $pdo, $businessId) : int {
 
 		try {
-			$voteBehaviorId = self::ValidateUuid($businessId);
+			$businessId = self::ValidateUuid($businessId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
