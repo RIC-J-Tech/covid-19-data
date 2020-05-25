@@ -19,7 +19,7 @@ const useStyles = makeStyles({
       maxWidth: 345,
     },
   });
-export const TestBusiness = ({business,behaviors, votes}) => {
+export const Business = ({business,behaviors, votes}) => {
     const classes = useStyles();
 	return (
 

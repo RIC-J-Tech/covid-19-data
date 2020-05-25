@@ -22,19 +22,7 @@ export const MainNav = (props) => {
 				</LinkContainer>
 				<SignUpModal/>
 				<SignInModal/>
-				<LinkContainer exact to="/image"
-				><Nav.Link>image</Nav.Link>
-				</LinkContainer>
 			</Nav>
-			{/*<label htmlFor="search">Search by Business Name</label>*/}
-			{/*<input type="text" value ={props.inputValue} onChange={props.businessFilterOnChange}/>*/}
-
-			<Form inline>
-				<FormControl type="text" placeholder="Search" className="mr-sm-2" />
-			</Form>
-			<Form inline>
-				<Button variant="outline-info">Search</Button>
-			</Form>
 		</Navbar>
 	)
 };
