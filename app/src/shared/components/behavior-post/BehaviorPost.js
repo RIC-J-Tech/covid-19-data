@@ -6,6 +6,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../FormDebugger";
 import {useDispatch} from "react-redux";
 import {getAllBehaviors} from "../../actions/get-behaviors";
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
 
 
 export const BehaviorPost = ({behaviorBusinessId}) => {
@@ -65,27 +68,24 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 				} = props;
 				return (
 					<>
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit} noValidate autoComplete="off">
 							{/*controlId must match what is passed to the initialValues prop*/}
-							<div className="form-group">
-								<label htmlFor="behaviorPost">Post Behavior</label>
+							<div className="form-group mt-5">
 								<div className="input-group">
 									<div className="input-group-prepend">
-										<div className="input-group-text">
-											<FontAwesomeIcon icon="envelope"/>
-										</div>
+									
 									</div>
-									<input
-										className="form-control"
-										id="behaviorContent"
-										type="text"
+									<TextField
+										id="filled-multiline-flexible"
+										label="Post a behavior"
+										multiline
+										rowsMax={4}
 										value={values.behaviorContent}
-										placeholder="Post a behavior"
 										onChange={handleChange}
 										onBlur={handleBlur}
-
-									/>
-										<button className="btn btn-primary mb-2" type="submit">Post</button>
+										variant="filled"
+										/>
+									
 								</div>
 
 							</div>
