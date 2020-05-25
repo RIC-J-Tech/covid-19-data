@@ -366,7 +366,7 @@ class Vote implements \JsonSerializable {
 		return ($vote);
 	}
 
-	public static function getVoteCountByVoteBehaviorId(\PDO $pdo, $voteBehaviorId) : \SplFixedArray {
+	public static function getVoteCountByVoteBehaviorId(\PDO $pdo, $voteBehaviorId) : int {
 
 		try {
 			$voteBehaviorId = self::ValidateUuid($voteBehaviorId);
@@ -375,33 +375,32 @@ class Vote implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT count(vote.*) as voteCount FROM vote WHERE voteBehaviorId = :voteBehaviorId" AND voteResult = 1;
+		$query = "SELECT count(*) as voteCount FROM vote WHERE voteBehaviorId = :voteBehaviorId AND voteResult = 1";
 		$statement = $pdo->prepare($query);
 
 		// bind the vote behavior id to the place holder in the template
 		$parameters = ["voteBehaviorId" => $voteBehaviorId->getBytes()];
 		$statement->execute($parameters);
-// build an array of votes
-		$votes = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
-				$votes[$votes->key()] = $vote;
-				$votes->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
+
+		try {
+			$voteCount = 0;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$voteCount = $row["voteCount"];
 			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($votes);
+		return ($voteCount);
 	}
 
 	
-	public static function getVoteCountByVoteProfileId(\PDO $pdo, $voteProfileId) : \SplFixedArray {
+	public static function getVoteCountByBusinessId(\PDO $pdo, $businessId) : int {
 
 		try {
-			$voteBehaviorId = self::ValidateUuid($voteBehaviorId);
+			$voteBehaviorId = self::ValidateUuid($businessId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
@@ -409,26 +408,25 @@ class Vote implements \JsonSerializable {
 		// create query template
 		$query = "SELECT count(vote.*) as voteCount FROM vote inner join 
 		behavior on behaviorId = voteBehaviorId
-		WHERE voteProfileId = :voteProfileId" AND voteResult = 1;
+		WHERE voteProfileId = :voteProfileId AND voteResult = 1";
 		$statement = $pdo->prepare($query);
 
 		// bind the vote behavior id to the place holder in the template
-		$parameters = ["voteProfileId" => $voteProfileId->getBytes()];
+		$parameters = ["businessId" => $businessId->getBytes()];
 		$statement->execute($parameters);
-// build an array of votes
-		$votes = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$vote = new Vote ($row["voteBehaviorId"], $row["voteProfileId"], $row["voteResult"], new \DateTime($row["voteDate"]));
-				$votes[$votes->key()] = $vote;
-				$votes->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
+
+		try {
+			$voteCount = 0;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$voteCount = $row["voteCount"];
 			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($votes);
+		return ($voteCount);
 	}
 
 
