@@ -406,9 +406,11 @@ class Vote implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT count(vote.*) as voteCount FROM vote inner join 
-		behavior on behaviorId = voteBehaviorId
-		WHERE voteProfileId = :voteProfileId AND voteResult = 1";
+		$query = "SELECT count(*) as voteCount from vote
+          inner join behavior on behaviorId = voteBehaviorId
+where behaviorBusinessId = :businessId
+    and voteResult = 1";
+
 		$statement = $pdo->prepare($query);
 
 		// bind the vote behavior id to the place holder in the template
