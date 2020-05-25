@@ -240,9 +240,7 @@ class Business implements \JsonSerializable {
 							group by businessId, businessName, businessUrl, businessAvatar,  
 							businessLat, businessLng, 
 							businessYelpId
-							order by count(voteBehaviorId) desc, businessName
-					
-		";
+							order by count(voteBehaviorId) desc, businessName limit :resultCount	";
 		$statement = $pdo->prepare($query);
 //		$parameters = ["resultCount" => $resultCount];
 
