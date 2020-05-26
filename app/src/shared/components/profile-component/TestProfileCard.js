@@ -56,7 +56,7 @@ export const TestProfileCard = ({profile,behaviors,businesses}) => {
 <List className={classes.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="https://via.placeholder.com/150" />
+          <Avatar alt="Remy Sharp" src={profile.profileAvatarUrl} styles={image} />
         </ListItemAvatar>
         <ListItemText
           primary="Brunch this weekend?"
@@ -74,14 +74,6 @@ export const TestProfileCard = ({profile,behaviors,businesses}) => {
           }
         />
       </ListItem>
-<<<<<<< HEAD
-  
-=======
-
-      <Divider variant="inset" component="li" />
-      
-      
->>>>>>> test design for profile page looking pretty good
     </List>
 
 </>
