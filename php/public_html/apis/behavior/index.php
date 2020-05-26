@@ -80,6 +80,7 @@ try {
 					"behaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
 					"businessUrl"=>$business->getBusinessUrl(),
 					"businessName"=>$business->getBusinessName(),
+					"voteCount"=>$behavior->getVoteCount()
 				];
 
 				$profile = 	Profile::getProfileByProfileId($pdo, $behavior->getBehaviorProfileId()->toString());
@@ -91,6 +92,7 @@ try {
 					"behaviorDate"=>$behavior->getBehaviorDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
 					"profileUsername"=>$profile->getProfileUsername(),
+					"voteCount"=>$behavior->getVoteCount()
 
 				];
 			}

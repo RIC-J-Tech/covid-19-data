@@ -42,6 +42,8 @@ class Behavior implements \JsonSerializable {
 	 */
 	private $behaviorDate;
 
+	private $voteCount = 0;
+
 	/**
 	 * constructor for this Behavior
 	 *
@@ -78,6 +80,20 @@ class Behavior implements \JsonSerializable {
 	 **/
 	public function getBehaviorId(): Uuid {
 		return ($this->behaviorId);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getVoteCount(): int {
+		return $this->voteCount;
+	}
+
+	/**
+	 * @param int $voteCount
+	 */
+	public function setVoteCount(int $voteCount): void {
+		$this->voteCount = $voteCount;
 	}
 
 	/**
@@ -181,9 +197,9 @@ class Behavior implements \JsonSerializable {
 			throw(new \InvalidArgumentException("behavior content is empty or insecure"));
 		}
 
-		// verify the tweet content will fit in the database
+		// verify the behavior content will fit in the database
 		if(strlen($newBehaviorContent) > 256) {
-			throw(new \RangeException("tweet content too large"));
+			throw(new \RangeException("behavior content too large"));
 		}
 
 		// store the behavior content
@@ -301,7 +317,10 @@ class Behavior implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorId = :behaviorId";
+		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
+from behavior
+left join vote on behaviorId = voteBehaviorId WHERE behaviorId = :behaviorId
+group by behaviorId ";
 		$statement = $pdo->prepare($query);
 
 		// bind the behavior id to the place holder in the template
@@ -316,6 +335,7 @@ class Behavior implements \JsonSerializable {
 			if($row !== false) {
 				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$behavior->setVoteCount($row['voteCount']);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -343,7 +363,10 @@ class Behavior implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorBusinessId = :behaviorBusinessId";
+		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
+						from behavior
+						left join vote on behaviorId = voteBehaviorId WHERE behaviorBusinessId = :behaviorBusinessId
+						group by behaviorId ";
 		$statement = $pdo->prepare($query);
 		// bind the behavior Business id to the place holder in the template
 		$parameters = ["behaviorBusinessId" => $behaviorBusinessId->getBytes()];
@@ -355,8 +378,10 @@ class Behavior implements \JsonSerializable {
 			try {
 				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$behavior->setVoteCount($row['voteCount']);
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
+
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -384,18 +409,21 @@ class Behavior implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorProfileId = :behaviorProfileId";
+		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
+						from behavior left join vote on behaviorId = voteBehaviorId WHERE behaviorProfileId = :behaviorProfileId
+						group by behaviorId ";
 		$statement = $pdo->prepare($query);
 		// bind the behavior profile id to the place holder in the template
 		$parameters = ["behaviorProfileId" => $behaviorProfileId->getBytes()];
 		$statement->execute($parameters);
-		// build an array of tweets
+		// build an array of behaviors
 		$behaviors = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$behavior->setVoteCount($row['voteCount']);
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
 			} catch(\Exception $exception) {
@@ -411,7 +439,7 @@ class Behavior implements \JsonSerializable {
 	 * gets the behavior by content
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param string $tweetContent behavior content to search for
+	 * @param string $behaviorContent behavior content to search for
 	 * @return \SplFixedArray SplFixedArray of behavior found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
@@ -427,7 +455,10 @@ class Behavior implements \JsonSerializable {
 		// escape any mySQL wild cards
 		$behaviorContent = str_replace("_", "\\_", str_replace("%", "\\%", $behaviorContent));
 		// create query template
-		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior WHERE behaviorContent LIKE :behaviorContent";
+		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
+						from behavior
+						left join vote on behaviorId = voteBehaviorId
+						group by behaviorId WHERE behaviorContent LIKE :behaviorContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the behavior content to the place holder in the template
@@ -442,6 +473,7 @@ class Behavior implements \JsonSerializable {
 			try {
 				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$behavior->setVoteCount($row['voteCount']);
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
 			} catch(\Exception $exception) {
@@ -462,7 +494,10 @@ class Behavior implements \JsonSerializable {
 	 **/
 	public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
 		// create query template
-		$query = "SELECT behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate FROM behavior";
+		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
+						from behavior
+						left join vote on behaviorId = voteBehaviorId
+						group by behaviorId";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 		// build an array of behaviors
@@ -472,6 +507,7 @@ class Behavior implements \JsonSerializable {
 			try {
 				$behavior = new Behavior($row["behaviorId"], $row["behaviorBusinessId"], $row["behaviorProfileId"],
 					$row["behaviorContent"], new \DateTime($row["behaviorDate"]));
+				$behavior->setVoteCount($row['voteCount']);
 				$behaviors[$behaviors->key()] = $behavior;
 				$behaviors->next();
 			} catch(\Exception $exception) {
