@@ -74,10 +74,7 @@ export const TestProfileCard = ({profile,behaviors,businesses}) => {
           }
         />
       </ListItem>
-
-      <Divider variant="inset" component="li" />
-      
-      
+  
     </List>
 
 </>
