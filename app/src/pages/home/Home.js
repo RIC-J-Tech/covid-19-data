@@ -45,7 +45,6 @@ export const Home= () => {
 			</Navbar>
 			{
 				businesses.map(
-
 			business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
 				behavior.behaviorBusinessId === business.businessId
 			)} 

@@ -74,7 +74,14 @@ export const TestProfileCard = ({profile,behaviors,businesses}) => {
           }
         />
       </ListItem>
+<<<<<<< HEAD
   
+=======
+
+      <Divider variant="inset" component="li" />
+      
+      
+>>>>>>> test design for profile page looking pretty good
     </List>
 
 </>

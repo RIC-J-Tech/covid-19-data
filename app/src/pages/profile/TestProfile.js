@@ -5,7 +5,11 @@ import { getAllBehaviors } from "../../shared/actions/get-behaviors";
 import { getAllVotes } from "../../shared/actions/get-votes";
 import { ProfileList } from "../profile/ProfileList";
 import {TestProfileCard } from "../../shared/components/profile-component/TestProfileCard";
+<<<<<<< HEAD
 import { makeStyles } from '@material-ui/core/styles';
+=======
+import { ListGroup } from 'react-bootstrap';
+>>>>>>> test design for profile page looking pretty good
 
 
 //MUI
@@ -14,6 +18,7 @@ import Grid from "@material-ui/core/Grid";
 //Javascript Package
 import * as jwtDecode from "jwt-decode";
 import { BehaviorProfile } from "../../shared/components/profile-component/BehaviorProfile";
+<<<<<<< HEAD
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
 export const TestProfile = () => {
 	const classes = useStyles();
 
+=======
+import { BehaviorCard } from "../../shared/components/behavior-post/BehaviorCard";
+
+export const TestProfile = () => {
+>>>>>>> test design for profile page looking pretty good
   const profiles = useSelector((state) =>
     state.profiles ? state.profiles : []
   );
@@ -67,6 +77,7 @@ export const TestProfile = () => {
   if (loggedInUser) {
     list = profiles.filter((profile) => profile.profileId === loggedInUser);
   }
+<<<<<<< HEAD
   
   return (
     <main className="container">
@@ -75,6 +86,16 @@ export const TestProfile = () => {
       <h3>Profile</h3>
 
       <Grid container spacing={5}>
+=======
+  console.log(list);
+  return (
+    <main className="container">
+      <h1>I am the Profile page</h1>
+      {/* <h3>List of Behaviors</h3> */}
+      <h3>Profile</h3>
+
+      <Grid container spacing={10}>
+>>>>>>> test design for profile page looking pretty good
         <Grid item sm={8} xs={12}>
           {list.map((profile) => (
             <TestProfileCard
@@ -88,7 +109,12 @@ export const TestProfile = () => {
         </Grid>
 
         <Grid item sm={4} xs={12}>
+<<<<<<< HEAD
          
+=======
+          <p>SOmething Goes HERE...</p>
+		 
+>>>>>>> test design for profile page looking pretty good
 		  {list.map((profile) => (
             <BehaviorProfile
               key={profile.profileId}
@@ -99,7 +125,11 @@ export const TestProfile = () => {
             />
           ))}
            
+<<<<<<< HEAD
          
+=======
+          ))}
+>>>>>>> test design for profile page looking pretty good
         </Grid>
       </Grid>
 
