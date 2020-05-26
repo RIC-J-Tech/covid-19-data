@@ -3,12 +3,7 @@ import { Route } from 'react-router';
 import Card from "react-bootstrap/Card";
 import {BehaviorList} from "../behavior/BehaviorList";
 import {BehaviorPost} from "../../shared/components/behavior-post/BehaviorPost";
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import logo from "./../images/recipe-placeholder.jpg";
@@ -21,6 +16,9 @@ const useStyles = makeStyles({
   });
 export const TestBusiness = ({business,behaviors, votes}) => {
     const classes = useStyles();
+
+
+
 	return (
 
 //this gives form to the recipes in the list on DOM
@@ -33,13 +31,7 @@ AAA
 		
 			
 			<Card className="my-5 border border-dark alternate-bg ml-5 ">
-            <div className ="row d-flex-column">
-
-                 
-        
-			
-				   
-
+            <div className ="row d-flex-column"> 
 				<a className="ml-5 p-2 align-self-center" href={business.businessUrl}> <Card.Title className="ml-5 p-2 align-self-center">{business.businessName}</Card.Title></a>
             </div>
            <CardMedia className="align-self-center">

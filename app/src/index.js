@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {Route,BrowserRouter, Switch} from "react-router-dom";
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 import {Home} from "./pages/home/Home";
-import {Profile} from "./pages/profile/Profile";
+import {TestProfile} from "./pages/profile/TestProfile";
 // import {Image} from "./pages/image/Image"
 // import {NavTest} from "./shared/components/main-nav/NavTest";
 import {MainNav} from "./shared/components/main-nav/MainNav"
@@ -55,7 +55,7 @@ const Routing = (store) => (
 				<BrowserRouter>
 				<MainNav/>
 				<Switch>
-					<Route exact path="/profile" component={Profile}/>
+					<Route exact path="/profile" component={TestProfile}/>
 					<Route exact path="/business" component={Business}/>
 
 					{/*<Route exact path="/image" component={Image}/>*/}

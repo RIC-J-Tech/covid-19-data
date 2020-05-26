@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import {BehaviorList} from '../../../pages/behavior/BehaviorList'
 import { ListGroup } from 'react-bootstrap';
 import {Business} from '../../../pages/business/Business'
-import {ProfileModal} from "./ProfileModal";
 
 // import logo from "./../images/recipe-placeholder.jpg";
 const card ={
@@ -31,7 +30,7 @@ const image= {
 
 
 
-export const ProfileCard = ({profile,behaviors,businesses}) => {
+export const BehaviorProfile = ({profile,behaviors,businesses}) => {
   console.log(behaviors)
    
 	return (
@@ -40,22 +39,18 @@ export const ProfileCard = ({profile,behaviors,businesses}) => {
         
         <Card style={{
         marginBottom: 50}}>
-              <CardMedia image ={profile.profileAvatarUrl}>
-                  <img src={profile.profileAvatarUrl} styles={image} />
-              </CardMedia>
+              
               
             <CardContent style={content} >
-                <Typography variant ="h5" color="primary">{profile.profileUsername}</Typography>
+                {/* <Typography variant ="h5" color="primary">{profile.profileUsername}</Typography>
                 <Typography variant ="body2" color ="Secondary">Phone: {profile.profilePhone}</Typography>
-                
-               <p>
+                 */}
+               
                {behaviors.map(behavior=> <ListGroup.Item color="warning" key={behavior.behaviorId} variant ="body1">{behavior.behaviorContent} </ListGroup.Item> )}
-            </p></CardContent>
+            </CardContent>
             
 
         </Card>
-
-         <ProfileModal profile={profile}/>
 
         </>
 

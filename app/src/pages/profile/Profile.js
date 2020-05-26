@@ -6,6 +6,8 @@ import { getAllVotes } from "../../shared/actions/get-votes";
 import { ProfileList } from "../profile/ProfileList";
 import { ProfileCard } from "../../shared/components/profile-component/ProfileCard";
 
+
+
 //MUI
 import Grid from "@material-ui/core/Grid";
 
@@ -44,7 +46,7 @@ export const Profile = () => {
   let loggedInUser =
     window.localStorage.getItem("jwt-token") !== null
       ? jwtDecode(window.localStorage.getItem("jwt-token")).auth.profileId
-      : "noone";
+      : "none";
   console.log(loggedInUser);
   let list = [];
   if (loggedInUser) {
@@ -72,20 +74,12 @@ export const Profile = () => {
 
         <Grid item sm={4} xs={12}>
           <p>SOmething Goes HERE...</p>
+         
+          
         </Grid>
       </Grid>
 
-      {/* <ProfileCard profiles={profiles}/> */}
 
-      {/* {profiles.map(
-				profile => <BehaviorList key={profile.profileId} profile={profile} behaviors={behaviors.filter(behavior =>
-					behavior.behaviorProfileId === profile.profileId
-				)}
-
-				/> )
-				}				 */}
-
-      {/*<profileList profilees={businesses}/>*/}
     </main>
   );
 };
