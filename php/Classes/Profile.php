@@ -201,7 +201,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 
 
 	/**
-	 * mutator method for tweet profile id
+	 * mutator method for  profile id
 	 *
 	 * @param string | Uuid $newProfileId new value of profile id
 	 * @throws RangeException if $newProfileId is not positive
@@ -220,18 +220,18 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 
 
 	/**
-	 * mutator method for tweet content
+	 * mutator method for  content
 	 *
-	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
-	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
+	 * @param string $newProfileCloudinaryId new value of Profile cloudinary Id
+	 * @throws InvalidArgumentException if $newProfileCloudinaryId is not a string or insecure
 	 * @throws RangeException if $newProfileAvatarUrl is > 255 characters
-	 * @throws TypeError if $newProfileAvatarUrl is not a string
+	 * @throws TypeError if $newProfileCloudinaryId is not a string
  */
 
 	/**
 	 * @param string $profileCloudinaryId
 	 */
-	public function setProfileCloudinaryId($newProfileCloudinaryId): void {
+	public function setProfileCloudinaryId(?string $newProfileCloudinaryId): void {
 		try {
 			// Making sure there are no whitespaces
 			$newProfileCloudinaryId = trim($newProfileCloudinaryId);
@@ -254,7 +254,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 
 
 	/**
-	 * mutator method for tweet content
+	 * mutator method for  content
 	 *
 	 * @param string $newProfileAvatarUrl new value of Profile  Avatar Url
 	 * @throws InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
@@ -285,8 +285,8 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	 * mutator method for Activation Token
 	 *
 	 * * @throws TypeError if $newProfileActivation is not a string
-	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws RangeException if $newTweetDate is a date that does not exist
+	 * @throws InvalidArgumentException if $newDate is not a valid object or string
+	 * @throws RangeException if $newDate is a date that does not exist
 	 **/
 
 	/**
@@ -329,7 +329,7 @@ catch(InvalidArgumentException | RangeException| \Exception | TypeError $excepti
 	/**
 	 * mutator method for profile email
 	 *@throws TypeError if $newProfileEmail is not a string
-	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 	 * @throws InvalidArgumentException if $newDate is not a valid object or string
 	 * @throws RangeException if $newProfileEmail is a date that does not exist
 	 **/
 
@@ -366,7 +366,7 @@ catch(\InvalidArgumentException | RangeException | \Exception | TypeError $excep
 	/**
 	 * mutator method for profile hash
 	 *@throws TypeError if $newProfileHash is not a string
-	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
+	 	 * @throws InvalidArgumentException if $newDate is not a valid object or string
 	 * @throws RangeException if $newProfileHash is a date that does not exist
 	 **/
 
@@ -440,11 +440,11 @@ catch(\InvalidArgumentException | RangeException | \Exception | TypeError $excep
 	}
 
 	/**
-	 * mutator method for tweet date
+	 * mutator method for  profileUsername
 	 *
 	 * @throws TypeError if $newProfileUsername is not a string
-	 	 * @throws InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws RangeException if $newProfileUsername is a date that does not exist
+	 	 * @throws InvalidArgumentException if $newProfileUsername is not a valid object or string
+	 * @throws RangeException if $newProfileUsername is longer than what the database can take
 	 **/
 
 	/**
@@ -758,7 +758,7 @@ catch(\Exception $exception) {
 	}
 
 
-public function getAllProfiles(\PDO $pdo): SplFixedArray{
+public static function getAllProfiles(\PDO $pdo): SplFixedArray{
 
 
 	// create query template
@@ -792,6 +792,7 @@ public function getAllProfiles(\PDO $pdo): SplFixedArray{
 	 * @return array resulting state variables to serialize
 	 **/
 	public function jsonSerialize() : array {
+
 		$fields = get_object_vars($this);
 
 		$fields["profileId"] = $this->profileId->toString();

@@ -6,14 +6,19 @@ use Ramsey\Uuid\Uuid;
 class Business implements \JsonSerializable {
 	use ValidateUuid;
 	private $businessId;
+	private $businessAvatar;
 	private $businessLng;
 	private $businessLat;
 	private $businessName;
 	private $businessUrl;
 	private $businessYelpId;
-	public function __construct($newBusinessId, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
+	private $voteCount = 0;
+
+
+	public function __construct($newBusinessId, $newBusinessAvatar, string $newBusinessYelpId, $newBusinessLng, $newBusinessLat, string $newBusinessName, string $newBusinessUrl) {
 		try {
 			$this->setBusinessId($newBusinessId);
+			$this->setBusinessAvatar($newBusinessAvatar);
 			$this->setBusinessYelpId($newBusinessYelpId);
 			$this->setBusinessLng($newBusinessLng);
 			$this->setBusinessLat($newBusinessLat);
@@ -36,6 +41,42 @@ class Business implements \JsonSerializable {
 		}
 		$this->businessId = $uuid;
 	}
+
+	/**
+	 * accessor method for restaurantAvatar
+	 *
+	 * @return string
+	 */
+	public function getBusinessAvatar(): string {
+		return $this->businessAvatar;
+	}
+
+	/**
+	 * mutator method for restaurantAvatar
+	 *
+	 * @param string $newBusinessAvatar
+	 */
+	public function setBusinessAvatar(string $newBusinessAvatar): void {
+
+		$this->businessAvatar = $newBusinessAvatar;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getVoteCount(): int {
+
+		return $this->voteCount;
+	}
+
+	/**
+	 * @param mixed $voteCount
+	 */
+	public function setVoteCount(int $voteCount): void {
+		$this->voteCount = $voteCount;
+	}
+
+
 	public function getBusinessLng() {
 		return $this->businessLng;
 	}
@@ -93,17 +134,17 @@ class Business implements \JsonSerializable {
 		return $this->businessYelpId;
 	}
 	public function setBusinessYelpId(string $newBusinessYelpId) {
-		if(strlen($newBusinessYelpId) > 32) {
+		if(strlen($newBusinessYelpId) > 64) {
 			throw(new \RangeException("Yelp Id is longer than 32 characters."));
 		}
 		$this->businessYelpId = $newBusinessYelpId;
 	}
 	public function insert(\PDO $pdo): void {
-		$query = "INSERT INTO business(businessId,businessYelpId,businessLng,businessLat,businessName,
-          businessUrl) VALUES(:businessId,:businessYelpId,:businessLng,:businessLat,:businessName,
+		$query = "INSERT INTO business(businessId,businessAvatar,businessYelpId,businessLng,businessLat,businessName,
+          businessUrl) VALUES(:businessId,:businessAvatar,:businessYelpId,:businessLng,:businessLat,:businessName,
           :businessUrl)";
 		$statement = $pdo->prepare($query);
-		$parameters = ["businessId" => $this->businessId->getBytes(), "businessYelpId" => $this->businessYelpId, "businessLng" => $this->businessLng,
+		$parameters = ["businessId" => $this->businessId->getBytes(), "businessAvatar" => $this->businessAvatar, "businessYelpId" => $this->businessYelpId, "businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat, "businessName" => $this->businessName, "businessUrl" =>
 				$this->businessUrl];
 		$statement->execute($parameters);
@@ -116,6 +157,7 @@ class Business implements \JsonSerializable {
 	}
 	public function update(\PDO $pdo): void {
 		$query = "UPDATE business SET
+				businessAvatar = :businessAvatar,
             businessYelpId = :businessYelpId,
             businessLng = :businessLng,
             businessLat = :businessLat,
@@ -124,6 +166,7 @@ class Business implements \JsonSerializable {
             WHERE businessId = :businessId";
 		$statement = $pdo->prepare($query);
 		$parameter = ["businessId" => $this->businessId->getBytes(),
+			"businessAvatar" => $this->businessAvatar,
 			"businessYelpId" => $this->businessYelpId,
 			"businessLng" => $this->businessLng,
 			"businessLat" => $this->businessLat,
@@ -137,7 +180,13 @@ class Business implements \JsonSerializable {
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
+		$query = "select count(voteBehaviorId) as voteCount, businessId, businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId WHERE businessId = :businessId
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId ";
 		$statement = $pdo->prepare($query);
 		$parameters = ["businessId" => $businessId->getBytes()];
 		$statement->execute($parameters);
@@ -146,7 +195,8 @@ class Business implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$business = new Business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new Business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
 			}
 		} catch(Exception $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -161,7 +211,13 @@ class Business implements \JsonSerializable {
 		}
 		$businessName = str_replace("_", "\\_", str_replace("%", "\\%", $businessName));
 		// create query template
-		$query = "SELECT businessId, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessName LIKE :businessName";
+		$query = "select count(voteBehaviorId) as voteCount,  (businessId), businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId WHERE businessName LIKE :businessName
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId";
 		$statement = $pdo->prepare($query);
 		$businessName = "%$businessName%";
 		$parameters = ["businessName" => $businessName];
@@ -170,7 +226,8 @@ class Business implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$business = new business($row["businessId"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();
 			} catch(\Exception $exception) {
@@ -180,14 +237,82 @@ class Business implements \JsonSerializable {
 		}
 		return($businesses);
 	}
+
+
+	public static function getTopBusinesses(\PDO $pdo, int $resultCount) : \SplFixedArray {
+		$resultCount = filter_var($resultCount, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($resultCount) === true) {
+			$resultCount = 3;
+		}
+		// create query template
+		$query = "
+		select count(voteBehaviorId) as voteCount, businessId, businessName, businessUrl, 
+							businessAvatar, businessLat, businessLng, businessYelpId
+							from vote
+							inner join behavior on behaviorId = voteBehaviorId
+							inner join business on businessId = behaviorBusinessId
+							group by businessId, businessName, businessUrl, businessAvatar,  
+							businessLat, businessLng, 
+							businessYelpId
+							order by count(voteBehaviorId) desc, businessName limit :resultCount	                                                                                                                                                                                                            ";
+		$statement = $pdo->prepare($query);
+//		$parameters = ["resultCount" => $resultCount];
+
+		$statement->bindParam(':resultCount',$resultCount, \PDO::PARAM_INT);
+		$statement->execute();
+
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"],
+					$row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($businesses);
+	}
+
+
+
+	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
+		// create query template
+		$query = "select count(voteBehaviorId) as voteCount, businessId, businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of business
+		$businesses = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
+				$businesses[$businesses->key()] = $business;
+				$businesses->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($businesses);
+	}
+
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["businessId"] = $this->businessId->toString();
-		$fields["businessYelpId"] = round(floatval($this->businessYelpId->format("")) * 1000);
-		$fields["businessLng"] = round(floatval($this->businessLng->format("")) * 1000);
-		$fields["businessLat"] = round(floatval($this->businessLat->format("")) * 1000);
-		$fields["businessName"] = $this->businessName->toString();
-		$fields["businessUrl"] = $this->businessUrl->toString();
 		return ($fields);
 	}
 }
