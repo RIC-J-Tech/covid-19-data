@@ -5,7 +5,7 @@ import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {TestBusiness} from "../business/TestBusiness";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import Navbar from "react-bootstrap/Navbar";
-import { SearchFormContent } from '../../shared/components/SearchForm/SearchForm';
+// import { SearchFormContent } from '../../shared/components/SearchForm/SearchForm';
 
 export const Home= () => {
 
@@ -40,9 +40,6 @@ export const Home= () => {
 	return (
 		<main className="container">
 
-			{/*<Navbar bg="white" variant="dark">*/}
-			{/*	<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>*/}
-			{/*</Navbar>*/}
 
 			{
 				businesses.map(
