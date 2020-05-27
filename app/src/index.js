@@ -13,6 +13,7 @@ import {Home} from "./pages/home/Home";
 import {Profile} from "./pages/profile/Profile";
 import {MainNav} from "./shared/components/main-nav/MainNav"
 import {BusinessPage} from "./pages/business/BusinessPage"
+import {About} from "./pages/About";
 
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -24,7 +25,6 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 // import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import grey from "@material-ui/core/colors/grey";
-import {BusinessPAge} from "./pages/business/BusinessPage";
 
 
 
@@ -58,6 +58,7 @@ const Routing = (store) => (
 				<BrowserRouter>
 				<MainNav/>
 				<Switch>
+					<Route exact path="/About" component={About}/>
 					<Route exact path="/BusinessPage" component={BusinessPage}/>
 					<Route exact path="/profile" component={Profile}/>
 					<Route exact path="/" component={Home}/>
