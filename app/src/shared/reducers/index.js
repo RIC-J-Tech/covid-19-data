@@ -9,7 +9,7 @@ export const combinedReducers = combineReducers({
 	businesses: businessReducer,
 	profiles: profileReducer,
 	behaviors: behaviorReducer,
-	votes: voteReducer
+	votes: voteReducer,
 })
 
 

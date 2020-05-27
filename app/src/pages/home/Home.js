@@ -40,9 +40,9 @@ export const Home= () => {
 	useEffect(effects, inputs);
 	return (
 		<main className="container">
-			<Navbar bg="white" variant="dark">
-				<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>
-			</Navbar>
+			{/*<Navbar bg="white" variant="dark">*/}
+			{/*	<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>*/}
+			{/*</Navbar>*/}
 			{
 				businesses.map(
 			business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
