@@ -41,6 +41,7 @@ console.log(window.localStorage.getItem("jwt-token"))
 
 					if(reply.status === 200) {
 						//TODO dispatch new Behavior
+						resetForm();
 					}
 					setStatus({message, type});
 				}

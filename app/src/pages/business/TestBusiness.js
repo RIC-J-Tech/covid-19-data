@@ -77,6 +77,7 @@ export const TestBusiness = ({business,behaviors, votes}) => {
 					</CardContent>
 				</Card>
 			</div>
+
 		</div>
 			</>
 		)}/>

@@ -41,17 +41,10 @@ export const OpeBusiness = ({business,behaviors}) => {
 
 
 			<>
-				{/* <img height="160" width="190" src ={business.businessAvatar} alt=""/> */}
 				<Card className={classes.card}>
-					{/*<CardMedia*/}
-					{/*	image={userImage}*/}
-					{/*	title="Profile image"*/}
-					{/*	className={classes.image}*/}
-					{/*/>*/}
+
 					<CardContent className={classes.content}>
-						{/*<Typography variant="body2" color="textSecondary">*/}
-						{/*	{dayjs(createdAt).fromNow()}*/}
-						{/*</Typography>*/}
+
 						<Typography variant="body1">
 							 			<BehaviorList behaviors={behaviors} />
 						</Typography>
@@ -66,20 +59,3 @@ export const OpeBusiness = ({business,behaviors}) => {
 		)}/>
 	)
 };
-
-// <Card className="my-5 border border-dark alternate-bg ml-5 " >
-//
-//
-// 	<Card.Body className="row my-3 px-5">
-//
-// 		<div className="col-4 pt-5 align-self-start " style={{width:25}}>
-// 			<BehaviorPost behaviorBusinessId = {business.businessId}/>
-// 		</div>
-//
-// 		<div style={{width: 40,heigh:200, order: -1}} className="col-8">
-// 			<BehaviorList behaviors={behaviors} /> Total votes: {business.voteCount}
-// 		</div>
-//
-// 	</Card.Body>
-//
-// </Card>

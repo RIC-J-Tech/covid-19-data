@@ -10,26 +10,35 @@ import {useDispatch, useSelector} from "react-redux";
 import {Home} from "../../../pages/home/Home"
 import {getBusinessesByBusinessName, getTopBusinesses} from "../../actions/get-businesses";
 import {TestBusiness} from "../../../pages/business/TestBusiness";
+import Avatar from "@material-ui/core/Avatar";
 
 
 export const MainNav = (props) => {
 	return(
+		<container>
 		<Navbar bg="primary" variant="dark">
 			<a href="#">
-				<img src="../../../../public/covid.JPG" alt="logo"/>
+				<Avatar src="../../../../public/covid.JPG" alt="logo"/>
 			</a>
 			<LinkContainer exact to="/" >
 				<Navbar.Brand>Pan-Ops</Navbar.Brand>
 			</LinkContainer>
 			<Nav className="mr-auto">
-				<LinkContainer exact to="/Profile">
+				<LinkContainer exact to="/profile">
 					<Nav.Link>profile</Nav.Link>
 				</LinkContainer>
 				<SignUpModal/>
 				<SignInModal/>
+				<LinkContainer exact to="/Profile"
+				><Nav.Link>My Account</Nav.Link>
+				</LinkContainer>
 
-				<SearchFormContent/>
+				<div className="d-inline-flex row-cols-1 align-item-end">
+					<SearchFormContent/>
+				</div>
+
 			</Nav>
 		</Navbar>
+		</container>
 	)
 };
