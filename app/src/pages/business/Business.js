@@ -84,10 +84,11 @@ export default function RussBusiness({ business, behaviors }) {
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<CardContent>
 					<Typography paragraph>Behaviors:</Typography>
+					<Typography paragraph>Total votes: {business.voteCount}</Typography>
 					<Typography paragraph>
 
 						<div
-							style={{ width: 400, height: 500, order: -1 }}
+							style={{ width: 400, height: 300, order: -1 }}
 							className="col-8"
 						>
 							<BehaviorList behaviors={behaviors} />
