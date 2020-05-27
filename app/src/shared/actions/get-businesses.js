@@ -2,7 +2,7 @@
 import {httpConfig} from "../utils/http-config";
 
 export const getTopBusinesses = () => async dispatch => {
-	const {data} = await httpConfig('/apis/business/?resultCount=3');
+	const {data} = await httpConfig('/apis/business/?resultCount=6');
 	dispatch({type: "GET_TOP_BUSINESSES", payload: data });
 	
 };

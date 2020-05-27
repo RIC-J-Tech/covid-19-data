@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button} from "react-bootstrap";
+import {Button, NavLink} from "react-bootstrap";
 import {Modal} from "react-bootstrap";
 import {SignUpForm} from "./SignUpForm";
 
@@ -12,9 +12,9 @@ export const SignUpModal = () => {
 
 	return (
 		<>
-			<Button variant="primary" onClick={handleShow}>
+			<NavLink variant="primary" onClick={handleShow}>
 				Sign Up
-			</Button>
+			</NavLink>
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>

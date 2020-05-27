@@ -2,43 +2,41 @@ import React, {useEffect, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
-import {Form, FormControl, Button} from "react-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {SignInModal} from "./sign-in/SignInModal";
 import {SearchFormContent} from "../SearchForm/SearchForm";
-import {useDispatch, useSelector} from "react-redux";
-import {Home} from "../../../pages/home/Home"
-import {getBusinessesByBusinessName, getTopBusinesses} from "../../actions/get-businesses";
-import {TestBusiness} from "../../../pages/business/TestBusiness";
-//import { SearchFormContent } from '../../shared/components/SearchForm/SearchForm'
-//import {BehaviorList} from "../../../pages/behavior/BehaviorList";
-//import {Profile} from "../../../pages/profile/Profile"
- 
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 
 export const MainNav = (props) => {
+
 	return(
-		<Navbar bg="primary" variant="dark">
-			<a href="#">
-				<img src="../../../../public/covid.JPG" alt="logo"/>
-			</a>
+		<Navbar bg="light" expand="lg">
 			<LinkContainer exact to="/" >
 				<Navbar.Brand>Pan-Ops</Navbar.Brand>
 			</LinkContainer>
-			<Nav className="mr-auto">
-				<LinkContainer exact to="/Profile">
-					<Nav.Link>profile</Nav.Link>
-				</LinkContainer>
-				<SignUpModal/>
-				<SignInModal/>
+			<Navbar.Toggle aria-controls="basic-navbar-nav" />
+			<Navbar.Collapse id="basic-navbar-nav">
+				<Nav className="mr-auto">
+					<LinkContainer exact to="/BusinessPage"
+					><Nav.Link>Local Businesses</Nav.Link>
+					</LinkContainer>
+					<SignUpModal/>
+					<SignInModal/>
+					<NavDropdown title="More" id="basic-nav-dropdown">
+						<NavDropdown.Item exact to="/Profile"><LinkContainer exact to="/Profile"
+						><Nav.Link>My Account</Nav.Link></LinkContainer></NavDropdown.Item>
 
+						<NavDropdown.Item exact to ="/About"><LinkContainer exact to="/About"
+						><Nav.Link>About</Nav.Link>
+						</LinkContainer></NavDropdown.Item>
+
+					</NavDropdown>
+				</Nav>
 				<SearchFormContent/>
-			</Nav>
 
-
+			</Navbar.Collapse>
 		</Navbar>
-
-
 
 	)
 };

@@ -22,7 +22,8 @@ React.useEffect(searchEffect,[searchWord]);
 
 	return (
 		<>
-			<Form inline className="justify-content-right p-5">
+			<container>
+			<Form inline className="justify-content-end">
 				<Form.Control type="text"
 								  placeholder="Search for businesses... "
 								  id="search-text"
@@ -32,6 +33,7 @@ React.useEffect(searchEffect,[searchWord]);
 				/>
 				<button type="submit" class="btn btn-primary">Search</button>
 			</Form>
+			</container>
 		</>
 
 	);

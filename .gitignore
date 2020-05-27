@@ -8,3 +8,4 @@
 /app/src/setupProxy.js
 /npm-debug.log
 /php/config
+/php/config/secrets

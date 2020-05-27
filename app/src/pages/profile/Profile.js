@@ -3,27 +3,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProfiles } from "../../shared/actions/get-profile";
 import { getAllBehaviors } from "../../shared/actions/get-behaviors";
 import { getAllVotes } from "../../shared/actions/get-votes";
-import { ProfileList } from "../profile/ProfileList";
-import { ProfileCard } from "../../shared/components/profile-component/ProfileCard";
-
-
-
+import {ProfileCard } from "../../shared/components/profile-component/ProfileCard";
+import { makeStyles } from '@material-ui/core/styles';
+import {EditProfileForm} from "./edit-profile/EditProfileForm";
 //MUI
 import Grid from "@material-ui/core/Grid";
-
 //Javascript Package
 import * as jwtDecode from "jwt-decode";
+import { BehaviorProfile } from "../../shared/components/profile-component/BehaviorProfile";
 
-export const Profile = () => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: '36ch',
+    marginLeft: 310,
+  }
+}));
+
+export const Profile = (profileId) => {
+  const classes = useStyles();
+
   const profiles = useSelector((state) =>
-    state.profiles ? state.profiles : []
+     state.profiles ? state.profiles : []
   );
   const behaviors = useSelector((state) =>
-    state.behaviors ? state.behaviors : []
+     state.behaviors ? state.behaviors : []
   );
   const votes = useSelector((state) => (state.votes ? state.votes : []));
   const businesses = useSelector((state) =>
-    state.businesses ? state.businesses : []
+     state.businesses ? state.businesses : []
   );
 
   // use dispatch from redux to dispatch actions
@@ -44,42 +52,57 @@ export const Profile = () => {
   console.log(behaviors);
 
   let loggedInUser =
-    window.localStorage.getItem("jwt-token") !== null
-      ? jwtDecode(window.localStorage.getItem("jwt-token")).auth.profileId
-      : "none";
+     window.localStorage.getItem("jwt-token") !== null
+        ? jwtDecode(window.localStorage.getItem("jwt-token")).auth.profileId
+        : "none";
   console.log(loggedInUser);
   let list = [];
   if (loggedInUser) {
     list = profiles.filter((profile) => profile.profileId === loggedInUser);
   }
-  console.log(list);
+
   return (
-    <main className="container">
-      <h1>I am the Profile page</h1>
-      {/* <h3>List of Behaviors</h3> */}
-      <h3>Profile</h3>
+     <main className="container">
+       <h1 className={classes.root} style={{color:"#aa00ff"}}>My Account</h1>
+       {/* <h3>List of Behaviors</h3> */}
+       <h3>Profile</h3>
 
-      <Grid container spacing={10}>
-        <Grid item sm={8} xs={12}>
-          {list.map((profile) => (
-            <ProfileCard
-              key={profile.profileId}
-              profile={profile}
-              behaviors={behaviors.filter(
-                (behavior) => behavior.behaviorProfileId === profile.profileId
-              )}
-            />
-          ))}
-        </Grid>
+       <Grid container spacing={5}>
+         <Grid item sm={8} xs={12}>
+           {list.map((profile) => (
+              <ProfileCard
+                 key={profile.profileId}
+                 profile={profile}
+                 behaviors={behaviors.filter(
+                    (behavior) => behavior.behaviorProfileId === profile.profileId
+                 )}
+              />
+           ))}
+           <div className=" mt-5 " style={{width:"70%"}}>
+             <h3>Edit Profile</h3>
+             <EditProfileForm profileId={profileId}/>
+           </div>
+         </Grid>
 
-        <Grid item sm={4} xs={12}>
-          <p>SOmething Goes HERE...</p>
-         
-          
-        </Grid>
-      </Grid>
+         <Grid item sm={4} xs={12}>
+
+           {list.map((profile) => (
+              <BehaviorProfile
+                 key={profile.profileId}
+                 profile={profile}
+                 behaviors={behaviors.filter(
+                    (behavior) => behavior.behaviorProfileId === profile.profileId
+                 )}
+              />
+           ))}
 
 
-    </main>
+         </Grid>
+       </Grid>
+
+
+
+     </main>
   );
 };
+export default Profile
