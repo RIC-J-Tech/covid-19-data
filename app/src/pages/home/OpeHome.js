@@ -3,11 +3,17 @@ import {useSelector, useDispatch} from "react-redux";
 import {getBusinessesByBusinessName, getTopBusinesses} from "../../shared/actions/get-businesses";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {TestBusiness} from "../business/TestBusiness";
+import {OpeBusiness} from "../business/OpeBusiness";
 import {getAllVotes} from "../../shared/actions/get-votes";
 import Navbar from "react-bootstrap/Navbar";
 import { SearchFormContent } from '../../shared/components/SearchForm/SearchForm';
 
-export const Home= () => {
+
+import Grid from '@material-ui/core/Grid';
+import {BehaviorList} from "../behavior/BehaviorList";
+
+
+export const OpeHome= () => {
 
 	const [searchWord, setSearchWord] = useState('');
 
@@ -39,25 +45,57 @@ export const Home= () => {
 	useEffect(effects, inputs);
 	return (
 		<main className="container">
-
-			{/*<Navbar bg="white" variant="dark">*/}
-			{/*	<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>*/}
-			{/*</Navbar>*/}
+			<Navbar bg="white" variant="dark">
+				<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>
+			</Navbar>
 
 			{
-				businesses.map(
-			business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
-				behavior.behaviorBusinessId === business.businessId
-			)} 
+						businesses.map(
+							business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
+								behavior.behaviorBusinessId === business.businessId
+							)}
 
-			/>)
+							/>)
 
-			}
-			{/*<BusinessList businesses={businesses}/>*/}
-		</main>
+					}
+
+
+
+					</main>
 	)
 };
 // businesses.map(
 //  business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
 //      behavior.behaviorBusinessId === business.businessId
 //  )}
+//
+//  <Grid container spacing={5}>
+// 				<Grid item sm={6} xs={12}>
+// 					Post Go here...
+// 					{
+// 						businesses.map(
+// 							business => <OpeBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
+// 								behavior.behaviorBusinessId === business.businessId
+// 							)}
+//
+// 							/>)
+//
+// 					}
+// 				</Grid>
+// 				<Grid item sm={6} xs={12}>
+// 					Business Card goes here...
+// 					{
+// 						businesses.map(
+// 							business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
+// 								behavior.behaviorBusinessId === business.businessId
+// 							)}
+//
+// 							/>)
+//
+// 					}
+// 					{/*<Profile />*/}
+// 				</Grid>
+// 			</Grid>
+
+
+

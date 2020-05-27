@@ -13,8 +13,7 @@ export const VotePost = ({voteBehaviorId}) => {
 	};
 
 	const validator = Yup.object().shape({
-		behaviorContent: Yup.boolean()
-			.required("Please post a behavior")
+		behaviorContent: Yup.string()
 
 	});
 
@@ -58,7 +57,7 @@ export const VotePost = ({voteBehaviorId}) => {
 				return (
 					<>
 						<form onSubmit={handleSubmit}>
-									<button className="btn btn-primary mb-2" type="submit">Post</button>
+									<button className="btn btn-primary mb-2" type="submit">Vote</button>
 						</form>
 					</>
 				)

@@ -180,7 +180,13 @@ class Business implements \JsonSerializable {
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessId = :businessId";
+		$query = "select count(voteBehaviorId) as voteCount, businessId, businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId WHERE businessId = :businessId
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId ";
 		$statement = $pdo->prepare($query);
 		$parameters = ["businessId" => $businessId->getBytes()];
 		$statement->execute($parameters);
@@ -190,6 +196,7 @@ class Business implements \JsonSerializable {
 			$row = $statement->fetch();
 			if($row !== false) {
 				$business = new Business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
 			}
 		} catch(Exception $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -204,7 +211,13 @@ class Business implements \JsonSerializable {
 		}
 		$businessName = str_replace("_", "\\_", str_replace("%", "\\%", $businessName));
 		// create query template
-		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business WHERE businessName LIKE :businessName";
+		$query = "select count(voteBehaviorId) as voteCount,  (businessId), businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId WHERE businessName LIKE :businessName
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId";
 		$statement = $pdo->prepare($query);
 		$businessName = "%$businessName%";
 		$parameters = ["businessName" => $businessName];
@@ -214,6 +227,7 @@ class Business implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();
 			} catch(\Exception $exception) {
@@ -268,7 +282,13 @@ class Business implements \JsonSerializable {
 
 	public static function getAllBusiness(\PDO $pdo) : \SPLFixedArray {
 		// create query template
-		$query = "SELECT businessId, businessAvatar, businessYelpId, businessLng, businessLat, businessName, businessUrl FROM business";
+		$query = "select count(voteBehaviorId) as voteCount, businessId, businessYelpId, businessName, businessUrl,
+    businessAvatar, businessLat, businessLng
+from vote
+          right join behavior on behaviorId = voteBehaviorId
+          right join business on businessId = behaviorBusinessId
+group by businessId, businessName, businessUrl, businessAvatar,
+    businessLat, businessLng, businessYelpId";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
@@ -278,6 +298,7 @@ class Business implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$business = new business($row["businessId"], $row["businessAvatar"], $row["businessYelpId"], $row["businessLng"], $row["businessLat"], $row["businessName"], $row["businessUrl"]);
+				$business->setVoteCount($row["voteCount"]);
 				$businesses[$businesses->key()] = $business;
 				$businesses->next();
 			} catch(\Exception $exception) {
