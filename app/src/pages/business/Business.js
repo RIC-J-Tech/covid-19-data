@@ -9,10 +9,8 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
 import { BehaviorList } from "../behavior/BehaviorList";
 import { BehaviorPost } from "../../shared/components/behavior-post/BehaviorPost";
-import { Route } from "react-router";
 import { Grid } from "@material-ui/core/Grid";
 import grey from "@material-ui/core/colors/grey";
 
@@ -88,7 +86,7 @@ export default function RussBusiness({ business, behaviors }) {
 					<Typography paragraph>
 
 						<div
-							style={{ width: 400, height: 300, order: -1 }}
+							style={{ width: 400, height: "auto", order: -1 }}
 							className="col-8"
 						>
 							<BehaviorList behaviors={behaviors} />
