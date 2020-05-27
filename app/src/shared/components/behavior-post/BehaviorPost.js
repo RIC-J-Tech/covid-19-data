@@ -3,7 +3,6 @@ import {Formik} from "formik/dist/index";
 import React from 'react';
 import {httpConfig} from "../../utils/http-config";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {FormDebugger} from "../FormDebugger";
 import {useDispatch} from "react-redux";
 import {getAllBehaviors} from "../../actions/get-behaviors";
 import { TextField } from "@material-ui/core";
@@ -93,9 +92,6 @@ export const BehaviorPost = ({behaviorBusinessId}) => {
 									/>
 										<button className="btn btn-primary mt-5" type="submit">Post</button>
 									</div>
-								
-						
-							{/*<FormDebugger {...props} />*/}
 						</form>
 
 						{/*{status && (<div className={status.type}>{status.message}</div>)}*/}

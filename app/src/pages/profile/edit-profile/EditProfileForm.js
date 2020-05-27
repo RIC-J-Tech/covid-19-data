@@ -28,11 +28,6 @@ export const EditProfileForm = ({profile}) => {
 
 	function submitEditedProfile(values, {resetForm, setStatus}) {
 
-        // let formData = new FormData();
-		// formData.append("image", imageUrl);
-		// formData.append("userPhotoSignId", foundSign.signId);
-		// formData.append("userPhotoCaption", photoCaption);
-
 		const submitUpdatedProfile = (updatedProfile) => {
 			httpConfig.put(`apis/profile/${updatedProfile.profileId}`, updatedProfile)
 				.then(reply => {

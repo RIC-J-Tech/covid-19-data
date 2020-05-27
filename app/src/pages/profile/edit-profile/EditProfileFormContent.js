@@ -1,10 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
-import {FormDebugger} from "../../../shared/components/FormDebugger";
-import {ImageDropZone} from "../../../shared/components/ImageDropZone";
-
-
-
 
 export const EditProfileFormContent = (props) => {
 	const {
@@ -54,7 +49,7 @@ export const EditProfileFormContent = (props) => {
 				</div>
 
 				<div className="form-group">
-					<label htmlFor="profileUsername"></label>
+					<label htmlFor="profileUsername">Username</label>
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
@@ -119,17 +114,17 @@ export const EditProfileFormContent = (props) => {
 					>Reset
 					</button>
 				</div>
-				<ImageDropZone
-					formikProps={{
-						values,
-						handleChange,
-						handleBlur,
-						setFieldValue,
-						fieldValue:"profileAvatarUrl"
-					}}
-				/>
+				{/*<ImageDropZone*/}
+				{/*	formikProps={{*/}
+				{/*		values,*/}
+				{/*		handleChange,*/}
+				{/*		handleBlur,*/}
+				{/*		setFieldValue,*/}
+				{/*		fieldValue:"profileAvatarUrl"*/}
+				{/*	}}*/}
+				{/*/>*/}
 				{status && (<div className={status.type}>{status.message}</div>)}
-				<FormDebugger {...props} />
+
 			</form>
 
 			{

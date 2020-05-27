@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {getBusinessesByBusinessName, getTopBusinesses} from "../../shared/actions/get-businesses";
 import {getAllBehaviors} from "../../shared/actions/get-behaviors";
 import {getAllVotes} from "../../shared/actions/get-votes";
-import RussBusiness from "../../shared/components/profile-component/RussBusiness";
+import Business from "../../pages/business/Business";
 import Grid from "@material-ui/core/Grid";
 
 export const Home= () => {
@@ -39,14 +39,21 @@ export const Home= () => {
 	return (
 
 
-		<main className="container">
+		<main className="container" >
+			<div className="container-fluid" style={{margin:"1% 30% 15% 30%",width:"200"}}>
+				<h1>WELCOME TO PAN OPS</h1>
+				<div className="container-fluid" style={{margin:"1%"}}>
+					<h4>We cherish you honesty in telling the world what you witness</h4>
+				</div>
+			</div>
+
 
 
 			<Grid container spacing={4}>
 				{
 					businesses.map(
 						business =>  <Grid item xs={12} sm={12} md={6}>
-							<RussBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
+							<Business key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
 								behavior.behaviorBusinessId === business.businessId
 							)}
 

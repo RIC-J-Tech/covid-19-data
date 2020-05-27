@@ -1,5 +1,4 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {FormDebugger} from "../../FormDebugger";
 import React from "react";
 
 export const SignUpFormContent = (props) => {
@@ -161,8 +160,6 @@ export const SignUpFormContent = (props) => {
 					</button>
 				</div>
 
-
-				<FormDebugger {...props} />
 			</form>
 
 			{/*{status && (<div className={status.type}>{status.message}</div>)}*/}

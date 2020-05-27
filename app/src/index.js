@@ -10,22 +10,14 @@ import {Provider} from "react-redux";
 import {Route,BrowserRouter, Switch} from "react-router-dom";
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 import {Home} from "./pages/home/Home";
-import {RussHome} from "./pages/home/RussHome";
-import {TestProfile} from "./pages/profile/TestProfile";
-// import {Image} from "./pages/image/Image"
-// import {NavTest} from "./shared/components/main-nav/NavTest";
+import {Profile} from "./pages/profile/Profile";
 import {MainNav} from "./shared/components/main-nav/MainNav"
-import {Business} from "./pages/business/Business"
+// import {Business} from "./pages/business/Business"
 
-
-//components
-//pages
-//
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {faDove, faEnvelope, faKey, faPhone, faStroopwafel} from '@fortawesome/free-solid-svg-icons'
 import {combinedReducers} from "./shared/reducers/index";
-import {BusinessList} from "./pages/business/BusinessList";
 
 //MUI imports
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -65,10 +57,7 @@ const Routing = (store) => (
 				<BrowserRouter>
 				<MainNav/>
 				<Switch>
-					<Route exact path="/profile" component={TestProfile}/>
-					<Route exact path="/business" component={Business}/>
-
-					{/*<Route exact path="/image" component={Image}/>*/}
+					<Route exact path="/profile" component={Profile}/>
 					<Route exact path="/" component={Home}/>
 					<Route component={FourOhFour}/>
 				</Switch>

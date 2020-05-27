@@ -13,10 +13,6 @@ import { ListGroup } from 'react-bootstrap';
 import {Business} from '../../../pages/business/Business'
 
 // import logo from "./../images/recipe-placeholder.jpg";
-const card ={
-    
-       
-    }
 const image= {
         minWidth: 200,
         marginLeft: 20
@@ -27,9 +23,6 @@ const image= {
     }
     
 
-
-
-
 export const BehaviorProfile = ({profile,behaviors,businesses}) => {
   console.log(behaviors)
    
@@ -39,13 +32,7 @@ export const BehaviorProfile = ({profile,behaviors,businesses}) => {
         
         <Card style={{
         marginBottom: 50}}>
-              
-              
             <CardContent style={content} >
-                {/* <Typography variant ="h5" color="primary">{profile.profileUsername}</Typography>
-                <Typography variant ="body2" color ="Secondary">Phone: {profile.profilePhone}</Typography>
-                 */}
-               
                {behaviors.map(behavior=> <ListGroup.Item color="warning" key={behavior.behaviorId} variant ="body1">{behavior.behaviorContent} </ListGroup.Item> )}
             </CardContent>
             
