@@ -47,7 +47,7 @@ export const Profile = () => {
     window.localStorage.getItem("jwt-token") !== null
       ? jwtDecode(window.localStorage.getItem("jwt-token")).auth.profileId
       : "none";
-  console.log(loggedInUser);
+
   let list = [];
   if (loggedInUser) {
     list = profiles.filter((profile) => profile.profileId === loggedInUser);

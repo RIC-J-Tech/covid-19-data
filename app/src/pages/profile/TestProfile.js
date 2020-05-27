@@ -6,6 +6,7 @@ import { getAllVotes } from "../../shared/actions/get-votes";
 import { ProfileList } from "../profile/ProfileList";
 import {TestProfileCard } from "../../shared/components/profile-component/TestProfileCard";
 import { makeStyles } from '@material-ui/core/styles';
+import {EditProfileForm} from "./edit-profile/EditProfileForm";
 
 
 //MUI
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   
 
 
-export const TestProfile = () => {
+export const TestProfile = (profileId) => {
 	const classes = useStyles();
 
   const profiles = useSelector((state) =>
@@ -74,7 +75,7 @@ export const TestProfile = () => {
       <h1 className={classes.root} style={{color:"#aa00ff"}}>WELCOME TO PAN OPS</h1>
       {/* <h3>List of Behaviors</h3> */}
       <h3>Profile</h3>
-
+      <EditProfileForm profileId={profileId}/>
       <Grid container spacing={5}>
         <Grid item sm={8} xs={12}>
           {list.map((profile) => (

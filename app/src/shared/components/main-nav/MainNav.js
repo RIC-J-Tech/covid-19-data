@@ -10,10 +10,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {Home} from "../../../pages/home/Home"
 import {getBusinessesByBusinessName, getTopBusinesses} from "../../actions/get-businesses";
 import {TestBusiness} from "../../../pages/business/TestBusiness";
-//import { SearchFormContent } from '../../shared/components/SearchForm/SearchForm'
-//import {BehaviorList} from "../../../pages/behavior/BehaviorList";
-//import {Profile} from "../../../pages/profile/Profile"
- 
 
 
 export const MainNav = (props) => {
@@ -34,11 +30,6 @@ export const MainNav = (props) => {
 
 				<SearchFormContent/>
 			</Nav>
-
-
 		</Navbar>
-
-
-
 	)
 };

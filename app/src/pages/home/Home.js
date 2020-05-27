@@ -15,7 +15,6 @@ export const Home= () => {
 	const businessState = useSelector(state => state.businesses ? state.businesses : []);
 	const behaviors = useSelector(state => state.behaviors ? state.behaviors : []);
 
-
 	const filterBusiness = businessState.filter(
 		businesses => businesses.businessName.toLowerCase().includes(searchWord) || businesses.businessUrl.toLowerCase().includes(searchWord)
 	);

@@ -3,7 +3,7 @@ import {ListGroup, ListGroupItem } from 'react-bootstrap';
 import {VotePost} from "../../shared/components/vote-post/VotePost";
 
 
-export const BehaviorList = ({behaviors}) => {
+export const BehaviorList = ({behaviors,}) => {
 
 	return (
 		<>
@@ -12,7 +12,7 @@ export const BehaviorList = ({behaviors}) => {
 				{behaviors.map(behavior => {
 						return(
 
-							<ListGroup.Item key={behavior.behaviorId}> {behavior.behaviorContent}<VotePost behaviorId = {behaviors.behaviorId}/> {behavior.voteCount}</ListGroup.Item>
+							<ListGroup.Item key={behavior.behaviorId}> {behavior.behaviorContent}<VotePost voteBehaviorId = {behavior.behaviorId}/> {behavior.voteCount}</ListGroup.Item>
 
 						)
 					}

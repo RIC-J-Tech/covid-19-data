@@ -45,9 +45,7 @@ export const OpeHome= () => {
 	useEffect(effects, inputs);
 	return (
 		<main className="container">
-			<Navbar bg="white" variant="dark">
-				<SearchFormContent searchWord={searchWord} setSearchWord={setSearchWord}/>
-			</Navbar>
+
 
 			{
 						businesses.map(
@@ -64,38 +62,7 @@ export const OpeHome= () => {
 					</main>
 	)
 };
-// businesses.map(
-//  business => <Business key={business.businessId} business={business} behaviors={behaviors.filter(behavior =>
-//      behavior.behaviorBusinessId === business.businessId
-//  )}
-//
-//  <Grid container spacing={5}>
-// 				<Grid item sm={6} xs={12}>
-// 					Post Go here...
-// 					{
-// 						businesses.map(
-// 							business => <OpeBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
-// 								behavior.behaviorBusinessId === business.businessId
-// 							)}
-//
-// 							/>)
-//
-// 					}
-// 				</Grid>
-// 				<Grid item sm={6} xs={12}>
-// 					Business Card goes here...
-// 					{
-// 						businesses.map(
-// 							business => <TestBusiness key={business.businessId} business={business} searchWord={searchWord} behaviors={behaviors.filter(behavior =>
-// 								behavior.behaviorBusinessId === business.businessId
-// 							)}
-//
-// 							/>)
-//
-// 					}
-// 					{/*<Profile />*/}
-// 				</Grid>
-// 			</Grid>
+
 
 
 

@@ -72,6 +72,7 @@ export const TestBusiness = ({business,behaviors, votes}) => {
 						<Typography variant="body1">
 							<BehaviorList behaviors={behaviors} />
 						</Typography>
+						<BehaviorPost behaviorBusinessId = {business.businessId}/>
 						<span>{business.voteCount} Votes</span>
 					</CardContent>
 				</Card>
