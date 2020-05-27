@@ -5,8 +5,6 @@ import {LinkContainer} from "react-router-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {SignInModal} from "./sign-in/SignInModal";
 import {SearchFormContent} from "../SearchForm/SearchForm";
-import Avatar from "@material-ui/core/Avatar";
-
 
 export const MainNav = (props) => {
 	return(
@@ -15,7 +13,10 @@ export const MainNav = (props) => {
 			<LinkContainer exact to="/" >
 				<Navbar.Brand>Pan-Ops</Navbar.Brand>
 			</LinkContainer>
-			<Nav className="mr-auto">
+			<Nav className="align-self-centers">
+				<LinkContainer exact to="/BusinessPage"
+				><Nav.Link>Business</Nav.Link>
+				</LinkContainer>
 				<SignUpModal/>
 				<SignInModal/>
 				<LinkContainer exact to="/Profile"
