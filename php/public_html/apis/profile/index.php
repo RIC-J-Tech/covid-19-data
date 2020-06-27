@@ -14,7 +14,7 @@ use RICJTech\Covid19Data\Profile;
 /**
  * API for Profile
  *
- * @author Gkephart
+ * @author Opeyemi Jonah
  * @version 1.0
  */
 
