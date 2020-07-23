@@ -395,10 +395,10 @@ public static function getReportByReportId(\PDO $pdo, $reportId): ?Report{
 		$row = $statement->fetch();
 		if($row !== false){
 				$report = new Report($row["reportId"],
-											$row["reportBusinessId"],
-											$row["reportProfileId"],
-											$row["reportContent"],
-											new \DateTime($row["reportDate"]));
+				$row["reportBusinessId"],
+				$row["reportProfileId"],
+				$row["reportContent"],
+				new \DateTime($row["reportDate"]));
 
 		}
 
