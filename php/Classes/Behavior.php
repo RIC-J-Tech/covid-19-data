@@ -15,34 +15,34 @@ class Behavior implements \JsonSerializable {
 
 
 	/*
-	 * id for this primary key
+	* id for this primary key
  	* @var Uuid behaviorId
  	*/
 	private $behaviorId;
 
 	/*
 	 * id for this foreign key
- 	* @var Uuid behaviorBusinessId
- 	*/
+ 	 * @var Uuid behaviorBusinessId
+ 	 */
 	private $behaviorBusinessId;
 
-	/*
+	 /*
 	 * id for this foreign key
- 	* @var Uuid behaviorProfileId
- 	*/
-	private $behaviorProfileId;
+ 	 * @var Uuid behaviorProfileId
+ 	 */
+	 private $behaviorProfileId;
 
-	/*
+	 /*
 	 * content for this behavior
 	 */
-	private $behaviorContent;
+	 private $behaviorContent;
 
-	/*
+	 /*
 	 * Date and time this behavior was posted
 	 */
-	private $behaviorDate;
+	 private $behaviorDate;
 
-	private $voteCount = 0;
+	 private $voteCount = 0;
 
 	/**
 	 * constructor for this Behavior
@@ -59,7 +59,7 @@ class Behavior implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 
-	public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, \DateTime $newBehaviorDate) {
+	 public function __construct($newBehaviorId, $newBehaviorBusinessId, $newBehaviorProfileId, string $newBehaviorContent, \DateTime $newBehaviorDate) {
 		try {
 			$this->setBehaviorId($newBehaviorId);
 			$this->setBehaviorBusinessId($newBehaviorBusinessId);
@@ -318,9 +318,9 @@ class Behavior implements \JsonSerializable {
 
 		// create query template
 		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
-from behavior
-left join vote on behaviorId = voteBehaviorId WHERE behaviorId = :behaviorId
-group by behaviorId ";
+			from behavior
+			left join vote on behaviorId = voteBehaviorId WHERE behaviorId = :behaviorId
+			group by behaviorId ";
 		$statement = $pdo->prepare($query);
 
 		// bind the behavior id to the place holder in the template
@@ -354,7 +354,7 @@ group by behaviorId ";
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorBusinessId(\PDO $pdo, $behaviorBusinessId): \SplFixedArray {
+	 public static function getBehaviorByBehaviorBusinessId(\PDO $pdo, $behaviorBusinessId): \SplFixedArray {
 
 		try {
 			$behaviorBusinessId = self::validateUuid($behaviorBusinessId);
@@ -400,7 +400,7 @@ group by behaviorId ";
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorProfileId(\PDO $pdo, $behaviorProfileId): \SplFixedArray {
+	 public static function getBehaviorByBehaviorProfileId(\PDO $pdo, $behaviorProfileId): \SplFixedArray {
 
 		try {
 			$behaviorProfileId = self::validateUuid($behaviorProfileId);
@@ -444,7 +444,7 @@ group by behaviorId ";
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getBehaviorByBehaviorContent(\PDO $pdo, string $behaviorContent): \SplFixedArray {
+	 public static function getBehaviorByBehaviorContent(\PDO $pdo, string $behaviorContent): \SplFixedArray {
 		// sanitize the description before searching
 		$behaviorContent = trim($behaviorContent);
 		$behaviorContent = filter_var($behaviorContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -492,7 +492,7 @@ group by behaviorId ";
 	 * @throws \PDOException when mySQL related errors.
 	 * @throws \TypeError when variables are not the correct data type.
 	 **/
-	public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
+	 public static function getAllBehaviors(\PDO $pdo) : \SPLFixedArray {
 		// create query template
 		$query = "select behaviorId, behaviorBusinessId, behaviorProfileId, behaviorContent, behaviorDate, count(voteBehaviorId) as voteCount
 						from behavior
