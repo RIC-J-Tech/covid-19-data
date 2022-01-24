@@ -8,7 +8,8 @@
     "lcobucci/jwt": "3.2",
     "ext-json": "*",
     "fzaninotto/faker": "*",
-    "ext-ctype": "*"
+    "ext-ctype": "*",
+    "cloudinary/cloudinary_php": "^2"
   },
   "scripts":{
     "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
