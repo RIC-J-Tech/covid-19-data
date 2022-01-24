@@ -9,6 +9,8 @@ use Ramsey\uuid\uuid;
 use RangeException;
 use SPLFixedArray;
 use TypeError;
+use Cloudinary\Api\Upload\UploadApi;
+
 
 /**
  * RIC-J Tech to the rescue

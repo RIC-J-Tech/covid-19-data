@@ -8,6 +8,8 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
+use Cloudinary\Api\Upload\UploadApi;
+use Cloudinary\Configuration\Configuration;
 
 use RICJTech\Covid19Data\Profile;
 
@@ -42,6 +44,16 @@ try {
 	$profileUsername = filter_input(INPUT_GET, "profileUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
+	//Applying Cloudinary configurations to upload am image for the Profile pic
+	Configuration::instance([
+		'cloud' => [
+		  'cloud_name' => 'dbmcm6ruq', 
+		  'api_key' => '411919186298744', 
+		  'api_secret' => '5ooWzF-yboEevIYnh0CpLVZVp6s'],
+		'url' => [
+		  'secure' => true]]);
+	
+	(new UploadApi())->upload('./images/tola.jpg');
 
 	// make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {

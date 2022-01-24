@@ -49,9 +49,7 @@ $VALID_BUSINESS_URL = $faker->url;
 		return $business;
 }
 
-
-<<<<<<< HEAD
-	private static function createBehavior(): Behavior{
+private static function createBehavior(): Behavior{
 		$faker = Faker\Factory::create();
 
 		$Valid_Behavior_Content = "Respected social distancing rule";
@@ -70,8 +68,6 @@ $VALID_BUSINESS_URL = $faker->url;
 		return $behavior;
 	}
 
-=======
->>>>>>> api-behavior
 
 private static function createReport(): Report{
 	$faker = Faker\Factory::create();
